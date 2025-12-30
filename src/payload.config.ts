@@ -9,29 +9,32 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import brevoAdapter from './lib/adapters/brevo'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  // --- Admin Configurations ---
   admin: {
     user: Users.slug,
     importMap: {
       baseDir: path.resolve(dirname),
     },
   },
+
+  // --- Database Collection Injections ---
   collections: [Users, Media],
-  editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
-  typescript: {
-    outputFile: path.resolve(dirname, 'payload-types.ts'),
-  },
+
+  // --- Adapters ---
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
   }),
-  sharp,
+  email: brevoAdapter(),
+
+  // --- Plugins ---
   plugins: [
     s3Storage({
       collections: {
@@ -47,4 +50,11 @@ export default buildConfig({
       },
     }),
   ],
+
+  sharp,
+  editor: lexicalEditor(),
+  secret: process.env.PAYLOAD_SECRET || '',
+  typescript: {
+    outputFile: path.resolve(dirname, 'payload-types.ts'),
+  },
 })
