@@ -10,6 +10,7 @@ import sharp from 'sharp'
 import { Users } from './collections/Users/config'
 import { Media } from './collections/Media'
 import brevoAdapter from './lib/adapters/brevo'
+import { Customers } from './collections/Customers/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -31,7 +32,7 @@ export default buildConfig({
   },
 
   // --- Database Collection Injections ---
-  collections: [Users, Media],
+  collections: [Users, Media, Customers],
 
   // --- Adapters ---
   db: postgresAdapter({
