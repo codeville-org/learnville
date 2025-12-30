@@ -123,7 +123,7 @@ export interface UserAuthOperations {
 export interface User {
   id: number;
   avatar?: (number | null) | Media;
-  roles?: ('admin' | 'editor' | 'instructor' | 'user')[] | null;
+  roles?: ('admin' | 'editor' | 'user')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;

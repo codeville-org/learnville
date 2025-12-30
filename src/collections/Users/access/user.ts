@@ -4,7 +4,7 @@ import { checkRole } from './check-role'
 
 const user: Access = ({ req: { user } }) => {
   if (user) {
-    if (checkRole(['admin', 'editor', 'instructor'], user)) {
+    if (checkRole(['admin', 'editor'], user)) {
       return true
     }
 
