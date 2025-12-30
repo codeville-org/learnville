@@ -7,7 +7,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users'
+import { Users } from './collections/Users/config'
 import { Media } from './collections/Media'
 import brevoAdapter from './lib/adapters/brevo'
 
@@ -21,6 +21,13 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    autoLogin:
+      process.env.NEXT_PUBLIC_PAYLOAD_AUTO_LOGIN === 'true'
+        ? {
+            email: `vihanga+editor@codeville.dev`,
+            password: `vihanga123`,
+          }
+        : false,
   },
 
   // --- Database Collection Injections ---
