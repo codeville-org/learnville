@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url'
 import config from '@/payload.config'
 import './styles.css'
 import { Button } from '@/components/ui/button'
+import { Spinner } from '@/components/ui/spinner'
+import { LogOutIcon } from 'lucide-react'
 
 export default async function HomePage() {
   const headers = await getHeaders()
@@ -15,12 +17,8 @@ export default async function HomePage() {
   const { user } = await payload.auth({ headers })
 
   return (
-    <div className="w-full h-screen gap-3 flex items-center justify-center">
-      <p className="font-semibold text-3xl">LearnVille</p>
-
-      <Button>Dashboard</Button>
-
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+    <div className="w-full h-screen gap-3 flex flex-col items-center justify-center">
+      <p className="font-bold text-4xl font-heading">LearnVille</p>
     </div>
   )
 }
