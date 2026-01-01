@@ -22,13 +22,13 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    autoLogin:
-      process.env.NEXT_PUBLIC_PAYLOAD_AUTO_LOGIN === 'true'
-        ? {
-            email: `vihanga+editor@codeville.dev`,
-            password: `vihanga123`,
-          }
-        : false,
+    // autoLogin:
+    //   process.env.NEXT_PUBLIC_PAYLOAD_AUTO_LOGIN === 'true'
+    //     ? {
+    //         email: `vihanga+editor@codeville.dev`,
+    //         password: `vihanga123`,
+    //       }
+    //     : false,
   },
 
   // --- Database Collection Injections ---

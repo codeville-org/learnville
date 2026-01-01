@@ -7,7 +7,11 @@ import type { SignupSchema, SignupResponseSchema } from '../types'
 
 export async function signup(data: SignupSchema): Promise<SignupResponseSchema> {
   try {
-    const { email, password, firstName, lastName } = data
+    const { email, password, firstName, lastName, confirmPassword } = data
+
+    if (password !== confirmPassword) {
+      return { success: false, error: 'Passwords do not match' }
+    }
 
     const payload = await getPayload({ config })
 
