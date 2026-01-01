@@ -28,7 +28,6 @@ import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/ui/spinner'
 import { UserRoundPlusIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
 type Props = {
@@ -61,7 +60,7 @@ export default function SignupForm({ className }: Props) {
         toast.success('Account created successfully!', { id: toastId })
 
         router.push(
-          `/sigin?message=${encodeURIComponent(`Check your email to verify your account.`)}`,
+          `/signin?message=${encodeURIComponent(`Check your email to verify your account.`)}`,
         )
         router.refresh()
       } else {
