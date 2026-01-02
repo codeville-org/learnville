@@ -7,6 +7,7 @@ import config from '@/payload.config'
 import './styles.css'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { SignoutButton } from '@/modules/auth/components/signout-button'
 
 export default async function HomePage() {
   const headers = await getHeaders()
@@ -34,7 +35,7 @@ export default async function HomePage() {
       ) : (
         <div className="text-center space-y-2">
           <p>Hello, {user?.firstName || user.email} !</p>
-          <Button variant={'destructive'}>Logout</Button>
+          <SignoutButton />
         </div>
       )}
     </div>

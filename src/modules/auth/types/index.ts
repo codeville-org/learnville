@@ -73,3 +73,11 @@ export const resetPasswordResponseSchema = z.object({
 })
 
 export type ResetPasswordResponseSchema = z.infer<typeof resetPasswordResponseSchema>
+
+// ------- Logout -------
+export const logoutResponseSchema = z.object({
+  success: z.boolean(),
+  error: z.string().optional(),
+})
+
+export type LogoutResponseSchema = z.infer<typeof logoutResponseSchema>
