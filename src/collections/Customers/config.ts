@@ -20,6 +20,21 @@ export const Customers: CollectionConfig = {
         `
       },
     },
+    forgotPassword: {
+      generateEmailSubject: (args) => {
+        return `Hey ${args?.user?.firstName ? args?.user?.firstName : args?.user?.email}, Change your password`
+      },
+      generateEmailHTML: (args) => {
+        return `
+          <div>
+            <h1>Hey ${args?.user?.firstName ? args?.user?.firstName : args?.user?.email}</h1>
+            <br />
+            <p>You (or someone) requested to reset your account password. If this wasn't you, you can safely ignore this email. Otherwise follow this link to reset your password :</p>
+            <a href="${getServerSideURL()}/reset-password?token=${args?.token}">Reset my Password</a>
+          </div>
+        `
+      },
+    },
     cookies: {
       secure: true,
       sameSite: 'None',

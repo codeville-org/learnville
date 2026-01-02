@@ -11,7 +11,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { type SigninSchema, signinSchema } from '../types'
+import {
+  forgotPasswordSchema,
+  ForgotPasswordSchema,
+  type SigninSchema,
+  signinSchema,
+} from '../types'
 import {
   Field,
   FieldDescription,
@@ -26,43 +31,43 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircleIcon, BellIcon, LogInIcon } from 'lucide-react'
+import { AlertCircleIcon, BellIcon, LogInIcon, SendIcon } from 'lucide-react'
 import Link from 'next/link'
-import { signin } from '../actions/signin.action'
+import { forgotPassword } from '../actions/forgot-password.action'
 import { Alert, AlertTitle } from '@/components/ui/alert'
 
 type Props = {
   className?: string
-  message?: string
 }
 
-export default function SigninForm({ message }: Props) {
+export function ForgotPasswordForm({}: Props) {
   const toastId = useId()
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
 
-  const form = useForm<SigninSchema>({
-    resolver: zodResolver(signinSchema),
+  const form = useForm<ForgotPasswordSchema>({
+    resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
       email: '',
-      password: '',
     },
   })
 
-  const onSubmit = (data: SigninSchema) => {
+  const onSubmit = (data: ForgotPasswordSchema) => {
     startTransition(async () => {
-      toast.loading('Signing in...', { id: toastId })
+      toast.loading('Sending password reset email...', { id: toastId })
 
-      const result = await signin(data)
+      const result = await forgotPassword(data)
 
       if (result.success) {
-        toast.success('Signed in successfully!', { id: toastId })
+        toast.success('Password reset email sent successfully!', { id: toastId })
 
-        router.push(`/portal`)
+        router.push(
+          `/signin?message=${encodeURIComponent('Please check your email for password reset instructions.')}`,
+        )
         router.refresh()
       } else {
-        toast.error(result.error || 'Signin failed', { id: toastId })
+        toast.error(result.error || 'Password reset failed', { id: toastId })
         setError(result.error || 'Signin failed')
       }
     })
@@ -71,17 +76,11 @@ export default function SigninForm({ message }: Props) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold font-heading">Welcome Back</CardTitle>
-        <CardDescription>{`Signin with Learnville account to explore your portal`}</CardDescription>
+        <CardTitle className="text-xl font-semibold font-heading">Forgot Password</CardTitle>
+        <CardDescription>{`Enter your email to receive password reset link`}</CardDescription>
       </CardHeader>
 
       <CardContent>
-        {message && (
-          <Alert className="mb-4">
-            <BellIcon />
-            <AlertTitle>{message}</AlertTitle>
-          </Alert>
-        )}
         {error && (
           <Alert className="mb-4" variant="destructive">
             <AlertCircleIcon />
@@ -107,27 +106,6 @@ export default function SigninForm({ message }: Props) {
                 </Field>
               )}
             />
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <div className="w-full flex items-center justify-between">
-                    <FieldLabel>Password</FieldLabel>
-                    <Link href="/forgot-password" className="text-xs text-foreground/50 underline">
-                      Forgot password?
-                    </Link>
-                  </div>
-                  <PasswordInput
-                    {...field}
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter your password"
-                    autoComplete="new-password"
-                  />
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
           </FieldGroup>
         </form>
       </CardContent>
@@ -141,8 +119,8 @@ export default function SigninForm({ message }: Props) {
             form="signin-form"
             className="w-full"
           >
-            {isPending ? <Spinner /> : <LogInIcon />}
-            Sign in
+            {isPending ? <Spinner /> : <SendIcon />}
+            Send Password Reset Link
           </Button>
         </Field>
 

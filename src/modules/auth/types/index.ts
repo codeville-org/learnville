@@ -1,5 +1,5 @@
 import { Customer } from '@/payload-types'
-import { z } from 'zod'
+import { email, z } from 'zod'
 
 // ------- Signup -------
 export const signupSchema = z
@@ -44,3 +44,32 @@ export type SigninActionResult = {
   token?: string
   user?: Customer
 }
+
+// ------- Forgot Password -------
+export const forgotPasswordSchema = z.object({
+  email: z.email().min(1, 'Email is required'),
+})
+
+export type ForgotPasswordSchema = z.infer<typeof forgotPasswordSchema>
+
+export const forgotPasswordResponseSchema = z.object({
+  success: z.boolean(),
+  error: z.string().optional(),
+})
+
+export type ForgotPasswordResponseSchema = z.infer<typeof forgotPasswordResponseSchema>
+
+// ------- Reset Password -------
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token is required'),
+  password: z.string().min(1, 'Password is required'),
+})
+
+export type ResetPasswordSchema = z.infer<typeof resetPasswordSchema>
+
+export const resetPasswordResponseSchema = z.object({
+  success: z.boolean(),
+  error: z.string().optional(),
+})
+
+export type ResetPasswordResponseSchema = z.infer<typeof resetPasswordResponseSchema>
