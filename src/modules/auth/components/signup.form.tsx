@@ -12,14 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { type SignupSchema, signupSchema } from '../types'
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  FieldSeparator,
-} from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Button } from '@/components/ui/button'
@@ -64,7 +57,7 @@ export default function SignupForm({ className }: Props) {
         )
         router.refresh()
       } else {
-        toast.error(result.error || 'Signup failed')
+        toast.error(result.error || 'Signup failed', { id: toastId })
 
         // Optionally set form errors
         if (result.error === 'Email already exists') {
