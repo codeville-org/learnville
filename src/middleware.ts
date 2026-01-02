@@ -6,6 +6,7 @@ const AUTH_ROUTES = ['/signin', '/signup', '/forgot-password', '/verify', '/rese
 const AUTHENTICATED_ROUTES = ['/portal']
 const AUTHENTICATED_REDIRECT = '/portal'
 const UNAUTHENTICATED_REDIRECT = '/signin'
+const ACCESS_DENIED_REDIRECT = '/access-denied'
 const PAYLOAD_ADMIN_ROUTE = '/admin'
 
 export async function middleware(request: NextRequest) {
@@ -36,6 +37,22 @@ export async function middleware(request: NextRequest) {
     if (!isAuthenticated) {
       const redirectUrl = new URL(UNAUTHENTICATED_REDIRECT, request.url)
       redirectUrl.searchParams.set('redirect', pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    // Check user status
+    try {
+      const response = await fetch(`${request.nextUrl.origin}/api/customers/me`, {
+        headers: request.headers,
+      })
+
+      if (!response.ok) throw new Error('Failed to fetch user data')
+
+      const data = await response.json()
+
+      if (!data?.user) throw new Error('User not found')
+    } catch (error) {
+      const redirectUrl = new URL(ACCESS_DENIED_REDIRECT, request.url)
       return NextResponse.redirect(redirectUrl)
     }
 
