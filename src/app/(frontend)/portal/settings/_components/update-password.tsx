@@ -24,6 +24,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { forgotPassword } from '@/modules/auth/actions/forgot-password.action'
 import { SignoutButton } from '@/modules/auth/components/signout-button'
 import { Customer } from '@/payload-types'
+import { EditIcon } from 'lucide-react'
 import React, { useId, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -93,7 +94,7 @@ export function UpdatePassword({ user }: Props) {
         </CardContent>
         <CardFooter className="p-4 py-3 bg-secondary/50 flex justify-end">
           <Button onClick={handleSendPasswordLink} disabled={pending}>
-            {pending && <Spinner />}
+            {pending ? <Spinner /> : <EditIcon />}
             Update Password
           </Button>
         </CardFooter>

@@ -81,3 +81,19 @@ export const logoutResponseSchema = z.object({
 })
 
 export type LogoutResponseSchema = z.infer<typeof logoutResponseSchema>
+
+// ------- Update Settings -------
+export const updateSchema = z.object({
+  email: z.email(),
+  firstName: z.string(),
+  lastName: z.string().optional(),
+})
+
+export type UpdateSchema = z.infer<typeof updateSchema>
+
+export const updateResponseSchema = z.object({
+  success: z.boolean(),
+  error: z.string().optional(),
+})
+
+export type UpdateResponseSchema = z.infer<typeof updateResponseSchema>
