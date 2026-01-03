@@ -9,7 +9,11 @@ import { logout } from '../actions/signout'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-export function SignoutButton() {
+interface Props {
+  size?: 'icon' | 'lg' | 'default'
+}
+
+export function SignoutButton({ size = 'default' }: Props) {
   const router = useRouter()
   const toastId = useId()
   const [isPending, startTransition] = useTransition()
@@ -31,9 +35,9 @@ export function SignoutButton() {
   }
 
   return (
-    <Button onClick={handleSignout} disabled={isPending}>
+    <Button onClick={handleSignout} disabled={isPending} size={size}>
       {isPending ? <Spinner /> : <LogOutIcon />}
-      {isPending ? 'Signing out...' : 'Sign Out'}
+      {size !== 'icon' ? (isPending ? 'Signing out...' : 'Sign Out') : null}
     </Button>
   )
 }
