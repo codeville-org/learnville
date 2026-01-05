@@ -7,11 +7,11 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { Users } from './collections/Users/config'
-import { Media } from './collections/Media'
+import { Users } from './payloadcms/collections/Users/config'
+import { Media } from './payloadcms/collections/Media'
 import brevoAdapter from './lib/adapters/brevo'
-import { Customers } from './collections/Customers/config'
-import { Header } from './globals/Header/config'
+import { Customers } from './payloadcms/collections/Customers/config'
+import { Categories } from './payloadcms/collections/Categories/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,10 +33,9 @@ export default buildConfig({
   },
 
   // --- Database Collection Injections ---
-  collections: [Users, Media, Customers],
+  collections: [Users, Media, Customers, Categories],
 
   // --- Payload Gloabls ---
-  globals: [Header],
 
   // --- Adapters ---
   db: postgresAdapter({
