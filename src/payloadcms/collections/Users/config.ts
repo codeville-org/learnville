@@ -32,6 +32,7 @@ export const Users: CollectionConfig = {
       options: [
         { label: 'Admin', value: 'admin' },
         { label: 'Editor', value: 'editor' },
+        { label: 'Instructor', value: 'instructor' },
         { label: 'User', value: 'user' },
       ],
       hooks: {
