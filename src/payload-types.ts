@@ -164,6 +164,82 @@ export interface User {
   id: number;
   avatar?: (number | null) | Media;
   roles?: ('admin' | 'editor' | 'instructor' | 'user')[] | null;
+  /**
+   * Profile information for instructors
+   */
+  instructorProfile?: {
+    /**
+     * Public display name (defaults to email if not set)
+     */
+    displayName?: string | null;
+    /**
+     * Short professional tagline or title
+     */
+    tagline?: string | null;
+    /**
+     * Instructor biography (max 1000 characters)
+     */
+    bio?: string | null;
+    /**
+     * Areas of expertise
+     */
+    expertise?: (number | Category)[] | null;
+    /**
+     * Years of professional experience
+     */
+    yearsExperience?: number | null;
+    /**
+     * Social media and professional profiles
+     */
+    socialLinks?: {
+      website?: string | null;
+      linkedin?: string | null;
+      twitter?: string | null;
+      github?: string | null;
+      youtube?: string | null;
+    };
+    /**
+     * Educational qualifications and certifications
+     */
+    qualifications?:
+      | {
+          title: string;
+          institution: string;
+          year?: number | null;
+          type?: ('degree' | 'certification' | 'diploma' | 'course') | null;
+          /**
+           * Link to credential verification (optional)
+           */
+          verificationUrl?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Make profile visible on instructor directory
+     */
+    isPublicProfile?: boolean | null;
+  };
+  /**
+   * Auto-calculated instructor statistics
+   */
+  instructorStats?: {
+    /**
+     * Total number of courses created
+     */
+    totalCourses?: number | null;
+    /**
+     * Total unique students enrolled across all courses
+     */
+    totalStudents?: number | null;
+    /**
+     * Average rating across all courses (0-5)
+     */
+    averageRating?: number | null;
+    /**
+     * Total number of reviews received
+     */
+    totalReviews?: number | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -200,6 +276,19 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  icon?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -339,19 +428,6 @@ export interface Course {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
- */
-export interface Category {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string | null;
-  icon?: (number | null) | Media;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -678,6 +754,43 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   avatar?: T;
   roles?: T;
+  instructorProfile?:
+    | T
+    | {
+        displayName?: T;
+        tagline?: T;
+        bio?: T;
+        expertise?: T;
+        yearsExperience?: T;
+        socialLinks?:
+          | T
+          | {
+              website?: T;
+              linkedin?: T;
+              twitter?: T;
+              github?: T;
+              youtube?: T;
+            };
+        qualifications?:
+          | T
+          | {
+              title?: T;
+              institution?: T;
+              year?: T;
+              type?: T;
+              verificationUrl?: T;
+              id?: T;
+            };
+        isPublicProfile?: T;
+      };
+  instructorStats?:
+    | T
+    | {
+        totalCourses?: T;
+        totalStudents?: T;
+        averageRating?: T;
+        totalReviews?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
