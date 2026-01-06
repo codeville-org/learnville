@@ -15,6 +15,9 @@ export const Lessons: CollectionConfig = {
     defaultColumns: ['lessonName', 'duration', 'totalLessonXP', 'order'],
     group: 'Learning',
   },
+  versions: {
+    drafts: true,
+  },
   access: {
     read: anyone,
     create: instructor,

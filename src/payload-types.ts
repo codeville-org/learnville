@@ -409,6 +409,7 @@ export interface Lesson {
   totalLessonXP?: number | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -418,6 +419,11 @@ export interface Course {
   id: number;
   title: string;
   slug: string;
+  /**
+   * Brief description for course listings (max 300 characters)
+   */
+  shortDescription?: string | null;
+  thumbnail: number | Media;
   description?: {
     root: {
       type: string;
@@ -434,11 +440,6 @@ export interface Course {
     [k: string]: unknown;
   } | null;
   /**
-   * Brief description for course listings (max 300 characters)
-   */
-  shortDescription?: string | null;
-  thumbnail: number | Media;
-  /**
    * Course instructor / author
    */
   instructor: number | User;
@@ -449,14 +450,17 @@ export interface Course {
    * Set to 0 for free courses.
    */
   price?: number | null;
+  featured?: boolean | null;
   /**
-   * Total XP available in this course, Auto-calculated from its lessons.
+   * Course chapters containing lessons
    */
-  totalXP?: number | null;
-  /**
-   * Estimated duration to complete the course in hours.
-   */
-  estimatedDuration?: number | null;
+  chapters: {
+    chapterTitle: string;
+    chapterDescription?: string | null;
+    order: number;
+    lessons: (number | Lesson)[];
+    id?: string | null;
+  }[];
   learningOutcomes?:
     | {
         outcome: string;
@@ -469,17 +473,14 @@ export interface Course {
         id?: string | null;
       }[]
     | null;
-  featured?: boolean | null;
   /**
-   * Course chapters containing lessons
+   * Total XP available in this course, Auto-calculated from its lessons.
    */
-  chapters: {
-    chapterTitle: string;
-    chapterDescription?: string | null;
-    order: number;
-    lessons: (number | Lesson)[];
-    id?: string | null;
-  }[];
+  totalXP?: number | null;
+  /**
+   * Estimated duration to complete the course in hours.
+   */
+  estimatedDuration?: number | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -743,6 +744,7 @@ export interface LessonsSelect<T extends boolean = true> {
   totalLessonXP?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -751,16 +753,24 @@ export interface LessonsSelect<T extends boolean = true> {
 export interface CoursesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  description?: T;
   shortDescription?: T;
   thumbnail?: T;
+  description?: T;
   instructor?: T;
   category?: T;
   level?: T;
   pricingType?: T;
   price?: T;
-  totalXP?: T;
-  estimatedDuration?: T;
+  featured?: T;
+  chapters?:
+    | T
+    | {
+        chapterTitle?: T;
+        chapterDescription?: T;
+        order?: T;
+        lessons?: T;
+        id?: T;
+      };
   learningOutcomes?:
     | T
     | {
@@ -773,16 +783,8 @@ export interface CoursesSelect<T extends boolean = true> {
         prerequisite?: T;
         id?: T;
       };
-  featured?: T;
-  chapters?:
-    | T
-    | {
-        chapterTitle?: T;
-        chapterDescription?: T;
-        order?: T;
-        lessons?: T;
-        id?: T;
-      };
+  totalXP?: T;
+  estimatedDuration?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
