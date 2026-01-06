@@ -14,6 +14,8 @@ import { Customers } from './payloadcms/collections/Customers/config'
 import { Categories } from './payloadcms/collections/Categories/config'
 import { Lessons } from './payloadcms/collections/CourseCollections/Lessons/config'
 import { Courses } from './payloadcms/collections/CourseCollections/Courses/config'
+import { CourseEnrollments } from './payloadcms/collections/CourseCollections/Enrollments/config'
+import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,7 +37,16 @@ export default buildConfig({
   },
 
   // --- Database Collection Injections ---
-  collections: [Users, Media, Customers, Categories, Lessons, Courses],
+  collections: [
+    Users,
+    Media,
+    Customers,
+    Categories,
+    Lessons,
+    Courses,
+    CourseEnrollments,
+    QuizAttempts,
+  ],
 
   // --- Payload Gloabls ---
 

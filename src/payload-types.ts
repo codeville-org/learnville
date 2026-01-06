@@ -79,6 +79,8 @@ export interface Config {
     categories: Category;
     lessons: Lesson;
     courses: Course;
+    'course-enrollments': CourseEnrollment;
+    'quiz-attempts': QuizAttempt;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -92,6 +94,8 @@ export interface Config {
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     lessons: LessonsSelect<false> | LessonsSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
+    'course-enrollments': CourseEnrollmentsSelect<false> | CourseEnrollmentsSelect<true>;
+    'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -206,6 +210,15 @@ export interface Customer {
   firstName?: string | null;
   lastName?: string | null;
   tier?: TierProps;
+  /**
+   * Total XP earned across all courses
+   */
+  totalXP?: number | null;
+  /**
+   * User level based on total XP
+   */
+  level?: number | null;
+  enrolledCourses?: (number | CourseEnrollment)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -225,6 +238,107 @@ export interface Customer {
       }[]
     | null;
   password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-enrollments".
+ */
+export interface CourseEnrollment {
+  id: number;
+  customer: number | Customer;
+  course: number | Course;
+  enrolledAt: string;
+  status: 'active' | 'completed' | 'paused' | 'dropped';
+  /**
+   * Course completion percentage
+   */
+  progress?: number | null;
+  /**
+   * Total XP earned in this course
+   */
+  totalXPEarned?: number | null;
+  lastAccessedAt?: string | null;
+  completedAt?: string | null;
+  /**
+   * Lessons marked as completed
+   */
+  completedLessons?: (number | Lesson)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: number;
+  title: string;
+  slug: string;
+  /**
+   * Brief description for course listings (max 300 characters)
+   */
+  shortDescription?: string | null;
+  thumbnail: number | Media;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Course instructor / author
+   */
+  instructor: number | User;
+  category?: (number | null) | Category;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  pricingType: 'free' | 'premium';
+  /**
+   * Set to 0 for free courses.
+   */
+  price?: number | null;
+  featured?: boolean | null;
+  /**
+   * Course chapters containing lessons
+   */
+  chapters: {
+    chapterTitle: string;
+    chapterDescription?: string | null;
+    order: number;
+    lessons: (number | Lesson)[];
+    id?: string | null;
+  }[];
+  learningOutcomes?:
+    | {
+        outcome: string;
+        id?: string | null;
+      }[]
+    | null;
+  prerequisites?:
+    | {
+        prerequisite: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Total XP available in this course, Auto-calculated from its lessons.
+   */
+  totalXP?: number | null;
+  /**
+   * Estimated duration to complete the course in hours.
+   */
+  estimatedDuration?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -413,77 +527,41 @@ export interface Lesson {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "courses".
+ * via the `definition` "quiz-attempts".
  */
-export interface Course {
+export interface QuizAttempt {
   id: number;
-  title: string;
-  slug: string;
+  customer: number | Customer;
+  enrollment: number | CourseEnrollment;
+  lesson: number | Lesson;
   /**
-   * Brief description for course listings (max 300 characters)
+   * ID of the quiz block within the lesson
    */
-  shortDescription?: string | null;
-  thumbnail: number | Media;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Course instructor / author
-   */
-  instructor: number | User;
-  category?: (number | null) | Category;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  pricingType: 'free' | 'premium';
-  /**
-   * Set to 0 for free courses.
-   */
-  price?: number | null;
-  featured?: boolean | null;
-  /**
-   * Course chapters containing lessons
-   */
-  chapters: {
-    chapterTitle: string;
-    chapterDescription?: string | null;
-    order: number;
-    lessons: (number | Lesson)[];
+  quizBlockId: string;
+  answers: {
+    questionIndex: number;
+    answer:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    isCorrect?: boolean | null;
+    xpAwarded?: number | null;
     id?: string | null;
   }[];
-  learningOutcomes?:
-    | {
-        outcome: string;
-        id?: string | null;
-      }[]
-    | null;
-  prerequisites?:
-    | {
-        prerequisite: string;
-        id?: string | null;
-      }[]
-    | null;
   /**
-   * Total XP available in this course, Auto-calculated from its lessons.
+   * Score percentage
    */
-  totalXP?: number | null;
-  /**
-   * Estimated duration to complete the course in hours.
-   */
-  estimatedDuration?: number | null;
+  score: number;
+  xpEarned: number;
+  passed?: boolean | null;
+  attemptedAt: string;
   updatedAt: string;
   createdAt: string;
-  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -532,6 +610,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'courses';
         value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'course-enrollments';
+        value: number | CourseEnrollment;
+      } | null)
+    | ({
+        relationTo: 'quiz-attempts';
+        value: number | QuizAttempt;
       } | null);
   globalSlug?: string | null;
   user:
@@ -635,6 +721,9 @@ export interface CustomersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   tier?: T;
+  totalXP?: T;
+  level?: T;
+  enrolledCourses?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -788,6 +877,48 @@ export interface CoursesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-enrollments_select".
+ */
+export interface CourseEnrollmentsSelect<T extends boolean = true> {
+  customer?: T;
+  course?: T;
+  enrolledAt?: T;
+  status?: T;
+  progress?: T;
+  totalXPEarned?: T;
+  lastAccessedAt?: T;
+  completedAt?: T;
+  completedLessons?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-attempts_select".
+ */
+export interface QuizAttemptsSelect<T extends boolean = true> {
+  customer?: T;
+  enrollment?: T;
+  lesson?: T;
+  quizBlockId?: T;
+  answers?:
+    | T
+    | {
+        questionIndex?: T;
+        answer?: T;
+        isCorrect?: T;
+        xpAwarded?: T;
+        id?: T;
+      };
+  score?: T;
+  xpEarned?: T;
+  passed?: T;
+  attemptedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

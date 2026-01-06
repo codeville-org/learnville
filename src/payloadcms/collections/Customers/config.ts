@@ -68,5 +68,32 @@ export const Customers: CollectionConfig = {
       interfaceName: 'tierProps',
       options: ['Free', 'Basic', 'Pro', 'Enterprise'],
     },
+    {
+      name: 'totalXP',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        readOnly: true,
+        description: 'Total XP earned across all courses',
+      },
+    },
+    {
+      name: 'level',
+      type: 'number',
+      defaultValue: 1,
+      admin: {
+        readOnly: true,
+        description: 'User level based on total XP',
+      },
+    },
+    {
+      name: 'enrolledCourses',
+      type: 'relationship',
+      relationTo: 'course-enrollments',
+      hasMany: true,
+      admin: {
+        readOnly: true,
+      },
+    },
   ],
 }
