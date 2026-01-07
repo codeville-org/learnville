@@ -4,6 +4,9 @@ import instructor from '../../Users/access/instructor'
 import { slugField } from '@/payloadcms/fields/Slug/config'
 
 import { beforeChange } from './hooks/beforeChange'
+import { checkRole } from '../../Users/access/check-role'
+import instructorOwn from '../../Users/access/instructorOwn'
+import { beforeValidate } from './hooks/beforeValidate'
 
 export const Courses: CollectionConfig = {
   slug: 'courses',
@@ -16,10 +19,10 @@ export const Courses: CollectionConfig = {
     drafts: true,
   },
   access: {
-    read: anyone,
+    read: instructorOwn,
     create: instructor,
-    update: instructor,
-    delete: instructor,
+    update: instructorOwn,
+    delete: instructorOwn,
   },
   fields: [
     {
@@ -71,6 +74,13 @@ export const Courses: CollectionConfig = {
               },
               admin: {
                 description: 'Course instructor / author',
+              },
+              defaultValue: ({ user }) => {
+                if (user && checkRole(['instructor'], user)) {
+                  return user.id
+                }
+
+                return undefined
               },
             },
             {
@@ -133,12 +143,6 @@ export const Courses: CollectionConfig = {
                 {
                   name: 'chapterDescription',
                   type: 'textarea',
-                },
-                {
-                  name: 'order',
-                  type: 'number',
-                  required: true,
-                  defaultValue: 1,
                 },
                 {
                   name: 'lessons',
@@ -209,5 +213,6 @@ export const Courses: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [beforeChange],
+    beforeValidate: [beforeValidate],
   },
 }

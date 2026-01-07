@@ -401,7 +401,6 @@ export interface Course {
   chapters: {
     chapterTitle: string;
     chapterDescription?: string | null;
-    order: number;
     lessons: (number | Lesson)[];
     id?: string | null;
   }[];
@@ -969,7 +968,6 @@ export interface CoursesSelect<T extends boolean = true> {
     | {
         chapterTitle?: T;
         chapterDescription?: T;
-        order?: T;
         lessons?: T;
         id?: T;
       };

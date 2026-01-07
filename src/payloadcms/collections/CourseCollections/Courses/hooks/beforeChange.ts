@@ -3,6 +3,7 @@ import { CollectionBeforeChangeHook } from 'payload'
 import type { Course } from '@/payload-types'
 
 export const beforeChange: CollectionBeforeChangeHook<Course> = async ({ data, req }) => {
+  // Calculate totalXP from all lessons in chapters
   if (data.chapters && data.chapters.length > 0) {
     let totalXP = 0
 
