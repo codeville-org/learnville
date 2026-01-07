@@ -77,6 +77,10 @@ export interface Config {
     media: Media;
     customers: Customer;
     categories: Category;
+    lessons: Lesson;
+    courses: Course;
+    'course-enrollments': CourseEnrollment;
+    'quiz-attempts': QuizAttempt;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +92,10 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     customers: CustomersSelect<false> | CustomersSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    lessons: LessonsSelect<false> | LessonsSelect<true>;
+    courses: CoursesSelect<false> | CoursesSelect<true>;
+    'course-enrollments': CourseEnrollmentsSelect<false> | CourseEnrollmentsSelect<true>;
+    'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -155,7 +163,83 @@ export interface CustomerAuthOperations {
 export interface User {
   id: number;
   avatar?: (number | null) | Media;
-  roles?: ('admin' | 'editor' | 'user')[] | null;
+  roles?: ('admin' | 'editor' | 'instructor' | 'user')[] | null;
+  /**
+   * Profile information for instructors
+   */
+  instructorProfile?: {
+    /**
+     * Public display name (defaults to email if not set)
+     */
+    displayName?: string | null;
+    /**
+     * Short professional tagline or title
+     */
+    tagline?: string | null;
+    /**
+     * Instructor biography (max 1000 characters)
+     */
+    bio?: string | null;
+    /**
+     * Areas of expertise
+     */
+    expertise?: (number | Category)[] | null;
+    /**
+     * Years of professional experience
+     */
+    yearsExperience?: number | null;
+    /**
+     * Social media and professional profiles
+     */
+    socialLinks?: {
+      website?: string | null;
+      linkedin?: string | null;
+      twitter?: string | null;
+      github?: string | null;
+      youtube?: string | null;
+    };
+    /**
+     * Educational qualifications and certifications
+     */
+    qualifications?:
+      | {
+          title: string;
+          institution: string;
+          year?: number | null;
+          type?: ('degree' | 'certification' | 'diploma' | 'course') | null;
+          /**
+           * Link to credential verification (optional)
+           */
+          verificationUrl?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Make profile visible on instructor directory
+     */
+    isPublicProfile?: boolean | null;
+  };
+  /**
+   * Auto-calculated instructor statistics
+   */
+  instructorStats?: {
+    /**
+     * Total number of courses created
+     */
+    totalCourses?: number | null;
+    /**
+     * Total unique students enrolled across all courses
+     */
+    totalStudents?: number | null;
+    /**
+     * Average rating across all courses (0-5)
+     */
+    averageRating?: number | null;
+    /**
+     * Total number of reviews received
+     */
+    totalReviews?: number | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -195,6 +279,19 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  description?: string | null;
+  icon?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "customers".
  */
 export interface Customer {
@@ -202,6 +299,15 @@ export interface Customer {
   firstName?: string | null;
   lastName?: string | null;
   tier?: TierProps;
+  /**
+   * Total XP earned across all courses
+   */
+  totalXP?: number | null;
+  /**
+   * User level based on total XP
+   */
+  level?: number | null;
+  enrolledCourses?: (number | CourseEnrollment)[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -224,14 +330,312 @@ export interface Customer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
+ * via the `definition` "course-enrollments".
  */
-export interface Category {
+export interface CourseEnrollment {
   id: number;
-  name: string;
+  customer: number | Customer;
+  course: number | Course;
+  enrolledAt: string;
+  status: 'active' | 'completed' | 'paused' | 'dropped';
+  /**
+   * Course completion percentage
+   */
+  progress?: number | null;
+  /**
+   * Total XP earned in this course
+   */
+  totalXPEarned?: number | null;
+  lastAccessedAt?: string | null;
+  completedAt?: string | null;
+  /**
+   * Lessons marked as completed
+   */
+  completedLessons?: (number | Lesson)[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: number;
+  title: string;
   slug: string;
+  /**
+   * Brief description for course listings (max 300 characters)
+   */
+  shortDescription?: string | null;
+  thumbnail: number | Media;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Course instructor / author
+   */
+  instructor: number | User;
+  category?: (number | null) | Category;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  pricingType: 'free' | 'premium';
+  /**
+   * Set to 0 for free courses.
+   */
+  price?: number | null;
+  featured?: boolean | null;
+  /**
+   * Course chapters containing lessons
+   */
+  chapters: {
+    chapterTitle: string;
+    chapterDescription?: string | null;
+    order: number;
+    lessons: (number | Lesson)[];
+    id?: string | null;
+  }[];
+  learningOutcomes?:
+    | {
+        outcome: string;
+        id?: string | null;
+      }[]
+    | null;
+  prerequisites?:
+    | {
+        prerequisite: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Total XP available in this course, Auto-calculated from its lessons.
+   */
+  totalXP?: number | null;
+  /**
+   * Estimated duration to complete the course in hours.
+   */
+  estimatedDuration?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons".
+ */
+export interface Lesson {
+  id: number;
+  lessonName: string;
+  /**
+   * Lesson duration in minutes
+   */
+  duration: number;
+  /**
+   * Order within the chapter
+   */
+  order: number;
+  /**
+   * Brief lesson description
+   */
   description?: string | null;
-  icon?: (number | null) | Media;
+  /**
+   * Allow non-enrolled users to preview this lesson
+   */
+  isPreview?: boolean | null;
+  curriculum: (
+    | {
+        videoTitle: string;
+        /**
+         * Bunny.net embedded video URL
+         */
+        videoURL: string;
+        /**
+         * Video duration in minutes
+         */
+        videoDuration?: number | null;
+        /**
+         * Video thumbnail (optional)
+         */
+        thumbnail?: (number | null) | Media;
+        /**
+         * Video transcript for accessibility
+         */
+        transcript?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'lessonVideo';
+      }
+    | {
+        contentTitle: string;
+        /**
+         * Main lesson content (text, images, code blocks, etc.)
+         */
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'lessonContent';
+      }
+    | {
+        materialsTitle?: string | null;
+        materials: {
+          materialName: string;
+          file: number | Media;
+          fileType?: ('pdf' | 'doc' | 'sheet' | 'code' | 'archive' | 'other') | null;
+          description?: string | null;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'lessonMaterials';
+      }
+    | {
+        quizTitle: string;
+        /**
+         * Instructions for the quiz
+         */
+        quizDescription?: string | null;
+        /**
+         * Minimum score percentage to pass
+         */
+        passingScore: number;
+        questions: {
+          question: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          };
+          questionType: 'multiple-choice' | 'true-false' | 'short-answer';
+          /**
+           * XP points awarded for correct answer
+           */
+          xpPoints: number;
+          options?:
+            | {
+                optionText: string;
+                isCorrect?: boolean | null;
+                id?: string | null;
+              }[]
+            | null;
+          /**
+           * Sample correct answer (for reference)
+           */
+          correctAnswer?: string | null;
+          /**
+           * Explanation shown after answering
+           */
+          explanation?: {
+            root: {
+              type: string;
+              children: {
+                type: any;
+                version: number;
+                [k: string]: unknown;
+              }[];
+              direction: ('ltr' | 'rtl') | null;
+              format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+              indent: number;
+              version: number;
+            };
+            [k: string]: unknown;
+          } | null;
+          id?: string | null;
+        }[];
+        id?: string | null;
+        blockName?: string | null;
+        blockType: 'lessonQuiz';
+      }
+  )[];
+  /**
+   * Total XP available in this lesson (auto-calculated)
+   */
+  totalLessonXP?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-attempts".
+ */
+export interface QuizAttempt {
+  id: number;
+  customer: number | Customer;
+  enrollment: number | CourseEnrollment;
+  lesson: number | Lesson;
+  /**
+   * ID of the quiz block within the lesson
+   */
+  quizBlockId: string;
+  answers: {
+    questionIndex: number;
+    answer:
+      | {
+          [k: string]: unknown;
+        }
+      | unknown[]
+      | string
+      | number
+      | boolean
+      | null;
+    isCorrect?: boolean | null;
+    xpAwarded?: number | null;
+    id?: string | null;
+  }[];
+  /**
+   * Score percentage
+   */
+  score: number;
+  xpEarned: number;
+  passed?: boolean | null;
+  attemptedAt: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -274,6 +678,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'categories';
         value: number | Category;
+      } | null)
+    | ({
+        relationTo: 'lessons';
+        value: number | Lesson;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
+      } | null)
+    | ({
+        relationTo: 'course-enrollments';
+        value: number | CourseEnrollment;
+      } | null)
+    | ({
+        relationTo: 'quiz-attempts';
+        value: number | QuizAttempt;
       } | null);
   globalSlug?: string | null;
   user:
@@ -334,6 +754,43 @@ export interface PayloadMigration {
 export interface UsersSelect<T extends boolean = true> {
   avatar?: T;
   roles?: T;
+  instructorProfile?:
+    | T
+    | {
+        displayName?: T;
+        tagline?: T;
+        bio?: T;
+        expertise?: T;
+        yearsExperience?: T;
+        socialLinks?:
+          | T
+          | {
+              website?: T;
+              linkedin?: T;
+              twitter?: T;
+              github?: T;
+              youtube?: T;
+            };
+        qualifications?:
+          | T
+          | {
+              title?: T;
+              institution?: T;
+              year?: T;
+              type?: T;
+              verificationUrl?: T;
+              id?: T;
+            };
+        isPublicProfile?: T;
+      };
+  instructorStats?:
+    | T
+    | {
+        totalCourses?: T;
+        totalStudents?: T;
+        averageRating?: T;
+        totalReviews?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -377,6 +834,9 @@ export interface CustomersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   tier?: T;
+  totalXP?: T;
+  level?: T;
+  enrolledCourses?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -405,6 +865,171 @@ export interface CategoriesSelect<T extends boolean = true> {
   slug?: T;
   description?: T;
   icon?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "lessons_select".
+ */
+export interface LessonsSelect<T extends boolean = true> {
+  lessonName?: T;
+  duration?: T;
+  order?: T;
+  description?: T;
+  isPreview?: T;
+  curriculum?:
+    | T
+    | {
+        lessonVideo?:
+          | T
+          | {
+              videoTitle?: T;
+              videoURL?: T;
+              videoDuration?: T;
+              thumbnail?: T;
+              transcript?: T;
+              id?: T;
+              blockName?: T;
+            };
+        lessonContent?:
+          | T
+          | {
+              contentTitle?: T;
+              content?: T;
+              id?: T;
+              blockName?: T;
+            };
+        lessonMaterials?:
+          | T
+          | {
+              materialsTitle?: T;
+              materials?:
+                | T
+                | {
+                    materialName?: T;
+                    file?: T;
+                    fileType?: T;
+                    description?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        lessonQuiz?:
+          | T
+          | {
+              quizTitle?: T;
+              quizDescription?: T;
+              passingScore?: T;
+              questions?:
+                | T
+                | {
+                    question?: T;
+                    questionType?: T;
+                    xpPoints?: T;
+                    options?:
+                      | T
+                      | {
+                          optionText?: T;
+                          isCorrect?: T;
+                          id?: T;
+                        };
+                    correctAnswer?: T;
+                    explanation?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  totalLessonXP?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses_select".
+ */
+export interface CoursesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  shortDescription?: T;
+  thumbnail?: T;
+  description?: T;
+  instructor?: T;
+  category?: T;
+  level?: T;
+  pricingType?: T;
+  price?: T;
+  featured?: T;
+  chapters?:
+    | T
+    | {
+        chapterTitle?: T;
+        chapterDescription?: T;
+        order?: T;
+        lessons?: T;
+        id?: T;
+      };
+  learningOutcomes?:
+    | T
+    | {
+        outcome?: T;
+        id?: T;
+      };
+  prerequisites?:
+    | T
+    | {
+        prerequisite?: T;
+        id?: T;
+      };
+  totalXP?: T;
+  estimatedDuration?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "course-enrollments_select".
+ */
+export interface CourseEnrollmentsSelect<T extends boolean = true> {
+  customer?: T;
+  course?: T;
+  enrolledAt?: T;
+  status?: T;
+  progress?: T;
+  totalXPEarned?: T;
+  lastAccessedAt?: T;
+  completedAt?: T;
+  completedLessons?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "quiz-attempts_select".
+ */
+export interface QuizAttemptsSelect<T extends boolean = true> {
+  customer?: T;
+  enrollment?: T;
+  lesson?: T;
+  quizBlockId?: T;
+  answers?:
+    | T
+    | {
+        questionIndex?: T;
+        answer?: T;
+        isCorrect?: T;
+        xpAwarded?: T;
+        id?: T;
+      };
+  score?: T;
+  xpEarned?: T;
+  passed?: T;
+  attemptedAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

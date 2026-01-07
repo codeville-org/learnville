@@ -2,6 +2,7 @@ import { CollectionConfig } from 'payload'
 import { anyone } from '../Users/access/anyone'
 import editor from '../Users/access/editor'
 import { slugField } from '@/payloadcms/fields/Slug/config'
+import admin from '../Users/access/admin'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',

@@ -1,5 +1,8 @@
 import { getServerSideURL } from '@/lib/get-url'
 import type { CollectionConfig } from 'payload'
+import admin from '../Users/access/admin'
+import { checkRole } from '../Users/access/check-role'
+import { User } from '@/payload-types'
 
 export const Customers: CollectionConfig = {
   slug: 'customers',
@@ -43,10 +46,21 @@ export const Customers: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'firstName',
+    hidden: ({ user }) => {
+      if (checkRole(['admin'], user as any)) return false
+
+      return true
+    },
   },
   access: {
     create: () => true,
-    admin: () => false,
+    admin: ({ req }) => {
+      if (req.user && req.user.collection === 'users') {
+        if (checkRole(['admin'], req.user)) return true
+      }
+
+      return false
+    },
   },
   fields: [
     {
@@ -67,6 +81,33 @@ export const Customers: CollectionConfig = {
       type: 'radio',
       interfaceName: 'tierProps',
       options: ['Free', 'Basic', 'Pro', 'Enterprise'],
+    },
+    {
+      name: 'totalXP',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        readOnly: true,
+        description: 'Total XP earned across all courses',
+      },
+    },
+    {
+      name: 'level',
+      type: 'number',
+      defaultValue: 1,
+      admin: {
+        readOnly: true,
+        description: 'User level based on total XP',
+      },
+    },
+    {
+      name: 'enrolledCourses',
+      type: 'relationship',
+      relationTo: 'course-enrollments',
+      hasMany: true,
+      admin: {
+        readOnly: true,
+      },
     },
   ],
 }
