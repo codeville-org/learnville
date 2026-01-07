@@ -20,7 +20,7 @@ const instructorOwn: Access = ({ req: { user } }) => {
   }
 
   // Regular users follow the existing 'anyone' logic
-  return true
+  return false
 }
 
 export default instructorOwn

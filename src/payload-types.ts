@@ -434,6 +434,14 @@ export interface Course {
  */
 export interface Lesson {
   id: number;
+  /**
+   * Associate this lesson with a course
+   */
+  course: number | Course;
+  /**
+   * Auto-populated from the selected course
+   */
+  instructor?: (number | null) | User;
   lessonName: string;
   /**
    * Lesson duration in minutes
@@ -872,6 +880,8 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "lessons_select".
  */
 export interface LessonsSelect<T extends boolean = true> {
+  course?: T;
+  instructor?: T;
   lessonName?: T;
   duration?: T;
   order?: T;
