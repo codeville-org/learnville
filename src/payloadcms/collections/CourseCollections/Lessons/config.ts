@@ -67,6 +67,9 @@ export const Lessons: CollectionConfig = {
       type: 'blocks',
       required: true,
       minRows: 1,
+      admin: {
+        initCollapsed: true,
+      },
       blocks: [LessonVideoBlock, LessonContentBlock, LessonMaterialsBlock, LessonQuizBlock],
     },
     {

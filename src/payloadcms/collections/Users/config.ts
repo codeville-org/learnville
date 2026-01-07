@@ -146,6 +146,7 @@ export const Users: CollectionConfig = {
           type: 'array',
           admin: {
             description: 'Educational qualifications and certifications',
+            initCollapsed: true,
           },
           fields: [
             {
