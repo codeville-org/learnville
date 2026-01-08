@@ -1,8 +1,14 @@
 import { CollectionConfig } from 'payload'
-import { anyone } from '../../Users/access/anyone'
-import instructor from '../../Users/access/instructor'
 import { slugField } from '@/payloadcms/fields/Slug/config'
+import {
+  MetaTitleField,
+  MetaDescriptionField,
+  MetaImageField,
+  OverviewField,
+  PreviewField,
+} from '@payloadcms/plugin-seo/fields'
 
+import instructor from '../../Users/access/instructor'
 import { beforeChange } from './hooks/beforeChange'
 import { checkRole } from '../../Users/access/check-role'
 import instructorOwn from '../../Users/access/instructorOwn'
@@ -206,6 +212,29 @@ export const Courses: CollectionConfig = {
                 description: 'Estimated duration to complete the course in hours.',
               },
             },
+          ],
+        },
+        {
+          label: 'SEO',
+          name: 'meta',
+          fields: [
+            MetaTitleField({
+              hasGenerateFn: true,
+            }),
+            MetaDescriptionField({
+              hasGenerateFn: true,
+            }),
+            MetaImageField({
+              relationTo: 'media',
+            }),
+            PreviewField({
+              hasGenerateFn: true,
+            }),
+            OverviewField({
+              titlePath: 'meta.title',
+              descriptionPath: 'meta.description',
+              imagePath: 'meta.image',
+            }),
           ],
         },
       ],

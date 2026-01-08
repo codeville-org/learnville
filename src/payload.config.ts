@@ -6,6 +6,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 
 import { Users } from './payloadcms/collections/Users/config'
 import { Media } from './payloadcms/collections/Media'
@@ -72,6 +73,16 @@ export default buildConfig({
         },
         region: process.env?.S3_REGION || '',
       },
+    }),
+    seoPlugin({
+      generateTitle: ({ doc }) => doc.title,
+      generateDescription: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'courses') {
+          return doc.shortDescription
+        }
+        return doc.description
+      },
+      generateURL: ({ doc, collectionSlug }) => `/${collectionSlug}/${doc.slug}`,
     }),
   ],
 
