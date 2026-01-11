@@ -9,6 +9,7 @@ import {
 } from '@payloadcms/plugin-seo/fields'
 import { slugField } from '@/payloadcms/fields/Slug/config'
 import { checkRole } from '../Users/access/check-role'
+import { ensureSingleHomepage } from './hooks/ensureSingleHomepage'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -47,6 +48,9 @@ export const Pages: CollectionConfig = {
     update: editor,
     delete: editor,
   },
+  hooks: {
+    beforeChange: [ensureSingleHomepage],
+  },
   fields: [
     {
       type: 'tabs',
@@ -58,7 +62,25 @@ export const Pages: CollectionConfig = {
               name: 'title',
               type: 'text',
             },
-            slugField('title'),
+            {
+              name: 'isHomepage',
+              type: 'checkbox',
+              label: 'Set as Homepage',
+              defaultValue: false,
+              admin: {
+                description:
+                  'If checked, this page will be set as the homepage of the website. Only one page can be the homepage at a time.',
+              },
+            },
+            {
+              name: 'slug',
+              type: 'text',
+              unique: true,
+              required: true,
+              admin: {
+                condition: (_, siblingData) => !siblingData?.isHomepage,
+              },
+            },
             {
               name: 'description',
               type: 'textarea',

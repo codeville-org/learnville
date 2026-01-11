@@ -667,7 +667,11 @@ export interface QuizAttempt {
 export interface Page {
   id: number;
   title?: string | null;
-  slug: string;
+  /**
+   * If checked, this page will be set as the homepage of the website. Only one page can be the homepage at a time.
+   */
+  isHomepage?: boolean | null;
+  slug?: string | null;
   description?: string | null;
   meta?: {
     title?: string | null;
@@ -1093,6 +1097,7 @@ export interface QuizAttemptsSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  isHomepage?: T;
   slug?: T;
   description?: T;
   meta?:
