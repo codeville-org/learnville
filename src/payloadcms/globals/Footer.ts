@@ -36,8 +36,7 @@ export const Footer: GlobalConfig = {
   admin: {
     group: 'Content Management',
     livePreview: {
-      // TODO: Update this URL to match your frontend footer preview route
-      url: `/homepage`,
+      url: `/`,
     },
   },
   fields: [

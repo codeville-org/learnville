@@ -4,8 +4,9 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 
 import { Footer } from '@/components/global/footer'
-import type { Footer as FooterType } from '@/payload-types'
+import type { Footer as FooterType, Header as HeaderType } from '@/payload-types'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { Header } from '@/components/global/header'
 
 type Props = {
   children: React.ReactNode
@@ -25,18 +26,26 @@ async function getGlobalsData() {
       draft: Boolean(user),
     })
 
-    return { footer: footerRes as FooterType, user }
+    const headerRes = await payload.findGlobal({
+      slug: 'header',
+      overrideAccess: Boolean(user),
+      draft: Boolean(user),
+    })
+
+    return { footer: footerRes as FooterType, header: headerRes as HeaderType, user }
   } catch (error) {
-    return { footer: null }
+    return { footer: null, header: null, user: null }
   }
 }
 
 export default async function PagesLayout({ children }: Props) {
-  const { footer, user } = await getGlobalsData()
+  const { footer, header, user } = await getGlobalsData()
 
   return (
     <div>
       {user && <LivePreviewListener />}
+
+      {header && <Header data={header} user={user} />}
 
       {children}
 

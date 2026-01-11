@@ -19,6 +19,7 @@ import { CourseEnrollments } from './payloadcms/collections/CourseCollections/En
 import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
 import { Pages } from './payloadcms/collections/Pages/config'
 import { Footer } from './payloadcms/globals/Footer'
+import { Header } from './payloadcms/globals/Header'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -77,7 +78,7 @@ export default buildConfig({
   ],
 
   // --- Payload Gloabls ---
-  globals: [Footer],
+  globals: [Header, Footer],
 
   // --- Adapters ---
   db: postgresAdapter({

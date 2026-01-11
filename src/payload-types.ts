@@ -108,9 +108,11 @@ export interface Config {
   };
   fallbackLocale: null;
   globals: {
+    header: Header;
     footer: Footer;
   };
   globalsSelect: {
+    header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
@@ -1153,6 +1155,84 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  logo: {
+    image: number | Media;
+    alt?: string | null;
+  };
+  topBanner: {
+    enabled?: boolean | null;
+    backgroundColor?: ('teal' | 'blue' | 'purple' | 'red' | 'orange') | null;
+    message: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    closeable?: boolean | null;
+  };
+  search?: {
+    placeholder?: string | null;
+    enabled?: boolean | null;
+  };
+  navigationLinks?:
+    | {
+        label: string;
+        type: 'page' | 'external' | 'custom';
+        page?: (number | null) | Page;
+        url?: string | null;
+        openInNewTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  exploreMenu?: {
+    enabled?: boolean | null;
+    label?: string | null;
+    /**
+     * Select categories to display in the Explore dropdown
+     */
+    categories?: (number | Category)[] | null;
+    viewAllLink?: {
+      enabled?: boolean | null;
+      label?: string | null;
+      page?: (number | null) | Page;
+    };
+  };
+  ctaButtons?: {
+    loginButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+    signupButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+    myAccountButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+  };
+  mobileMenu?: {
+    enabled?: boolean | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer".
  */
 export interface Footer {
@@ -1201,6 +1281,87 @@ export interface Footer {
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  logo?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+      };
+  topBanner?:
+    | T
+    | {
+        enabled?: T;
+        backgroundColor?: T;
+        message?: T;
+        closeable?: T;
+      };
+  search?:
+    | T
+    | {
+        placeholder?: T;
+        enabled?: T;
+      };
+  navigationLinks?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        page?: T;
+        url?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  exploreMenu?:
+    | T
+    | {
+        enabled?: T;
+        label?: T;
+        categories?: T;
+        viewAllLink?:
+          | T
+          | {
+              enabled?: T;
+              label?: T;
+              page?: T;
+            };
+      };
+  ctaButtons?:
+    | T
+    | {
+        loginButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+        signupButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+        myAccountButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+      };
+  mobileMenu?:
+    | T
+    | {
+        enabled?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
