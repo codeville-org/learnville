@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Search, Menu, X, ChevronDown, ShoppingCart } from 'lucide-react'
+import { Search, Menu, X, ChevronDown, ShoppingCart, UserIcon, User2Icon } from 'lucide-react'
 
 import type { Customer, Header as HeaderType, User } from '@/payload-types'
 import { Button } from '@/components/ui/button'
@@ -188,7 +188,7 @@ export function Header({ data, user }: Props) {
                   <>
                     <Button
                       variant="ghost"
-                      className="h-10 rounded-full bg-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-emerald-100"
+                      className="h-11 rounded-full bg-emerald-100 text-emerald-600 hover:bg-emerald-600 hover:text-emerald-100"
                       asChild
                     >
                       <Link href={data.ctaButtons?.loginButton?.url || '/login'}>
@@ -196,7 +196,7 @@ export function Header({ data, user }: Props) {
                       </Link>
                     </Button>
                     <Button
-                      className="h-10 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
+                      className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
                       asChild
                     >
                       <Link href={data.ctaButtons?.signupButton?.url || '/signup'}>
@@ -207,17 +207,19 @@ export function Header({ data, user }: Props) {
                 ) : user?.collection === 'customers' ? (
                   <Button
                     variant="ghost"
-                    className="h-10 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
+                    className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
                     asChild
                   >
                     <Link href={data.ctaButtons?.myAccountButton?.url || '/portal'}>
+                      <User2Icon />
+
                       {data.ctaButtons?.myAccountButton?.label || 'My Account'}
                     </Link>
                   </Button>
                 ) : user?.collection === 'users' ? (
                   <Button
                     variant="ghost"
-                    className="h-10 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
+                    className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
                     asChild
                   >
                     <Link href={'/admin'} target="_blank" rel="noopener noreferrer">

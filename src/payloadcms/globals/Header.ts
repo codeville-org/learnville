@@ -260,7 +260,7 @@ export const Header: GlobalConfig = {
             {
               name: 'url',
               type: 'text',
-              defaultValue: '/account',
+              defaultValue: '/portal',
             },
           ],
         },
