@@ -1,11 +1,29 @@
 import { GlobalConfig } from 'payload'
 import editor from '../collections/Users/access/editor'
+import { checkRole } from '../collections/Users/access/check-role'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
   label: 'Site Footer',
   access: {
-    read: () => true,
+    read: ({ req: { user } }) => {
+      // Admins can see everything (published and drafts)
+      if (user?.collection === 'users' && checkRole(['admin', 'editor'], user)) {
+        return true
+      }
+
+      // Public users only see published pages
+      return {
+        or: [
+          {
+            _status: { equals: 'published' },
+          },
+          {
+            _status: { exists: false },
+          },
+        ],
+      }
+    },
     update: editor,
   },
   versions: {
