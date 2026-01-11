@@ -7,6 +7,7 @@ import { headers as getHeaders } from 'next/headers'
 
 import { generateMeta } from '@/lib/seo/generateMetadata'
 import { LivePreviewListener } from '@/components/live-preview-listener'
+import { HeroBlockRenderer } from '@/payloadcms/blocks/Hero/renderer'
 
 type Props = {}
 
@@ -33,30 +34,25 @@ async function getHomepage() {
 
   const page = res.docs[0]
 
-  return { page, user }
+  return page
 }
 
 export default async function Homepage({}: Props) {
-  const res = await getHomepage()
-  const page = res?.page
+  const page = await getHomepage()
 
   if (!page) notFound()
 
   return (
-    <>
-      {res?.user && <LivePreviewListener />}
-
-      <div>
-        <h1 className="text-xl font-semibold">{page.title}</h1>
-        <h1 className="text-foreground/60">{page.description}</h1>
-      </div>
-    </>
+    <div>
+      {page?.content?.sections?.map((section) => {
+        if (section.blockType === 'hero') return <HeroBlockRenderer data={section} />
+      })}
+    </div>
   )
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const res = await getHomepage()
-  const page = res?.page
+  const page = await getHomepage()
 
   if (!page) return {}
 

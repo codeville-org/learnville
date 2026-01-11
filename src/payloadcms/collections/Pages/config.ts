@@ -7,9 +7,9 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { slugField } from '@/payloadcms/fields/Slug/config'
 import { checkRole } from '../Users/access/check-role'
 import { ensureSingleHomepage } from './hooks/ensureSingleHomepage'
+import { Hero } from '@/payloadcms/blocks/Hero/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -85,11 +85,17 @@ export const Pages: CollectionConfig = {
               name: 'description',
               type: 'textarea',
             },
-            // {
-            //   name: 'content',
-            //   type: 'blocks',
-            //   blocks: [],
-            // },
+          ],
+        },
+        {
+          label: 'Content',
+          name: 'content',
+          fields: [
+            {
+              name: 'sections',
+              type: 'blocks',
+              blocks: [Hero],
+            },
           ],
         },
         {

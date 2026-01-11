@@ -675,6 +675,65 @@ export interface Page {
   isHomepage?: boolean | null;
   slug?: string | null;
   description?: string | null;
+  content?: {
+    sections?:
+      | {
+          content: {
+            /**
+             * Small text above the main heading (e.g., "Every Course,")
+             */
+            preHeading?: string | null;
+            /**
+             * Main hero heading (e.g., "Every Skill — One")
+             */
+            heading: string;
+            /**
+             * Text to highlight in different color (e.g., "Powerful Platform.")
+             */
+            highlightedText?: string | null;
+            highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+            /**
+             * Supporting text below the heading
+             */
+            description: string;
+            cta?: {
+              enabled?: boolean | null;
+              label?: string | null;
+              linkType?: ('internal' | 'external') | null;
+              internalLink?: (number | null) | Page;
+              externalLink?: string | null;
+            };
+          };
+          image: {
+            /**
+             * Upload the hero image (recommended: 800x900px)
+             */
+            media: number | Media;
+          };
+          statistics?: {
+            enabled?: boolean | null;
+            stats?:
+              | {
+                  label: string;
+                  /**
+                   * You can use numbers with + suffix or any format
+                   */
+                  value: string;
+                  icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
+                  /**
+                   * Make this stat stand out with different styling
+                   */
+                  highlighted?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+          blockName?: string | null;
+          blockType: 'hero';
+        }[]
+      | null;
+  };
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1102,6 +1161,57 @@ export interface PagesSelect<T extends boolean = true> {
   isHomepage?: T;
   slug?: T;
   description?: T;
+  content?:
+    | T
+    | {
+        sections?:
+          | T
+          | {
+              hero?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    image?:
+                      | T
+                      | {
+                          media?: T;
+                        };
+                    statistics?:
+                      | T
+                      | {
+                          enabled?: T;
+                          stats?:
+                            | T
+                            | {
+                                label?: T;
+                                value?: T;
+                                icon?: T;
+                                highlighted?: T;
+                                id?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+            };
+      };
   meta?:
     | T
     | {
