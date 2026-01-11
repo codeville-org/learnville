@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import type { Course, Config, Media } from '@/payload-types'
+import type { Course, Config, Media, Page } from '@/payload-types'
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from '../get-url'
 
@@ -16,11 +16,14 @@ export const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null
   return url
 }
 
-export const generateMeta = async (args: { doc: Partial<Course> }): Promise<Metadata> => {
+// Modify Following Type for Extend Collection types for Generate Meta Params
+type DocType = Partial<Course> | Partial<Page>
+
+export const generateMeta = async (args: { doc: DocType }): Promise<Metadata> => {
   const { doc } = args || {}
 
   const ogImage = getImageURL(doc?.meta?.image)
-  const title = doc.meta?.title ? doc.meta.title + '| LearnVille' : 'LearnVille'
+  const title = doc.meta?.title ? doc.meta.title + ' | LearnVille' : 'LearnVille'
   const description = doc.meta?.description ? doc.meta.description : ''
 
   return {
