@@ -35,7 +35,7 @@ async function getPageBySlug(slug: string = '/') {
 
   const page = res.docs[0]
 
-  return { page, user }
+  return page
 }
 
 export default async function Page({ params }: Props) {
@@ -43,20 +43,15 @@ export default async function Page({ params }: Props) {
 
   if (!slug) notFound()
 
-  const res = await getPageBySlug(slug)
-  const page = res?.page
+  const page = await getPageBySlug(slug)
 
   if (!page) notFound()
 
   return (
-    <>
-      {res?.user && <LivePreviewListener />}
-
-      <div>
-        <h1 className="text-xl font-semibold">{page.title}</h1>
-        <h1 className="text-foreground/60">{page.description}</h1>
-      </div>
-    </>
+    <div>
+      <h1 className="text-xl font-semibold">{page.title}</h1>
+      <h1 className="text-foreground/60">{page.description}</h1>
+    </div>
   )
 }
 
@@ -65,8 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!slug) return {}
 
-  const res = await getPageBySlug(slug)
-  const page = res?.page
+  const page = await getPageBySlug(slug)
 
   if (!page) return {}
 
