@@ -81,6 +81,7 @@ export interface Config {
     courses: Course;
     'course-enrollments': CourseEnrollment;
     'quiz-attempts': QuizAttempt;
+    pages: Page;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +97,7 @@ export interface Config {
     courses: CoursesSelect<false> | CoursesSelect<true>;
     'course-enrollments': CourseEnrollmentsSelect<false> | CourseEnrollmentsSelect<true>;
     'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
+    pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -401,7 +403,6 @@ export interface Course {
   chapters: {
     chapterTitle: string;
     chapterDescription?: string | null;
-    order: number;
     lessons: (number | Lesson)[];
     id?: string | null;
   }[];
@@ -425,6 +426,14 @@ export interface Course {
    * Estimated duration to complete the course in hours.
    */
   estimatedDuration?: number | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -435,6 +444,14 @@ export interface Course {
  */
 export interface Lesson {
   id: number;
+  /**
+   * Associate this lesson with a course
+   */
+  course: number | Course;
+  /**
+   * Auto-populated from the selected course
+   */
+  instructor?: (number | null) | User;
   lessonName: string;
   /**
    * Lesson duration in minutes
@@ -641,6 +658,27 @@ export interface QuizAttempt {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title?: string | null;
+  slug: string;
+  description?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -694,6 +732,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'quiz-attempts';
         value: number | QuizAttempt;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
       } | null);
   globalSlug?: string | null;
   user:
@@ -873,6 +915,8 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "lessons_select".
  */
 export interface LessonsSelect<T extends boolean = true> {
+  course?: T;
+  instructor?: T;
   lessonName?: T;
   duration?: T;
   order?: T;
@@ -969,7 +1013,6 @@ export interface CoursesSelect<T extends boolean = true> {
     | {
         chapterTitle?: T;
         chapterDescription?: T;
-        order?: T;
         lessons?: T;
         id?: T;
       };
@@ -987,6 +1030,13 @@ export interface CoursesSelect<T extends boolean = true> {
       };
   totalXP?: T;
   estimatedDuration?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1032,6 +1082,25 @@ export interface QuizAttemptsSelect<T extends boolean = true> {
   attemptedAt?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

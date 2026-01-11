@@ -6,6 +6,7 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { seoPlugin } from '@payloadcms/plugin-seo'
 
 import { Users } from './payloadcms/collections/Users/config'
 import { Media } from './payloadcms/collections/Media'
@@ -16,6 +17,7 @@ import { Lessons } from './payloadcms/collections/CourseCollections/Lessons/conf
 import { Courses } from './payloadcms/collections/CourseCollections/Courses/config'
 import { CourseEnrollments } from './payloadcms/collections/CourseCollections/Enrollments/config'
 import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
+import { Pages } from './payloadcms/collections/Pages/config'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -34,6 +36,29 @@ export default buildConfig({
     //         password: `vihanga123`,
     //       }
     //     : false,
+
+    // Live Preview
+    livePreview: {
+      collections: ['pages'],
+      breakpoints: [
+        {
+          label: 'Desktop',
+          name: 'desktop',
+          width: 1440,
+          height: 1080,
+        },
+        {
+          label: 'Mobile',
+          name: 'mobile',
+          width: 375,
+          height: 667,
+        },
+      ],
+      url: ({ data, collectionConfig }) => {
+        // return `/${collectionConfig?.slug === "pages" ? data?.slug !== "homepage" ? data.slug : ""}`
+        return `/${data?.slug}`
+      },
+    },
   },
 
   // --- Database Collection Injections ---
@@ -46,6 +71,7 @@ export default buildConfig({
     Courses,
     CourseEnrollments,
     QuizAttempts,
+    Pages,
   ],
 
   // --- Payload Gloabls ---
@@ -73,6 +99,16 @@ export default buildConfig({
         region: process.env?.S3_REGION || '',
       },
     }),
+    seoPlugin({
+      generateTitle: ({ doc }) => doc.title,
+      generateDescription: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'courses') {
+          return doc.shortDescription
+        }
+        return doc.description
+      },
+      generateURL: ({ doc, collectionSlug }) => `/${collectionSlug}/${doc.slug}`,
+    }),
   ],
 
   sharp,
@@ -81,4 +117,13 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+
+  // Hooks
+  // onInit: async (payload) => {
+  //   await payload.update({
+  //     collection: 'pages',
+  //     where: {},
+  //     data: { _status: 'published' },
+  //   })
+  // },
 })

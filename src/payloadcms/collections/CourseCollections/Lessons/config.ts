@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload'
-import { anyone } from '../../Users/access/anyone'
 import instructor from '../../Users/access/instructor'
 import { LessonVideoBlock } from '@/payloadcms/blocks/lessonVideo/config'
 import { LessonContentBlock } from '@/payloadcms/blocks/lessonContent/config'
@@ -7,24 +6,55 @@ import { LessonMaterialsBlock } from '@/payloadcms/blocks/lessonMaterials/config
 import { LessonQuizBlock } from '@/payloadcms/blocks/lessonQuiz/config'
 
 import { beforeChange } from './hooks/beforeChange'
+import instructorOwn from '../../Users/access/instructorOwn'
+import { beforeValidate } from './hooks/beforeValidate'
 
 export const Lessons: CollectionConfig = {
   slug: 'lessons',
   admin: {
     useAsTitle: 'lessonName',
-    defaultColumns: ['lessonName', 'duration', 'totalLessonXP', 'order'],
+    defaultColumns: ['lessonName', 'duration', 'totalLessonXP', 'course', 'order'],
     group: 'Learning',
+    listSearchableFields: ['lessonName', 'description'],
+    groupBy: true,
   },
   versions: {
     drafts: true,
   },
   access: {
-    read: anyone,
+    read: instructorOwn,
     create: instructor,
-    update: instructor,
-    delete: instructor,
+    update: instructorOwn,
+    delete: instructorOwn,
   },
   fields: [
+    {
+      name: 'course',
+      type: 'relationship',
+      relationTo: 'courses',
+      required: true,
+      hasMany: false,
+      admin: {
+        description: 'Associate this lesson with a course',
+        position: 'sidebar',
+      },
+    },
+    {
+      name: 'instructor',
+      type: 'relationship',
+      relationTo: 'users',
+      required: false,
+      hasMany: false,
+      filterOptions: {
+        roles: { contains: 'instructor' },
+      },
+      admin: {
+        position: 'sidebar',
+        readOnly: true, // Make it read-only since it's auto-populated
+        description: 'Auto-populated from the selected course',
+      },
+    },
+
     {
       name: 'lessonName',
       type: 'text',
@@ -83,6 +113,7 @@ export const Lessons: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeValidate: [beforeValidate],
     beforeChange: [beforeChange],
   },
 }
