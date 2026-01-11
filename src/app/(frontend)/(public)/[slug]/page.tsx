@@ -6,7 +6,7 @@ import { Metadata } from 'next'
 import { headers as getHeaders } from 'next/headers'
 
 import { generateMeta } from '@/lib/seo/generateMetadata'
-import { LivePreviewListener } from '@/components/live-preview-listener'
+import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -47,12 +47,7 @@ export default async function Page({ params }: Props) {
 
   if (!page) notFound()
 
-  return (
-    <div>
-      <h1 className="text-xl font-semibold">{page.title}</h1>
-      <h1 className="text-foreground/60">{page.description}</h1>
-    </div>
-  )
+  return <RenderPageBlocks blocks={page?.content?.sections} />
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
