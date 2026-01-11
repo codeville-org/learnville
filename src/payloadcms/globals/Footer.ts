@@ -135,6 +135,7 @@ export const Footer: GlobalConfig = {
               options: [
                 { label: 'Internal Link', value: 'internal' },
                 { label: 'External Link', value: 'external' },
+                { label: 'Category Page', value: 'category' },
               ],
             },
             {
@@ -143,6 +144,14 @@ export const Footer: GlobalConfig = {
               relationTo: 'pages',
               admin: {
                 condition: (_, siblingData) => siblingData?.type === 'internal',
+              },
+            },
+            {
+              name: 'categoryLink',
+              type: 'relationship',
+              relationTo: 'categories',
+              admin: {
+                condition: (_, siblingData) => siblingData?.type === 'category',
               },
             },
             {
@@ -192,7 +201,7 @@ export const Footer: GlobalConfig = {
         {
           name: 'designer',
           type: 'text',
-          defaultValue: 'Designed by Blackrise Themes',
+          defaultValue: 'Developed by CodeVille',
         },
       ],
     },

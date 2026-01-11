@@ -1173,8 +1173,9 @@ export interface Footer {
         links?:
           | {
               label: string;
-              type: 'internal' | 'external';
+              type: 'internal' | 'external' | 'category';
               internalLink?: (number | null) | Page;
+              categoryLink?: (number | null) | Category;
               externalLink?: string | null;
               id?: string | null;
             }[]
@@ -1228,6 +1229,7 @@ export interface FooterSelect<T extends boolean = true> {
               label?: T;
               type?: T;
               internalLink?: T;
+              categoryLink?: T;
               externalLink?: T;
               id?: T;
             };
