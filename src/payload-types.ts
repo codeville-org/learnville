@@ -107,8 +107,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    footer: Footer;
+  };
+  globalsSelect: {
+    footer: FooterSelect<false> | FooterSelect<true>;
+  };
   locale: null;
   user:
     | (User & {
@@ -1141,6 +1145,112 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  logo: number | Media;
+  tagline: string;
+  socials?:
+    | {
+        platform: 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'youtube' | 'github';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  newsletter: {
+    title: string;
+    description?: string | null;
+    placeholder?: string | null;
+    buttonText?: string | null;
+  };
+  linkColumns?:
+    | {
+        title: string;
+        links?:
+          | {
+              label: string;
+              type: 'internal' | 'external';
+              internalLink?: (number | null) | Page;
+              externalLink?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  contactInfo?: {
+    title?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+  };
+  copyright?: {
+    text?: string | null;
+    designer?: string | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  logo?: T;
+  tagline?: T;
+  socials?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  newsletter?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        placeholder?: T;
+        buttonText?: T;
+      };
+  linkColumns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              internalLink?: T;
+              externalLink?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  contactInfo?:
+    | T
+    | {
+        title?: T;
+        email?: T;
+        phone?: T;
+        address?: T;
+      };
+  copyright?:
+    | T
+    | {
+        text?: T;
+        designer?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

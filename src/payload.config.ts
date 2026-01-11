@@ -18,6 +18,7 @@ import { Courses } from './payloadcms/collections/CourseCollections/Courses/conf
 import { CourseEnrollments } from './payloadcms/collections/CourseCollections/Enrollments/config'
 import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
 import { Pages } from './payloadcms/collections/Pages/config'
+import { Footer } from './payloadcms/globals/Footer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -40,6 +41,7 @@ export default buildConfig({
     // Live Preview
     livePreview: {
       collections: ['pages'],
+      globals: ['footer'],
       breakpoints: [
         {
           label: 'Desktop',
@@ -75,6 +77,7 @@ export default buildConfig({
   ],
 
   // --- Payload Gloabls ---
+  globals: [Footer],
 
   // --- Adapters ---
   db: postgresAdapter({
