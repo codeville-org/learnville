@@ -19,6 +19,7 @@ import type { BlockRendererProps, HeroBlock } from '../types'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
+import { cn } from '@/lib/utils'
 
 const iconMap = {
   none: null,
@@ -65,6 +66,15 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
           }
           50% {
             transform: translateY(-20px);
+          }
+        }
+        @keyframes float-smooth {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-5px);
           }
         }
       `}</style>
@@ -149,26 +159,43 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
                     }}
                   >
                     <div
-                      className={`bg-white rounded-xl shadow-lg p-4 flex items-center gap-3 min-w-[180px] ${
-                        stat.highlighted ? 'ring-2 ring-emerald-500' : ''
-                      }`}
+                      className={cn(
+                        `rounded-xl p-4 flex items-center gap-3 min-w-[180px]`,
+                        'bg-linear-to-t from-white to-white/40 backdrop-blur-md ring-1 ring-emerald-400  shadow-2xl shadow-emerald-200',
+                        {
+                          'ring-2 ring-orange-500 bg-linear-to-t from-orange-100 to-orange-100/40 shadow-2xl shadow-orange-300':
+                            stat.highlighted,
+                        },
+                      )}
                     >
                       {Icon && (
                         <div
                           className={`p-2 rounded-lg ${
-                            stat.highlighted ? 'bg-emerald-100' : 'bg-gray-100'
+                            stat.highlighted ? 'bg-orange-500' : 'bg-emerald-600'
                           }`}
                         >
                           <Icon
                             className={`h-6 w-6 ${
-                              stat.highlighted ? 'text-emerald-600' : 'text-gray-600'
+                              stat.highlighted ? 'text-orange-200' : 'text-emerald-100'
                             }`}
                           />
                         </div>
                       )}
                       <div className="flex flex-col">
-                        <span className="text-2xl font-bold text-gray-900">{stat.value}</span>
-                        <span className="text-sm text-gray-500">{stat.label}</span>
+                        <span
+                          className={cn('text-2xl font-heading font-bold', 'text-emerald-600', {
+                            'text-orange-500': stat.highlighted,
+                          })}
+                        >
+                          {stat.value}
+                        </span>
+                        <span
+                          className={cn('text-sm', 'text-emerald-950/70', {
+                            'text-orange-950/90': stat.highlighted,
+                          })}
+                        >
+                          {stat.label}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -210,13 +237,21 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
           className="absolute z-10 top-10 left-40 w-12 object-cover"
           width={300}
           height={300}
+          style={{
+            animation: `float-smooth 3s ease-in-out infinite`,
+            animationDelay: '0.8s',
+          }}
         />
         <Image
           alt="element1"
           src={'/assets/strings_vector_2.png'}
-          className="absolute z-10 bottom-15 left-110 w-12 object-cover"
+          className="absolute z-10 bottom-15 left-110 lg:left-[45rem] w-12 object-cover"
           width={300}
           height={300}
+          style={{
+            animation: `float-smooth 3s ease-in-out infinite`,
+            animationDelay: '0.6s',
+          }}
         />
       </div>
 
