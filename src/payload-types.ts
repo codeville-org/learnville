@@ -677,61 +677,95 @@ export interface Page {
   description?: string | null;
   content?: {
     sections?:
-      | {
-          content: {
-            /**
-             * Small text above the main heading (e.g., "Every Course,")
-             */
-            preHeading?: string | null;
-            /**
-             * Main hero heading (e.g., "Every Skill — One")
-             */
-            heading: string;
-            /**
-             * Text to highlight in different color (e.g., "Powerful Platform.")
-             */
-            highlightedText?: string | null;
-            highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
-            /**
-             * Supporting text below the heading
-             */
-            description: string;
-            cta?: {
-              enabled?: boolean | null;
-              label?: string | null;
-              linkType?: ('internal' | 'external') | null;
-              internalLink?: (number | null) | Page;
-              externalLink?: string | null;
-            };
-          };
-          image: {
-            /**
-             * Upload the hero image (recommended: 800x900px)
-             */
-            media: number | Media;
-          };
-          statistics?: {
-            enabled?: boolean | null;
-            stats?:
-              | {
-                  label: string;
-                  /**
-                   * You can use numbers with + suffix or any format
-                   */
-                  value: string;
-                  icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
-                  /**
-                   * Make this stat stand out with different styling
-                   */
-                  highlighted?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-          };
-          id?: string | null;
-          blockName?: string | null;
-          blockType: 'hero';
-        }[]
+      | (
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Every Course,")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Every Skill — One")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Powerful Platform.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              image: {
+                /**
+                 * Upload the hero image (recommended: 800x900px)
+                 */
+                media: number | Media;
+              };
+              statistics?: {
+                enabled?: boolean | null;
+                stats?:
+                  | {
+                      label: string;
+                      /**
+                       * You can use numbers with + suffix or any format
+                       */
+                      value: string;
+                      icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
+                      /**
+                       * Make this stat stand out with different styling
+                       */
+                      highlighted?: boolean | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+              };
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'hero';
+            }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Popular Categories,")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Explore Our Most-Loved")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Learning Paths.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              topCategories: (number | Category)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'topCategories';
+            }
+        )[]
       | null;
   };
   meta?: {
@@ -1207,6 +1241,31 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                         };
+                    id?: T;
+                    blockName?: T;
+                  };
+              topCategories?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    topCategories?: T;
                     id?: T;
                     blockName?: T;
                   };

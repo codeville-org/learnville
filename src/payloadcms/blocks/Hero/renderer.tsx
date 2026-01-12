@@ -19,7 +19,7 @@ import type { BlockRendererProps, HeroBlock } from '../types'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
-import { cn } from '@/lib/utils'
+import { cn, getCTAHref, highlightColorMap } from '@/lib/utils'
 
 const iconMap = {
   none: null,
@@ -29,24 +29,6 @@ const iconMap = {
   star: Star,
   graduation: GraduationCap,
   target: Target,
-}
-
-const highlightColorMap: Record<string, string> = {
-  orange: '#f97316',
-  emerald: '#10b981',
-  teal: '#14b8a6',
-  purple: '#a855f7',
-  blue: '#3b82f6',
-}
-
-function getCTAHref(cta: any): string {
-  if (cta.linkType === 'external' && cta.externalLink) {
-    return cta.externalLink
-  }
-  if (cta.linkType === 'internal' && cta.internalLink) {
-    return `/${cta.internalLink.slug}`
-  }
-  return '#'
 }
 
 export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {

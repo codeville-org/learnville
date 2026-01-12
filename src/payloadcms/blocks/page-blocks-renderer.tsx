@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { HeroBlockRenderer } from './Hero/renderer'
+import { TopCategoriesBlockRenderer } from './TopCategories/renderer'
 import type { PageBlock } from './types'
 
 /**
@@ -10,6 +11,7 @@ import type { PageBlock } from './types'
  */
 export const blockRenderers = {
   hero: HeroBlockRenderer,
+  topCategories: TopCategoriesBlockRenderer,
 } as const
 
 /**
@@ -55,8 +57,10 @@ export function RenderPageBlocks({ blocks }: RenderBlocksProps) {
           return null
         }
 
-        // Render the block
-        return <Renderer key={block.id || index} data={block} />
+        // Render the block with type assertion
+        // TypeScript can't narrow union types in this pattern, so we assert the type is correct
+        // @ts-ignore
+        return <Renderer key={block.id || index} data={block as any} />
       })}
     </>
   )
