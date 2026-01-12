@@ -107,8 +107,14 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    header: Header;
+    footer: Footer;
+  };
+  globalsSelect: {
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+  };
   locale: null;
   user:
     | (User & {
@@ -663,8 +669,71 @@ export interface QuizAttempt {
 export interface Page {
   id: number;
   title?: string | null;
-  slug: string;
+  /**
+   * If checked, this page will be set as the homepage of the website. Only one page can be the homepage at a time.
+   */
+  isHomepage?: boolean | null;
+  slug?: string | null;
   description?: string | null;
+  content?: {
+    sections?:
+      | {
+          content: {
+            /**
+             * Small text above the main heading (e.g., "Every Course,")
+             */
+            preHeading?: string | null;
+            /**
+             * Main hero heading (e.g., "Every Skill — One")
+             */
+            heading: string;
+            /**
+             * Text to highlight in different color (e.g., "Powerful Platform.")
+             */
+            highlightedText?: string | null;
+            highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+            /**
+             * Supporting text below the heading
+             */
+            description: string;
+            cta?: {
+              enabled?: boolean | null;
+              label?: string | null;
+              linkType?: ('internal' | 'external') | null;
+              internalLink?: (number | null) | Page;
+              externalLink?: string | null;
+            };
+          };
+          image: {
+            /**
+             * Upload the hero image (recommended: 800x900px)
+             */
+            media: number | Media;
+          };
+          statistics?: {
+            enabled?: boolean | null;
+            stats?:
+              | {
+                  label: string;
+                  /**
+                   * You can use numbers with + suffix or any format
+                   */
+                  value: string;
+                  icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
+                  /**
+                   * Make this stat stand out with different styling
+                   */
+                  highlighted?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+          blockName?: string | null;
+          blockType: 'hero';
+        }[]
+      | null;
+  };
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1089,8 +1158,60 @@ export interface QuizAttemptsSelect<T extends boolean = true> {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
+  isHomepage?: T;
   slug?: T;
   description?: T;
+  content?:
+    | T
+    | {
+        sections?:
+          | T
+          | {
+              hero?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    image?:
+                      | T
+                      | {
+                          media?: T;
+                        };
+                    statistics?:
+                      | T
+                      | {
+                          enabled?: T;
+                          stats?:
+                            | T
+                            | {
+                                label?: T;
+                                value?: T;
+                                icon?: T;
+                                highlighted?: T;
+                                id?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+            };
+      };
   meta?:
     | T
     | {
@@ -1141,6 +1262,273 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  logo: {
+    image: number | Media;
+    alt?: string | null;
+  };
+  topBanner: {
+    enabled?: boolean | null;
+    backgroundColor?: ('teal' | 'blue' | 'purple' | 'red' | 'orange') | null;
+    message: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    closeable?: boolean | null;
+  };
+  search?: {
+    placeholder?: string | null;
+    enabled?: boolean | null;
+  };
+  navigationLinks?:
+    | {
+        label: string;
+        type: 'page' | 'external' | 'custom';
+        page?: (number | null) | Page;
+        url?: string | null;
+        openInNewTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  exploreMenu?: {
+    enabled?: boolean | null;
+    label?: string | null;
+    /**
+     * Select categories to display in the Explore dropdown
+     */
+    categories?: (number | Category)[] | null;
+    viewAllLink?: {
+      enabled?: boolean | null;
+      label?: string | null;
+      page?: (number | null) | Page;
+    };
+  };
+  ctaButtons?: {
+    loginButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+    signupButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+    myAccountButton?: {
+      label?: string | null;
+      url?: string | null;
+    };
+  };
+  mobileMenu?: {
+    enabled?: boolean | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  logo: number | Media;
+  tagline: string;
+  socials?:
+    | {
+        platform: 'facebook' | 'twitter' | 'instagram' | 'linkedin' | 'youtube' | 'github';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  newsletter: {
+    title: string;
+    description?: string | null;
+    placeholder?: string | null;
+    buttonText?: string | null;
+  };
+  linkColumns?:
+    | {
+        title: string;
+        links?:
+          | {
+              label: string;
+              type: 'internal' | 'external' | 'category';
+              internalLink?: (number | null) | Page;
+              categoryLink?: (number | null) | Category;
+              externalLink?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  contactInfo?: {
+    title?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    address?: string | null;
+  };
+  copyright?: {
+    text?: string | null;
+    designer?: string | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  logo?:
+    | T
+    | {
+        image?: T;
+        alt?: T;
+      };
+  topBanner?:
+    | T
+    | {
+        enabled?: T;
+        backgroundColor?: T;
+        message?: T;
+        closeable?: T;
+      };
+  search?:
+    | T
+    | {
+        placeholder?: T;
+        enabled?: T;
+      };
+  navigationLinks?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        page?: T;
+        url?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  exploreMenu?:
+    | T
+    | {
+        enabled?: T;
+        label?: T;
+        categories?: T;
+        viewAllLink?:
+          | T
+          | {
+              enabled?: T;
+              label?: T;
+              page?: T;
+            };
+      };
+  ctaButtons?:
+    | T
+    | {
+        loginButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+        signupButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+        myAccountButton?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+            };
+      };
+  mobileMenu?:
+    | T
+    | {
+        enabled?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  logo?: T;
+  tagline?: T;
+  socials?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
+  newsletter?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        placeholder?: T;
+        buttonText?: T;
+      };
+  linkColumns?:
+    | T
+    | {
+        title?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              internalLink?: T;
+              categoryLink?: T;
+              externalLink?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  contactInfo?:
+    | T
+    | {
+        title?: T;
+        email?: T;
+        phone?: T;
+        address?: T;
+      };
+  copyright?:
+    | T
+    | {
+        text?: T;
+        designer?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

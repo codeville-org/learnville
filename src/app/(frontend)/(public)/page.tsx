@@ -8,11 +8,9 @@ import { headers as getHeaders } from 'next/headers'
 import { generateMeta } from '@/lib/seo/generateMetadata'
 import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
 
-type Props = {
-  params: Promise<{ slug?: string }>
-}
+type Props = {}
 
-async function getPageBySlug(slug: string = '/') {
+async function getHomepage() {
   const headers = await getHeaders()
 
   const payload = await getPayload({ config })
@@ -23,7 +21,7 @@ async function getPageBySlug(slug: string = '/') {
     collection: 'pages',
     limit: 1,
     where: {
-      slug: { equals: slug },
+      isHomepage: { equals: true },
     },
     depth: 1,
     overrideAccess: Boolean(user),
@@ -38,24 +36,16 @@ async function getPageBySlug(slug: string = '/') {
   return page
 }
 
-export default async function Page({ params }: Props) {
-  const { slug } = await params
-
-  if (!slug) notFound()
-
-  const page = await getPageBySlug(slug)
+export default async function Homepage({}: Props) {
+  const page = await getHomepage()
 
   if (!page) notFound()
 
   return <RenderPageBlocks blocks={page?.content?.sections} />
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-
-  if (!slug) return {}
-
-  const page = await getPageBySlug(slug)
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getHomepage()
 
   if (!page) return {}
 
