@@ -40,26 +40,6 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
 
   return (
     <div className="w-full overflow-hidden min-h-[600px]  bg-linear-to-b from-emerald-200/10 to-orange-200/20 relative">
-      <style jsx>{`
-        @keyframes float {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-        @keyframes float-smooth {
-          0%,
-          100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-5px);
-          }
-        }
-      `}</style>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-0 items-center min-h-[600px]">
           {/* Left Content Area - 2 columns */}
@@ -138,11 +118,7 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
                 return (
                   <div
                     key={index}
-                    className={`absolute z-30 ${positions[index]}`}
-                    style={{
-                      animation: `float 3s ease-in-out infinite`,
-                      animationDelay: delays[index],
-                    }}
+                    className={`absolute z-30 ${positions[index]} animate-float delay-[${delays[index]}]`}
                   >
                     <div
                       className={cn(
@@ -224,24 +200,16 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
         <Image
           alt="element1"
           src={'/assets/strings_vector_1.png'}
-          className="absolute z-10 top-6 sm:top-10 left-10 sm:left-40 w-12 object-cover"
+          className="absolute z-10 top-6 sm:top-10 left-10 sm:left-40 w-12 object-cover animate-float-smooth delay-[0.8s]"
           width={300}
           height={300}
-          style={{
-            animation: `float-smooth 3s ease-in-out infinite`,
-            animationDelay: '0.8s',
-          }}
         />
         <Image
           alt="element1"
           src={'/assets/strings_vector_2.png'}
-          className="absolute z-10 bottom-3/5 sm:bottom-15 left-4/5 sm:left-110 w-12 object-cover"
+          className="absolute z-10 bottom-3/5 sm:bottom-15 left-4/5 sm:left-110 w-12 object-cover animate-float-smooth delay-[0.6s]"
           width={300}
           height={300}
-          style={{
-            animation: `float-smooth 3s ease-in-out infinite`,
-            animationDelay: '0.6s',
-          }}
         />
       </div>
 

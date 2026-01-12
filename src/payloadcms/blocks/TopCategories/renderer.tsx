@@ -19,7 +19,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
   return (
     <div className="w-full overflow-hidden min-h-[400px] relative bg-emerald-50">
       <div className="container mx-auto px-4">
-        <div className="py-16 md:py-24">
+        <div className="py-16 md:py-16">
           <div className="w-full flex items-center justify-between">
             <div className="text-center sm:text-left">
               {content?.preHeading && (
