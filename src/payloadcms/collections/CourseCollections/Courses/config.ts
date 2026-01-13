@@ -206,6 +206,15 @@ export const Courses: CollectionConfig = {
               },
             },
             {
+              name: 'overallRating',
+              type: 'number',
+              defaultValue: 0,
+              admin: {
+                readOnly: true,
+                description: 'Overall rating of this course, Auto-calculated from its reviews.',
+              },
+            },
+            {
               name: 'estimatedDuration',
               type: 'number',
               admin: {
