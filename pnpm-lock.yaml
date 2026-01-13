@@ -11,6 +11,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.69.0(react@19.2.1))
+      '@innovixx/payload-icon-picker-field':
+        specifier: ^1.0.2
+        version: 1.0.2(next@15.4.10(@babel/core@7.28.5)(@playwright/test@1.56.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(payload@3.69.0(graphql@16.12.0)(typescript@5.7.3))(react@19.2.1)
       '@payloadcms/db-postgres':
         specifier: 3.69.0
         version: 3.69.0(payload@3.69.0(graphql@16.12.0)(typescript@5.7.3))
@@ -125,6 +128,9 @@ importers:
       react-hook-form:
         specifier: ^7.69.0
         version: 7.69.0(react@19.2.1)
+      react-icons:
+        specifier: ^5.5.0
+        version: 5.5.0(react@19.2.1)
       rough-notation:
         specifier: ^0.5.1
         version: 0.5.1
@@ -1397,6 +1403,13 @@ packages:
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
+
+  '@innovixx/payload-icon-picker-field@1.0.2':
+    resolution: {integrity: sha512-FVoQH1ONfyBD3G6TcrYLIGw7IyZIHDcjJV23CTpFkVA1oaVS9YobvxiBHPFM4xkuOW8l8omyaHX0DBmq7wl4xw==}
+    peerDependencies:
+      next: 15.1.9
+      payload: ^3.2.2
+      react: ^19.0.0
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -4779,6 +4792,11 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+  react-icons@5.5.0:
+    resolution: {integrity: sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw==}
+    peerDependencies:
+      react: '*'
+
   react-image-crop@10.1.8:
     resolution: {integrity: sha512-4rb8XtXNx7ZaOZarKKnckgz4xLMvds/YrU6mpJfGhGAsy2Mg4mIw1x+DCCGngVGq2soTBVVOxx2s/C6mTX9+pA==}
     peerDependencies:
@@ -6937,6 +6955,12 @@ snapshots:
 
   '@img/sharp-win32-x64@0.34.5':
     optional: true
+
+  '@innovixx/payload-icon-picker-field@1.0.2(next@15.4.10(@babel/core@7.28.5)(@playwright/test@1.56.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4))(payload@3.69.0(graphql@16.12.0)(typescript@5.7.3))(react@19.2.1)':
+    dependencies:
+      next: 15.4.10(@babel/core@7.28.5)(@playwright/test@1.56.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(sass@1.77.4)
+      payload: 3.69.0(graphql@16.12.0)(typescript@5.7.3)
+      react: 19.2.1
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
@@ -10868,6 +10892,10 @@ snapshots:
       react: 19.2.1
 
   react-hook-form@7.69.0(react@19.2.1):
+    dependencies:
+      react: 19.2.1
+
+  react-icons@5.5.0(react@19.2.1):
     dependencies:
       react: 19.2.1
 

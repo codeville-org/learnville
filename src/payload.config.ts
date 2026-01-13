@@ -17,6 +17,7 @@ import { Lessons } from './payloadcms/collections/CourseCollections/Lessons/conf
 import { Courses } from './payloadcms/collections/CourseCollections/Courses/config'
 import { CourseEnrollments } from './payloadcms/collections/CourseCollections/Enrollments/config'
 import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
+import { Reviews } from './payloadcms/collections/CourseCollections/Reviews/config'
 import { Pages } from './payloadcms/collections/Pages/config'
 import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
@@ -74,6 +75,7 @@ export default buildConfig({
     Courses,
     CourseEnrollments,
     QuizAttempts,
+    Reviews,
     Pages,
   ],
 

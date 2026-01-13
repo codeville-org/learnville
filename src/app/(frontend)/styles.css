@@ -126,3 +126,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+@theme {
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-float-smooth: float-smooth 3s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  @keyframes float-smooth {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+}

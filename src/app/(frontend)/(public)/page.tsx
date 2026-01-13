@@ -23,7 +23,7 @@ async function getHomepage() {
     where: {
       isHomepage: { equals: true },
     },
-    depth: 1,
+    depth: 2,
     overrideAccess: Boolean(user),
     pagination: false,
     draft: Boolean(user),

@@ -81,6 +81,7 @@ export interface Config {
     courses: Course;
     'course-enrollments': CourseEnrollment;
     'quiz-attempts': QuizAttempt;
+    reviews: Review;
     pages: Page;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -97,6 +98,7 @@ export interface Config {
     courses: CoursesSelect<false> | CoursesSelect<true>;
     'course-enrollments': CourseEnrollmentsSelect<false> | CourseEnrollmentsSelect<true>;
     'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
+    reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -429,6 +431,10 @@ export interface Course {
    */
   totalXP?: number | null;
   /**
+   * Overall rating of this course, Auto-calculated from its reviews.
+   */
+  overallRating?: number | null;
+  /**
    * Estimated duration to complete the course in hours.
    */
   estimatedDuration?: number | null;
@@ -664,6 +670,47 @@ export interface QuizAttempt {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews".
+ */
+export interface Review {
+  id: number;
+  /**
+   * Customer who submitted the review
+   */
+  customer: number | Customer;
+  /**
+   * Course being reviewed
+   */
+  course: number | Course;
+  /**
+   * Enrollment associated with this review
+   */
+  enrollment: number | CourseEnrollment;
+  /**
+   * Rating from 1 to 5 stars
+   */
+  rating: number;
+  /**
+   * Review title (optional)
+   */
+  title?: string | null;
+  /**
+   * Review content (optional)
+   */
+  content?: string | null;
+  /**
+   * Automatically set based on enrollment verification
+   */
+  isVerifiedPurchase?: boolean | null;
+  /**
+   * Admin can moderate reviews
+   */
+  isApproved?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
@@ -677,61 +724,151 @@ export interface Page {
   description?: string | null;
   content?: {
     sections?:
-      | {
-          content: {
-            /**
-             * Small text above the main heading (e.g., "Every Course,")
-             */
-            preHeading?: string | null;
-            /**
-             * Main hero heading (e.g., "Every Skill — One")
-             */
-            heading: string;
-            /**
-             * Text to highlight in different color (e.g., "Powerful Platform.")
-             */
-            highlightedText?: string | null;
-            highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
-            /**
-             * Supporting text below the heading
-             */
-            description: string;
-            cta?: {
-              enabled?: boolean | null;
-              label?: string | null;
-              linkType?: ('internal' | 'external') | null;
-              internalLink?: (number | null) | Page;
-              externalLink?: string | null;
-            };
-          };
-          image: {
-            /**
-             * Upload the hero image (recommended: 800x900px)
-             */
-            media: number | Media;
-          };
-          statistics?: {
-            enabled?: boolean | null;
-            stats?:
-              | {
-                  label: string;
-                  /**
-                   * You can use numbers with + suffix or any format
-                   */
-                  value: string;
-                  icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
-                  /**
-                   * Make this stat stand out with different styling
-                   */
-                  highlighted?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-          };
-          id?: string | null;
-          blockName?: string | null;
-          blockType: 'hero';
-        }[]
+      | (
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Every Course,")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Every Skill — One")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Powerful Platform.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              image: {
+                /**
+                 * Upload the hero image (recommended: 800x900px)
+                 */
+                media: number | Media;
+              };
+              statistics?: {
+                enabled?: boolean | null;
+                stats?:
+                  | {
+                      label: string;
+                      /**
+                       * You can use numbers with + suffix or any format
+                       */
+                      value: string;
+                      icon?: ('none' | 'book' | 'users' | 'award' | 'star' | 'graduation' | 'target') | null;
+                      /**
+                       * Make this stat stand out with different styling
+                       */
+                      highlighted?: boolean | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+              };
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'hero';
+            }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Popular Categories,")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Explore Our Most-Loved")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Learning Paths.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              topCategories: (number | Category)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'topCategories';
+            }
+          | {
+              content: {
+                /**
+                 * Hero image showing on the About section
+                 */
+                sectionImage?: (number | null) | Media;
+                /**
+                 * Small text above the main heading (e.g., "About Learnville")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "One Platform. Infinite")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Learning Possibilities")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              aboutStats?: {
+                statsEnabled?: boolean | null;
+                /**
+                 * E.g., "100K+"
+                 */
+                activeLearners?: string | null;
+                /**
+                 * E.g., "500+"
+                 */
+                expertInstructors?: string | null;
+              };
+              aboutFeatures?: {
+                featuresList?:
+                  | {
+                      title?: string | null;
+                      description?: string | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+              };
+              layout?: ('image-left' | 'image-right') | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'about';
+            }
+        )[]
       | null;
   };
   meta?: {
@@ -801,6 +938,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'quiz-attempts';
         value: number | QuizAttempt;
+      } | null)
+    | ({
+        relationTo: 'reviews';
+        value: number | Review;
       } | null)
     | ({
         relationTo: 'pages';
@@ -1098,6 +1239,7 @@ export interface CoursesSelect<T extends boolean = true> {
         id?: T;
       };
   totalXP?: T;
+  overallRating?: T;
   estimatedDuration?: T;
   meta?:
     | T
@@ -1149,6 +1291,22 @@ export interface QuizAttemptsSelect<T extends boolean = true> {
   xpEarned?: T;
   passed?: T;
   attemptedAt?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "reviews_select".
+ */
+export interface ReviewsSelect<T extends boolean = true> {
+  customer?: T;
+  course?: T;
+  enrollment?: T;
+  rating?: T;
+  title?: T;
+  content?: T;
+  isVerifiedPurchase?: T;
+  isApproved?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1207,6 +1365,75 @@ export interface PagesSelect<T extends boolean = true> {
                                 id?: T;
                               };
                         };
+                    id?: T;
+                    blockName?: T;
+                  };
+              topCategories?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    topCategories?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              about?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          sectionImage?: T;
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    aboutStats?:
+                      | T
+                      | {
+                          statsEnabled?: T;
+                          activeLearners?: T;
+                          expertInstructors?: T;
+                        };
+                    aboutFeatures?:
+                      | T
+                      | {
+                          featuresList?:
+                            | T
+                            | {
+                                title?: T;
+                                description?: T;
+                                id?: T;
+                              };
+                        };
+                    layout?: T;
                     id?: T;
                     blockName?: T;
                   };
