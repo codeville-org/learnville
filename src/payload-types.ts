@@ -765,6 +765,62 @@ export interface Page {
               blockName?: string | null;
               blockType: 'topCategories';
             }
+          | {
+              content: {
+                /**
+                 * Hero image showing on the About section
+                 */
+                sectionImage?: (number | null) | Media;
+                /**
+                 * Small text above the main heading (e.g., "About Learnville")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "One Platform. Infinite")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "Learning Possibilities")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              aboutStats?: {
+                statsEnabled?: boolean | null;
+                /**
+                 * E.g., "100K+"
+                 */
+                activeLearners?: string | null;
+                /**
+                 * E.g., "500+"
+                 */
+                expertInstructors?: string | null;
+              };
+              aboutFeatures?: {
+                featuresList?:
+                  | {
+                      title?: string | null;
+                      description?: string | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+              };
+              layout?: ('image-left' | 'image-right') | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'about';
+            }
         )[]
       | null;
   };
@@ -1266,6 +1322,50 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                         };
                     topCategories?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              about?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          sectionImage?: T;
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    aboutStats?:
+                      | T
+                      | {
+                          statsEnabled?: T;
+                          activeLearners?: T;
+                          expertInstructors?: T;
+                        };
+                    aboutFeatures?:
+                      | T
+                      | {
+                          featuresList?:
+                            | T
+                            | {
+                                title?: T;
+                                description?: T;
+                                id?: T;
+                              };
+                        };
+                    layout?: T;
                     id?: T;
                     blockName?: T;
                   };

@@ -18,6 +18,7 @@ export type ExtractBlockType<T extends PageBlock['blockType']> = Extract<
  */
 export type HeroBlock = ExtractBlockType<'hero'>
 export type TopCategoriesBlock = ExtractBlockType<'topCategories'>
+export type AboutBlock = ExtractBlockType<'about'>
 
 /**
  * Lesson Block Types (if used in Pages or separate Lesson collection)

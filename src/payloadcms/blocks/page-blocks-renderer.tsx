@@ -3,6 +3,7 @@ import React from 'react'
 import { HeroBlockRenderer } from './Hero/renderer'
 import { TopCategoriesBlockRenderer } from './TopCategories/renderer'
 import type { PageBlock } from './types'
+import { AboutBlockRenderer } from './About/renderer'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -12,6 +13,7 @@ import type { PageBlock } from './types'
 export const blockRenderers = {
   hero: HeroBlockRenderer,
   topCategories: TopCategoriesBlockRenderer,
+  about: AboutBlockRenderer,
 } as const
 
 /**

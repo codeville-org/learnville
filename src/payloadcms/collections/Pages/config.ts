@@ -11,6 +11,7 @@ import { checkRole } from '../Users/access/check-role'
 import { ensureSingleHomepage } from './hooks/ensureSingleHomepage'
 import { Hero } from '@/payloadcms/blocks/Hero/config'
 import { TopCategories } from '@/payloadcms/blocks/TopCategories/config'
+import { About } from '@/payloadcms/blocks/About/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -95,7 +96,10 @@ export const Pages: CollectionConfig = {
             {
               name: 'sections',
               type: 'blocks',
-              blocks: [Hero, TopCategories],
+              blocks: [Hero, TopCategories, About],
+              admin: {
+                initCollapsed: true,
+              },
             },
           ],
         },
