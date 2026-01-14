@@ -16,6 +16,7 @@ import { Hero } from '@/payloadcms/blocks/Hero/config'
 import { TopCategories } from '@/payloadcms/blocks/TopCategories/config'
 import { About } from '@/payloadcms/blocks/About/config'
 import { FeaturedCourses } from '@/payloadcms/blocks/FeaturedCourses/config'
+import { CTABlock } from '@/payloadcms/blocks/CTA/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -100,7 +101,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'sections',
               type: 'blocks',
-              blocks: [Hero, TopCategories, About, FeaturedCourses],
+              blocks: [Hero, TopCategories, About, FeaturedCourses, CTABlock],
               admin: {
                 initCollapsed: true,
               },

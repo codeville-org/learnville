@@ -21,6 +21,7 @@ import { Reviews } from './payloadcms/collections/CourseCollections/Reviews/conf
 import { Pages } from './payloadcms/collections/Pages/config'
 import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
+import { CTA } from './payloadcms/globals/CTA'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -80,7 +81,7 @@ export default buildConfig({
   ],
 
   // --- Payload Gloabls ---
-  globals: [Header, Footer],
+  globals: [Header, Footer, CTA],
 
   // --- Adapters ---
   db: postgresAdapter({

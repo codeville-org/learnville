@@ -5,6 +5,7 @@ import { TopCategoriesBlockRenderer } from './TopCategories/renderer'
 import { AboutBlockRenderer } from './About/renderer'
 import { FeaturedCoursesBlockRenderer } from './FeaturedCourses/renderer'
 import type { PageBlock } from './types'
+import { CTARenderer } from './CTA/renderer'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -16,6 +17,7 @@ export const blockRenderers = {
   topCategories: TopCategoriesBlockRenderer,
   about: AboutBlockRenderer,
   featuredCourses: FeaturedCoursesBlockRenderer,
+  ctaBlock: CTARenderer,
 } as const
 
 /**
@@ -44,10 +46,7 @@ export function RenderPageBlocks({ blocks }: RenderBlocksProps) {
           console.warn(`No renderer found for block type: ${blockType}`)
           if (process.env.NODE_ENV === 'development') {
             return (
-              <div
-                key={block.id || index}
-                className="border-2 border-red-500 bg-red-50 p-4 rounded-lg"
-              >
+              <div key={block.id || index} className="border-2 border-red-500 bg-red-50 p-4">
                 <p className="text-red-700 font-semibold">Missing Renderer</p>
                 <p className="text-red-600 text-sm">
                   No renderer found for block type: {blockType}

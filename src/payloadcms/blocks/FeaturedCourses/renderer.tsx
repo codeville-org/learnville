@@ -46,7 +46,7 @@ export function FeaturedCoursesBlockRenderer({ data }: BlockRendererProps<Featur
   }
 
   return (
-    <section className="py-16 md:py-24 bg-linear-to-b from-orange-200/10 to-green-200/10 from-25% to-75% ">
+    <section className="py-16 md:py-20 bg-linear-to-b from-orange-200/10 to-green-200/10 from-25% to-75% ">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
