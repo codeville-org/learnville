@@ -51,6 +51,8 @@ export interface HydratedCourseData {
     displayName?: string | null
     avatarUrl?: string | null
   } | null
+  estimatedDuration?: number | null
+  category: string | null
 }
 
 export interface HydratedMediaData {
@@ -155,6 +157,8 @@ async function hydrateFeaturedCoursesBlock(
       chapters: {
         lessons: true,
       },
+      estimatedDuration: true,
+      category: true,
     },
     overrideAccess: true,
   })
@@ -198,6 +202,8 @@ async function hydrateFeaturedCoursesBlock(
       pricingType: course.pricingType,
       price: course.price || 0,
       instructor,
+      estimatedDuration: course.estimatedDuration,
+      category: course.category instanceof Object ? course.category.name : null,
     })
   })
 

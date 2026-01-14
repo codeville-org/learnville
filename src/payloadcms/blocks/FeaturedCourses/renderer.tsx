@@ -1,35 +1,55 @@
-import React from 'react'
-import Image from 'next/image'
+'use client'
+
+import React, { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRightIcon, BookIcon, ImageIcon, StarIcon } from 'lucide-react'
+import { ArrowRightIcon } from 'lucide-react'
 
 import type { BlockRendererProps, FeaturedCoursesBlock } from '../types'
 import { getCTAHref, highlightColorMap } from '@/lib/utils'
 import { Highlighter } from '@/components/ui/highlighter'
 import { TextAnimate } from '@/components/ui/text-animate'
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { CourseCard } from '@/components/shared/course-card'
+import { HydratedCourseData } from '@/lib/hydrate-page-blocks'
 
 export function FeaturedCoursesBlockRenderer({ data }: BlockRendererProps<FeaturedCoursesBlock>) {
   const { content, featuredCourses } = data
+  const [selectedCategory, setSelectedCategory] = useState<HydratedCourseData['category'] | 'all'>(
+    'all',
+  )
+
+  const distinctCategories = React.useMemo(() => {
+    const categoriesSet = new Set<HydratedCourseData['category']>()
+
+    featuredCourses?.forEach((course) => {
+      if (course.category) {
+        categoriesSet.add(course.category)
+      }
+    })
+
+    return Array.from(categoriesSet)
+  }, [featuredCourses])
+
+  const filteredCourses = React.useMemo(() => {
+    if (selectedCategory === 'all') {
+      return featuredCourses || []
+    }
+    return (featuredCourses || []).filter((course) => course.category === selectedCategory)
+  }, [featuredCourses, selectedCategory])
 
   const highlightColor =
     (content?.highlightColor && highlightColorMap[content.highlightColor]) || '#f97316'
 
-  const ctaLink =
-    content?.cta?.linkType === 'internal'
-      ? typeof content.cta.internalLink === 'object'
-        ? `/${content.cta.internalLink?.slug}`
-        : '/courses'
-      : content?.cta?.externalLink || '/courses'
+  const handleCategorySelect = (category: HydratedCourseData['category'] | 'all') => {
+    setSelectedCategory(category)
+  }
 
   return (
     <section className="py-16 md:py-24 bg-linear-to-b from-orange-200/10 to-green-200/10 from-25% to-75% ">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           {content?.preHeading && (
             <TextAnimate
               as="h3"
@@ -58,110 +78,50 @@ export function FeaturedCoursesBlockRenderer({ data }: BlockRendererProps<Featur
           )}
         </div>
 
+        {/* Categories Bar */}
+        {distinctCategories.length > 0 && (
+          <div className="mb-10 w-full flex items-center justify-start sm:justify-center">
+            <ScrollArea className="w-full sm:w-fit">
+              <div className="flex items-center justify-center border-b border-gray-200/60">
+                <button
+                  onClick={() => handleCategorySelect('all')}
+                  className={`relative px-4 py-3 text-sm cursor-pointer font-medium whitespace-nowrap transition-colors bg-transparent ${
+                    selectedCategory === 'all'
+                      ? 'text-emerald-700'
+                      : 'text-gray-600 hover:text-emerald-800/60'
+                  }`}
+                >
+                  All
+                  {selectedCategory === 'all' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600" />
+                  )}
+                </button>
+                {distinctCategories.map((category) => (
+                  <button
+                    key={category || 'uncategorized'}
+                    onClick={() => handleCategorySelect(category)}
+                    className={`relative px-4 py-3 text-sm cursor-pointer font-medium whitespace-nowrap transition-colors bg-transparent ${
+                      selectedCategory === category
+                        ? 'text-emerald-700'
+                        : 'text-gray-600 hover:text-emerald-800/60'
+                    }`}
+                  >
+                    {category || 'Uncategorized'}
+                    {selectedCategory === category && (
+                      <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600" />
+                    )}
+                  </button>
+                ))}
+              </div>
+              <ScrollBar orientation="horizontal" className="h-1.5" />
+            </ScrollArea>
+          </div>
+        )}
+
         {/* Courses Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-6">
-          {featuredCourses?.map((course) => (
-            <Link key={course.id} href={`/courses/${course.slug}`}>
-              <Card className="group rounded-xl p-2 shadow-none hover:shadow-sm transition-shadow duration-300 overflow-hidden flex flex-col space-0 gap-0">
-                {/* Thumbnail */}
-                <div className="relative aspect-video overflow-hidden">
-                  {course.thumbnail?.url ? (
-                    <Image
-                      src={course.thumbnail.url}
-                      alt={course.thumbnail.alt || course.title}
-                      fill
-                      className="object-cover rounded-xl"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <ImageIcon className="text-gray-400 size-8" />
-                    </div>
-                  )}
-                  {/* Price Badge */}
-                  <div className="absolute top-3 right-3">
-                    {course.pricingType === 'free' ? (
-                      <span className="bg-emerald-500 text-emerald-50 text-sm font-semibold px-2 py-1 rounded-md">
-                        Free
-                      </span>
-                    ) : (
-                      <span className="bg-amber-500 text-amber-50 text-sm font-semibold px-2 py-1 rounded-md">
-                        ${course.price}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-4 pb-0">
-                  <div className="mb-2 flex items-center justify-between w-full">
-                    {/* Level Badge */}
-                    <Badge className="text-xs font-medium bg-emerald-500/10 text-emerald-600 uppercase tracking-wide">
-                      {course.level}
-                    </Badge>
-
-                    {/* Rating */}
-                    <div className="flex items-center gap-1">
-                      <StarIcon className="fill-yellow-400 text-yellow-300 size-4" />
-                      <p className="text-sm font-medium tracking-wide text-yellow-900/70">
-                        {course.overallRating.toFixed(1)}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-emerald-700 transition-colors line-clamp-2">
-                    {course.title}
-                  </h3>
-
-                  {/* Description */}
-                  {course.shortDescription && (
-                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
-                      {course.shortDescription}
-                    </p>
-                  )}
-
-                  {/* Meta */}
-                  <Separator className="mt-4 mb-1" />
-
-                  <div className="min-h-9 h-11 flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex flex-1 items-center gap-4">
-                      {/* Lessons Count */}
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-full bg-emerald-500/10 text-emerald-600">
-                          <BookIcon className="size-4" />
-                        </div>
-
-                        <div className="flex flex-col">
-                          <span>{course.lessonCount}</span>
-                          <span className="text-xs">{`Lessons`}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator orientation="vertical" className="h-full" />
-
-                    {/* Instructor */}
-                    {course.instructor && (
-                      <div className="flex flex-1 items-center justify-end gap-2">
-                        {course.instructor.avatarUrl && (
-                          <Image
-                            src={course.instructor.avatarUrl}
-                            alt={course?.instructor?.displayName || ''}
-                            className="size-7 sm:size-6 rounded-full object-cover"
-                            width={16}
-                            height={16}
-                          />
-                        )}
-                        <div className="flex flex-col space-y-0 max-w-fit">
-                          <span className="text-xs">{`Instructor`}</span>
-                          <span className="text-sm line-clamp-1">{`${course.instructor.displayName}`}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            </Link>
+          {filteredCourses.map((course) => (
+            <CourseCard key={course.id} data={course} />
           ))}
         </div>
 
