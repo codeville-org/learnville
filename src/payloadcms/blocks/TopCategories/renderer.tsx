@@ -72,33 +72,30 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-4 gap-4">
             {topCategories &&
               topCategories.length > 0 &&
-              topCategories.map(
-                (category) =>
-                  category instanceof Object && (
-                    <Link key={category.id} href={`/categories/${category.slug}`}>
-                      <Card className="p-4 group cursor-pointer shadow-none flex flex-row items-center gap-2 bg-linear-to-t from-emerald-50/30 to-white hover:shadow-sm">
-                        {category.icon && category.icon instanceof Object && (
-                          <Image
-                            alt={category.icon.alt}
-                            src={category?.icon?.url || '#'}
-                            className="size-11 object-cover"
-                            width={category.icon.width || 96}
-                            height={category.icon.height || 96}
-                          />
-                        )}
+              topCategories.map((category) => (
+                <Link key={category.id} href={`/categories/${category.slug}`}>
+                  <Card className="p-4 group cursor-pointer shadow-none flex flex-row items-center gap-2 bg-linear-to-t from-emerald-50/30 to-white hover:shadow-sm">
+                    {category.icon && category.icon.url && (
+                      <Image
+                        alt={category.icon.alt || category.name}
+                        src={category.icon.url}
+                        className="size-11 object-cover"
+                        width={96}
+                        height={96}
+                      />
+                    )}
 
-                        <div className="space-y-0">
-                          <h3 className="text-lg group-hover:underline font-medium text-emerald-950">
-                            {category.name}
-                          </h3>
-                          <p className="text-xs text-emerald-950/60 line-clamp-1">
-                            {category.description}
-                          </p>
-                        </div>
-                      </Card>
-                    </Link>
-                  ),
-              )}
+                    <div className="space-y-0">
+                      <h3 className="text-lg group-hover:underline font-medium text-emerald-950">
+                        {category.name}
+                      </h3>
+                      <p className="text-xs text-emerald-950/60 line-clamp-1">
+                        {category.description}
+                      </p>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
           </div>
 
           <div className="flex sm:hidden mt-8 justify-center">

@@ -7,6 +7,7 @@ import { headers as getHeaders } from 'next/headers'
 
 import { generateMeta } from '@/lib/seo/generateMetadata'
 import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
+import { hydratePageBlocks } from '@/lib/hydrate-page-blocks'
 
 type Props = {}
 
@@ -23,7 +24,7 @@ async function getHomepage() {
     where: {
       isHomepage: { equals: true },
     },
-    depth: 2,
+    depth: 0, // Minimal depth - blocks will be hydrated separately
     overrideAccess: Boolean(user),
     pagination: false,
     draft: Boolean(user),
@@ -32,6 +33,11 @@ async function getHomepage() {
   if (res.totalDocs === 0) return null
 
   const page = res.docs[0]
+
+  // Hydrate all blocks with their required relationship data
+  if (page.content?.sections) {
+    page.content.sections = await hydratePageBlocks(page.content.sections)
+  }
 
   return page
 }

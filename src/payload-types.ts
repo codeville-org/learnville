@@ -868,6 +868,34 @@ export interface Page {
               blockName?: string | null;
               blockType: 'about';
             }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Featured Courses")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Start Your Journey")
+                 */
+                heading: string;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              featuredCourses: (number | Course)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'featuredCourses';
+            }
         )[]
       | null;
   };
@@ -1434,6 +1462,30 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                         };
                     layout?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              featuredCourses?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    featuredCourses?: T;
                     id?: T;
                     blockName?: T;
                   };
