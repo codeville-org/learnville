@@ -7,6 +7,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { Users } from './payloadcms/collections/Users/config'
 import { Media } from './payloadcms/collections/Media'
@@ -93,22 +94,33 @@ export default buildConfig({
 
   // --- Plugins ---
   plugins: [
-    s3Storage({
+    // ------- Storage Adapters -------
+    // s3Storage({
+    //   collections: {
+    //     media: true,
+    //   },
+    //   bucket: process.env?.R2_BUCKET || '',
+    //   config: {
+    //     credentials: {
+    //       accessKeyId: process.env?.R2_ACCESS_KEY_ID || '',
+    //       secretAccessKey: process.env?.R2_SECRET_ACCESS_KEY || '',
+    //     },
+    //     region: 'auto',
+    //     endpoint: process.env?.S3_ENDPOINT || '',
+    //   },
+    //   acl: 'public-read',
+    //   disableLocalStorage: true,
+    // }),
+
+    vercelBlobStorage({
+      enabled: true,
       collections: {
         media: true,
       },
-      bucket: process.env?.R2_BUCKET || '',
-      config: {
-        credentials: {
-          accessKeyId: process.env?.R2_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env?.R2_SECRET_ACCESS_KEY || '',
-        },
-        region: 'auto',
-        endpoint: process.env?.S3_ENDPOINT || '',
-      },
-      acl: 'public-read',
-      disableLocalStorage: true,
+      token: process?.env?.BLOB_READ_WRITE_TOKEN,
     }),
+    // ----------------------------------
+
     seoPlugin({
       generateTitle: ({ doc }) => doc.title,
       generateDescription: ({ doc, collectionSlug }) => {

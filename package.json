@@ -27,7 +27,7 @@
     "@payloadcms/plugin-seo": "3.69.0",
     "@payloadcms/richtext-lexical": "3.69.0",
     "@payloadcms/storage-s3": "^3.69.0",
-    "@payloadcms/storage-vercel-blob": "^3.71.1",
+    "@payloadcms/storage-vercel-blob": "3.69.0",
     "@payloadcms/ui": "3.69.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
