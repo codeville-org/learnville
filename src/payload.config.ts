@@ -97,14 +97,17 @@ export default buildConfig({
       collections: {
         media: true,
       },
-      bucket: process.env?.S3_BUCKET || '',
+      bucket: process.env?.R2_BUCKET || '',
       config: {
         credentials: {
-          accessKeyId: process.env?.S3_ACCESS_KEY_ID || '',
-          secretAccessKey: process.env?.S3_SECRET_ACCESS_KEY || '',
+          accessKeyId: process.env?.R2_ACCESS_KEY_ID || '',
+          secretAccessKey: process.env?.R2_SECRET_ACCESS_KEY || '',
         },
-        region: process.env?.S3_REGION || '',
+        region: 'auto',
+        endpoint: process.env?.S3_ENDPOINT || '',
       },
+      acl: 'public-read',
+      disableLocalStorage: true,
     }),
     seoPlugin({
       generateTitle: ({ doc }) => doc.title,
