@@ -24,7 +24,7 @@ async function getHomepage() {
     where: {
       isHomepage: { equals: true },
     },
-    depth: 0, // Minimal depth - blocks will be hydrated separately
+    depth: 1, // Minimal depth - blocks will be hydrated separately
     overrideAccess: Boolean(user),
     pagination: false,
     draft: Boolean(user),

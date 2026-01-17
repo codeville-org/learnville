@@ -1,7 +1,6 @@
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import type { Page } from '@/payload-types'
-import { intersectionProcessor } from 'node_modules/zod/v4/core/json-schema-processors.cjs'
 
 type PageBlock = NonNullable<NonNullable<Page['content']>['sections']>[number]
 

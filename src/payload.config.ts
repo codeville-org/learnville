@@ -20,6 +20,7 @@ import { CourseEnrollments } from './payloadcms/collections/CourseCollections/En
 import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAttempts/config'
 import { Reviews } from './payloadcms/collections/CourseCollections/Reviews/config'
 import { Pages } from './payloadcms/collections/Pages/config'
+import { Blog } from './payloadcms/collections/Blog/config'
 import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
 import { CTA } from './payloadcms/globals/CTA'
@@ -79,6 +80,7 @@ export default buildConfig({
     QuizAttempts,
     Reviews,
     Pages,
+    Blog,
   ],
 
   // --- Payload Gloabls ---

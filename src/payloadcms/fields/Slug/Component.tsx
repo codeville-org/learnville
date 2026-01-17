@@ -19,13 +19,22 @@ export const SlugComponent: TextFieldClientComponent = (props) => {
   useEffect(() => {
     if (stopTrackingRef.current || !nameField?.value) return
 
-    // Only auto-generate if slug matches previous auto-generated value
-    const prevSlug = prevNameRef.current?.toString().replace(/ /g, '-').toLowerCase()
-    if (prevSlug !== value) return
+    const currentName = nameField.value.toString()
+    const prevName = prevNameRef.current?.toString() || ''
+
+    // Only auto-generate if:
+    // 1. Slug is empty/undefined (new document), OR
+    // 2. Slug matches the previous auto-generated value
+    const prevSlug = prevName.replace(/ /g, '-').toLowerCase()
+    const isEmpty = !value || value === ''
+
+    if (!isEmpty && prevSlug !== value) return
 
     prevNameRef.current = nameField.value
-    setValue(nameField.value.toString().replace(/ /g, '-').toLowerCase())
-  }, [nameField?.value])
+    const slugValue = currentName.replace(/ /g, '-').toLowerCase()
+
+    setValue(slugValue)
+  }, [nameField?.value, value, setValue])
 
   return (
     <TextInput
