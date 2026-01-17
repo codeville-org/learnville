@@ -4,6 +4,7 @@ import { HeroBlockRenderer } from './Hero/renderer'
 import { TopCategoriesBlockRenderer } from './TopCategories/renderer'
 import { AboutBlockRenderer } from './About/renderer'
 import { FeaturedCoursesBlockRenderer } from './FeaturedCourses/renderer'
+import { FeaturedBlogsRenderer } from './FeaturedBlogs/renderer'
 import type { PageBlock } from './types'
 import { CTARenderer } from './CTA/renderer'
 
@@ -18,6 +19,7 @@ export const blockRenderers = {
   about: AboutBlockRenderer,
   featuredCourses: FeaturedCoursesBlockRenderer,
   ctaBlock: CTARenderer,
+  featuredBlogs: FeaturedBlogsRenderer,
 } as const
 
 /**

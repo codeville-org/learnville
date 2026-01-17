@@ -1,5 +1,9 @@
 import type { Page, Lesson } from '@/payload-types'
-import type { HydratedCourseData, HydratedCategoryData } from '@/lib/hydrate-page-blocks'
+import type {
+  HydratedCourseData,
+  HydratedCategoryData,
+  HydratedFeaturedBlogData,
+} from '@/lib/hydrate-page-blocks'
 
 /**
  * Extract block type from Page content sections
@@ -27,6 +31,9 @@ export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCat
 }
 export type FeaturedCoursesBlock = Omit<ExtractBlockType<'featuredCourses'>, 'featuredCourses'> & {
   featuredCourses?: HydratedCourseData[] | null
+}
+export type FeaturedBlogsBlock = Omit<ExtractBlockType<'featuredBlogs'>, 'featuredBlogs'> & {
+  featuredBlogs?: HydratedFeaturedBlogData[] | null
 }
 
 /**

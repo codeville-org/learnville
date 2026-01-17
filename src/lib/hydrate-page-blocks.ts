@@ -54,6 +54,21 @@ export interface HydratedCourseData {
   category: string | null
 }
 
+export interface HydratedFeaturedBlogData {
+  id: number
+  title: string
+  slug: string
+  excerpt?: string | null
+  featuredImage: {
+    url?: string | null
+    alt?: string | null
+  } | null
+  author: string | null
+  category: string | null
+  publishedAt: string | null
+  readTimeMinutes?: number | null
+}
+
 export interface HydratedMediaData {
   id: number
   url?: string | null
@@ -296,6 +311,71 @@ async function hydrateAboutBlock(
   }
 }
 
+/**
+ * Hydrate Featured Blogs block with media data
+ */
+async function hydrateFeaturedBlogsBlock(
+  block: Extract<PageBlock, { blockType: 'featuredBlogs' }>,
+  payload: PayloadInstance,
+): Promise<any> {
+  if (!block.featuredBlogs || block.featuredBlogs.length === 0) return block
+
+  // Collect blog IDs
+  const blogIds = block.featuredBlogs
+    .map((blog) => (typeof blog === 'object' ? blog.id : blog))
+    .filter((id): id is number => id !== undefined)
+
+  if (blogIds.length === 0) return block
+
+  // Fetch blogs with only needed fields
+  const blogsResult = await payload.find({
+    collection: 'blog',
+    where: { id: { in: blogIds } },
+    depth: 2,
+    limit: blogIds.length,
+    select: {
+      title: true,
+      slug: true,
+      excerpt: true,
+      featuredImage: true,
+      author: true,
+      category: true,
+      publishedAt: true,
+      readTime: true,
+    },
+    overrideAccess: true,
+  })
+
+  // Create hydrated blogs data
+  const blogsMap = new Map<number, HydratedFeaturedBlogData>()
+  blogsResult.docs.forEach((blog) => {
+    const featuredImage =
+      typeof blog === 'object' && blog.featuredImage && blog.featuredImage instanceof Object
+        ? { url: blog.featuredImage.url, alt: blog.featuredImage.alt }
+        : null
+
+    blogsMap.set(blog.id, {
+      title: blog.title,
+      slug: blog.slug,
+      author: blog.author instanceof Object ? blog.author.email : null,
+      category: blog.category instanceof Object ? blog.category.name : null,
+      publishedAt: blog.publishedAt,
+      readTimeMinutes: blog.readTime,
+      id: blog.id,
+      excerpt: blog.excerpt,
+      featuredImage,
+    })
+  })
+
+  return {
+    ...block,
+    featuredBlogs: block.featuredBlogs.map((blog) => {
+      const id = typeof blog === 'object' ? blog.id : blog
+      return blogsMap.get(id!) || blog
+    }),
+  }
+}
+
 // ============================================================================
 // HYDRATOR REGISTRY
 // ============================================================================
@@ -309,6 +389,7 @@ const blockHydrators: Record<string, (block: any, payload: PayloadInstance) => P
   featuredCourses: hydrateFeaturedCoursesBlock,
   hero: hydrateHeroBlock,
   about: hydrateAboutBlock,
+  featuredBlogs: hydrateFeaturedBlogsBlock,
 }
 
 // ============================================================================

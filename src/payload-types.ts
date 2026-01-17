@@ -906,6 +906,38 @@ export interface Page {
               blockName?: string | null;
               blockType: 'ctaBlock';
             }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Our Blog")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main section heading (e.g., "Insights & Ideas From")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "The land of Learning.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              featuredBlogs: (number | Blog)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'featuredBlogs';
+            }
         )[]
       | null;
   };
@@ -1583,6 +1615,31 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     type?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              featuredBlogs?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    featuredBlogs?: T;
                     id?: T;
                     blockName?: T;
                   };
