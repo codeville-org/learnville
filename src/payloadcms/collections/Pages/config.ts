@@ -1,5 +1,4 @@
 import { CollectionConfig } from 'payload'
-import editor from '../Users/access/editor'
 import {
   MetaDescriptionField,
   MetaImageField,
@@ -7,11 +6,18 @@ import {
   OverviewField,
   PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+
+import editor from '../Users/access/editor'
 import { checkRole } from '../Users/access/check-role'
 import { ensureSingleHomepage } from './hooks/ensureSingleHomepage'
+
+// Blocks
 import { Hero } from '@/payloadcms/blocks/Hero/config'
 import { TopCategories } from '@/payloadcms/blocks/TopCategories/config'
 import { About } from '@/payloadcms/blocks/About/config'
+import { FeaturedCourses } from '@/payloadcms/blocks/FeaturedCourses/config'
+import { CTABlock } from '@/payloadcms/blocks/CTA/config'
+import { FeaturedBlogs } from '@/payloadcms/blocks/FeaturedBlogs/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -96,7 +102,7 @@ export const Pages: CollectionConfig = {
             {
               name: 'sections',
               type: 'blocks',
-              blocks: [Hero, TopCategories, About],
+              blocks: [Hero, TopCategories, About, FeaturedCourses, CTABlock, FeaturedBlogs],
               admin: {
                 initCollapsed: true,
               },

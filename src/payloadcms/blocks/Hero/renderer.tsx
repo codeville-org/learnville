@@ -3,16 +3,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  Book,
-  Users,
-  Award,
-  Star,
-  GraduationCap,
-  Target,
-  ArrowRight,
-  ArrowRightIcon,
-} from 'lucide-react'
+import { Book, Users, Award, Star, GraduationCap, Target, ArrowRightIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import type { BlockRendererProps, HeroBlock } from '../types'

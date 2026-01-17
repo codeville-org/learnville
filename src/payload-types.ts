@@ -83,6 +83,7 @@ export interface Config {
     'quiz-attempts': QuizAttempt;
     reviews: Review;
     pages: Page;
+    blog: Blog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -100,6 +101,7 @@ export interface Config {
     'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    blog: BlogSelect<false> | BlogSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -112,10 +114,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    cta: Cta;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    cta: CtaSelect<false> | CtaSelect<true>;
   };
   locale: null;
   user:
@@ -868,6 +872,72 @@ export interface Page {
               blockName?: string | null;
               blockType: 'about';
             }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Featured Courses")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main hero heading (e.g., "Start Your Journey")
+                 */
+                heading: string;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              featuredCourses: (number | Course)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'featuredCourses';
+            }
+          | {
+              type?: ('buttons' | 'cards') | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'ctaBlock';
+            }
+          | {
+              content: {
+                /**
+                 * Small text above the main heading (e.g., "Our Blog")
+                 */
+                preHeading?: string | null;
+                /**
+                 * Main section heading (e.g., "Insights & Ideas From")
+                 */
+                heading: string;
+                /**
+                 * Text to highlight in different color (e.g., "The land of Learning.")
+                 */
+                highlightedText?: string | null;
+                highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+                /**
+                 * Supporting text below the heading
+                 */
+                description: string;
+                cta?: {
+                  enabled?: boolean | null;
+                  label?: string | null;
+                  linkType?: ('internal' | 'external') | null;
+                  internalLink?: (number | null) | Page;
+                  externalLink?: string | null;
+                };
+              };
+              featuredBlogs: (number | Blog)[];
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'featuredBlogs';
+            }
         )[]
       | null;
   };
@@ -879,6 +949,82 @@ export interface Page {
      */
     image?: (number | null) | Media;
   };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog".
+ */
+export interface Blog {
+  id: number;
+  title: string;
+  slug: string;
+  /**
+   * A brief summary of the post (appears in listings and SEO)
+   */
+  excerpt: string;
+  /**
+   * Main image for the blog post
+   */
+  featuredImage: number | Media;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * The author of this post
+   */
+  author: number | User;
+  /**
+   * Primary category for this post
+   */
+  category?: (number | null) | Category;
+  /**
+   * Tags help readers find related content
+   */
+  tags?:
+    | {
+        tag: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Schedule when this post should be published
+   */
+  publishedAt: string;
+  /**
+   * Estimated reading time in minutes
+   */
+  readTime?: number | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  /**
+   * Feature this post on the homepage
+   */
+  isFeatured?: boolean | null;
+  /**
+   * Select up to 3 related posts
+   */
+  relatedPosts?: (number | Blog)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -946,6 +1092,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'pages';
         value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'blog';
+        value: number | Blog;
       } | null);
   globalSlug?: string | null;
   user:
@@ -1437,6 +1587,62 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                     blockName?: T;
                   };
+              featuredCourses?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    featuredCourses?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              ctaBlock?:
+                | T
+                | {
+                    type?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              featuredBlogs?:
+                | T
+                | {
+                    content?:
+                      | T
+                      | {
+                          preHeading?: T;
+                          heading?: T;
+                          highlightedText?: T;
+                          highlightColor?: T;
+                          description?: T;
+                          cta?:
+                            | T
+                            | {
+                                enabled?: T;
+                                label?: T;
+                                linkType?: T;
+                                internalLink?: T;
+                                externalLink?: T;
+                              };
+                        };
+                    featuredBlogs?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
             };
       };
   meta?:
@@ -1446,6 +1652,39 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "blog_select".
+ */
+export interface BlogSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  excerpt?: T;
+  featuredImage?: T;
+  content?: T;
+  author?: T;
+  category?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  publishedAt?: T;
+  readTime?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
+  isFeatured?: T;
+  relatedPosts?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1621,6 +1860,52 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta".
+ */
+export interface Cta {
+  id: number;
+  content: {
+    preHeading?: string | null;
+    heading: string;
+    highlightedText?: string | null;
+    highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+    /**
+     * Supporting text below the heading
+     */
+    description: string;
+  };
+  info?:
+    | {
+        icon?: (number | null) | Media;
+        title: string;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  instructorCTA?: {
+    image?: (number | null) | Media;
+    title?: string | null;
+    description?: string | null;
+    buttonLabel?: string | null;
+    linkType?: ('internal' | 'external') | null;
+    internalLink?: (number | null) | Page;
+    externalLink?: string | null;
+  };
+  studentCTA?: {
+    image?: (number | null) | Media;
+    title?: string | null;
+    description?: string | null;
+    buttonLabel?: string | null;
+    linkType?: ('internal' | 'external') | null;
+    internalLink?: (number | null) | Page;
+    externalLink?: string | null;
+  };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1751,6 +2036,55 @@ export interface FooterSelect<T extends boolean = true> {
     | {
         text?: T;
         designer?: T;
+      };
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cta_select".
+ */
+export interface CtaSelect<T extends boolean = true> {
+  content?:
+    | T
+    | {
+        preHeading?: T;
+        heading?: T;
+        highlightedText?: T;
+        highlightColor?: T;
+        description?: T;
+      };
+  info?:
+    | T
+    | {
+        icon?: T;
+        title?: T;
+        description?: T;
+        id?: T;
+      };
+  instructorCTA?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+        linkType?: T;
+        internalLink?: T;
+        externalLink?: T;
+      };
+  studentCTA?:
+    | T
+    | {
+        image?: T;
+        title?: T;
+        description?: T;
+        buttonLabel?: T;
+        linkType?: T;
+        internalLink?: T;
+        externalLink?: T;
       };
   _status?: T;
   updatedAt?: T;
