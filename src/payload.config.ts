@@ -24,6 +24,7 @@ import { Blog } from './payloadcms/collections/Blog/config'
 import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
 import { CTA } from './payloadcms/globals/CTA'
+import { SiteStats } from './payloadcms/globals/Stats'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -84,7 +85,7 @@ export default buildConfig({
   ],
 
   // --- Payload Gloabls ---
-  globals: [Header, Footer, CTA],
+  globals: [Header, Footer, CTA, SiteStats],
 
   // --- Adapters ---
   db: postgresAdapter({
