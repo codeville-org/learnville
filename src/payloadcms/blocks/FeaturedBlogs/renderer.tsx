@@ -40,14 +40,14 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                 <TextAnimate
                   as={'h1'}
                   animation="slideRight"
-                  className="text-4xl font-semibold text-emerald-950 font-heading"
+                  className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading"
                 >
                   {content.heading}
                 </TextAnimate>
               )}
 
               {content?.highlightedText && (
-                <h2 className="text-emerald-950 font-black font-heading text-4xl whitespace-nowrap">
+                <h2 className="text-emerald-950 font-black font-heading text-3xl sm:text-4xl whitespace-nowrap">
                   <Highlighter animationDuration={2500} action="underline" color={highlightColor}>
                     {content?.highlightedText}
                   </Highlighter>
@@ -73,9 +73,9 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
           </div>
 
           {/* Categories Section */}
-          <div className="mt-12 grid grid-cols-3 gap-4">
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {firstBlog && (
-              <Card className="shadow-none p-4">
+              <Card className="shadow-none p-4 w-full">
                 <Link href={`/blog/${firstBlog.slug}`} className="space-y-3 w-full h-full group">
                   <div className="w-full aspect-video relative overflow-hidden rounded-md">
                     <Badge className="absolute top-2 left-2 z-10 text-sm py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">

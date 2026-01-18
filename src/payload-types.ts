@@ -920,6 +920,11 @@ export interface Page {
               blockName?: string | null;
               blockType: 'featuredBlogs';
             }
+          | {
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'siteStatsBlock';
+            }
         )[]
       | null;
   };
@@ -1604,6 +1609,12 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                         };
                     featuredBlogs?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              siteStatsBlock?:
+                | T
+                | {
                     id?: T;
                     blockName?: T;
                   };

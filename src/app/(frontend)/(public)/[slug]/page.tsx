@@ -9,6 +9,15 @@ import { generateMeta } from '@/lib/seo/generateMetadata'
 import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { GridPattern } from '@/components/ui/grid-pattern'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import Link from 'next/link'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -53,8 +62,26 @@ export default async function Page({ params }: Props) {
     <div>
       {/* Slugified Page Header */}
       <div className="w-full overflow-hidden bg-linear-to-tr from-emerald-900 to-emerald-700">
-        <div className="min-h-[200px] container px-4 mx-auto flex items-center justify-start">
+        <div className="min-h-fit sm:min-h-[200px] container px-4 py-12 sm:py-0 mx-auto flex items-center justify-between">
           <div className="space-y-1">
+            <Breadcrumb className="mb-6">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink asChild>
+                    <Link href="/" className="text-white/80 hover:text-white/80 hover:underline">
+                      Home
+                    </Link>
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="text-white/80" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-white">
+                    {page?.title || page?.meta?.title || ''}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+
             <TextAnimate
               as={'h1'}
               animation="blurIn"

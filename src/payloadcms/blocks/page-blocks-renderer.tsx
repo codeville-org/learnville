@@ -7,6 +7,7 @@ import { FeaturedCoursesBlockRenderer } from './FeaturedCourses/renderer'
 import { FeaturedBlogsRenderer } from './FeaturedBlogs/renderer'
 import type { PageBlock } from './types'
 import { CTARenderer } from './CTA/renderer'
+import { SiteStatsRenderer } from './SiteStats/renderer'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -20,6 +21,7 @@ export const blockRenderers = {
   featuredCourses: FeaturedCoursesBlockRenderer,
   ctaBlock: CTARenderer,
   featuredBlogs: FeaturedBlogsRenderer,
+  siteStatsBlock: SiteStatsRenderer,
 } as const
 
 /**

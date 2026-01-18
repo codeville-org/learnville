@@ -18,6 +18,7 @@ import { About } from '@/payloadcms/blocks/About/config'
 import { FeaturedCourses } from '@/payloadcms/blocks/FeaturedCourses/config'
 import { CTABlock } from '@/payloadcms/blocks/CTA/config'
 import { FeaturedBlogs } from '@/payloadcms/blocks/FeaturedBlogs/config'
+import { SiteStatsBlock } from '@/payloadcms/blocks/SiteStats/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -102,7 +103,15 @@ export const Pages: CollectionConfig = {
             {
               name: 'sections',
               type: 'blocks',
-              blocks: [Hero, TopCategories, About, FeaturedCourses, CTABlock, FeaturedBlogs],
+              blocks: [
+                Hero,
+                TopCategories,
+                About,
+                FeaturedCourses,
+                CTABlock,
+                FeaturedBlogs,
+                SiteStatsBlock,
+              ],
               admin: {
                 initCollapsed: true,
               },
