@@ -925,6 +925,26 @@ export interface Page {
               blockName?: string | null;
               blockType: 'siteStatsBlock';
             }
+          | {
+              content?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'richTextContent';
+            }
         )[]
       | null;
   };
@@ -1615,6 +1635,13 @@ export interface PagesSelect<T extends boolean = true> {
               siteStatsBlock?:
                 | T
                 | {
+                    id?: T;
+                    blockName?: T;
+                  };
+              richTextContent?:
+                | T
+                | {
+                    content?: T;
                     id?: T;
                     blockName?: T;
                   };

@@ -62,7 +62,7 @@ export default async function Page({ params }: Props) {
     <div>
       {/* Slugified Page Header */}
       <div className="w-full overflow-hidden bg-linear-to-tr from-emerald-900 to-emerald-700">
-        <div className="min-h-fit sm:min-h-[200px] container px-4 py-12 sm:py-0 mx-auto flex items-center justify-between">
+        <div className="min-h-fit sm:min-h-[200px] overflow-hidden container px-4 py-12 sm:py-0 mx-auto flex items-center justify-between">
           <div className="space-y-1">
             <Breadcrumb className="mb-6">
               <BreadcrumbList>
@@ -101,7 +101,7 @@ export default async function Page({ params }: Props) {
           </div>
         </div>
 
-        <GridPattern className="opacity-20 max-h-full" />
+        <GridPattern className=" opacity-20 max-h-full" />
       </div>
 
       <RenderPageBlocks blocks={page?.content?.sections} />

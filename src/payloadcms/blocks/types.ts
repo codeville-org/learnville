@@ -25,6 +25,7 @@ export type HeroBlock = ExtractBlockType<'hero'>
 export type AboutBlock = ExtractBlockType<'about'>
 export type CTABlock = ExtractBlockType<'ctaBlock'>
 export type SiteStatsBlock = ExtractBlockType<'siteStatsBlock'>
+export type RichTextContentBlock = ExtractBlockType<'richTextContent'>
 
 // Hydrated block types (with lightweight data from hydration)
 export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCategories'> & {

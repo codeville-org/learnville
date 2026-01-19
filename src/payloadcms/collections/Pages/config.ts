@@ -19,6 +19,7 @@ import { FeaturedCourses } from '@/payloadcms/blocks/FeaturedCourses/config'
 import { CTABlock } from '@/payloadcms/blocks/CTA/config'
 import { FeaturedBlogs } from '@/payloadcms/blocks/FeaturedBlogs/config'
 import { SiteStatsBlock } from '@/payloadcms/blocks/SiteStats/config'
+import { RichTextContentBlock } from '@/payloadcms/blocks/RichTextContent/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -111,6 +112,7 @@ export const Pages: CollectionConfig = {
                 CTABlock,
                 FeaturedBlogs,
                 SiteStatsBlock,
+                RichTextContentBlock,
               ],
               admin: {
                 initCollapsed: true,
