@@ -921,6 +921,7 @@ export interface Page {
               blockType: 'featuredBlogs';
             }
           | {
+              variant?: ('secondary' | 'primary') | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'siteStatsBlock';
@@ -1676,6 +1677,7 @@ export interface PagesSelect<T extends boolean = true> {
               siteStatsBlock?:
                 | T
                 | {
+                    variant?: T;
                     id?: T;
                     blockName?: T;
                   };

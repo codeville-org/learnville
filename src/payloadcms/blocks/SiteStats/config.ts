@@ -6,5 +6,16 @@ export const SiteStatsBlock: Block = {
     singular: 'Site Stats Section',
     plural: 'Site Stats Sections',
   },
-  fields: [],
+  fields: [
+    {
+      name: 'variant',
+      type: 'select',
+      label: 'Variant',
+      options: [
+        { label: 'Secondary', value: 'secondary' },
+        { label: 'Primary', value: 'primary' },
+      ],
+      defaultValue: 'secondary',
+    },
+  ],
 }
