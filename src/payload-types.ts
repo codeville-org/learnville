@@ -945,6 +945,47 @@ export interface Page {
               blockName?: string | null;
               blockType: 'richTextContent';
             }
+          | {
+              /**
+               * Small text above the main heading (e.g., "Popular Categories,")
+               */
+              preHeading?: string | null;
+              /**
+               * Main hero heading (e.g., "Explore Our Most-Loved")
+               */
+              heading: string;
+              /**
+               * Text to highlight in different color (e.g., "Learning Paths.")
+               */
+              highlightedText?: string | null;
+              highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+              tabs?:
+                | {
+                    tabLabel?: string | null;
+                    content?: {
+                      root: {
+                        type: string;
+                        children: {
+                          type: any;
+                          version: number;
+                          [k: string]: unknown;
+                        }[];
+                        direction: ('ltr' | 'rtl') | null;
+                        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                        indent: number;
+                        version: number;
+                      };
+                      [k: string]: unknown;
+                    } | null;
+                    image?: (number | null) | Media;
+                    layout?: ('imageLeft' | 'imageRight') | null;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'tabLayoutBlock';
+            }
         )[]
       | null;
   };
@@ -1642,6 +1683,25 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     content?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              tabLayoutBlock?:
+                | T
+                | {
+                    preHeading?: T;
+                    heading?: T;
+                    highlightedText?: T;
+                    highlightColor?: T;
+                    tabs?:
+                      | T
+                      | {
+                          tabLabel?: T;
+                          content?: T;
+                          image?: T;
+                          layout?: T;
+                          id?: T;
+                        };
                     id?: T;
                     blockName?: T;
                   };
