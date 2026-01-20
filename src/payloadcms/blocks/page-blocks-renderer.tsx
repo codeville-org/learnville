@@ -9,6 +9,7 @@ import type { PageBlock } from './types'
 import { CTARenderer } from './CTA/renderer'
 import { SiteStatsRenderer } from './SiteStats/renderer'
 import { RichTextContentBlockRenderer } from './RichTextContent/renderer'
+import { TabLayoutBlockRenderer } from './TabLayout/renderer'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -24,6 +25,7 @@ export const blockRenderers = {
   featuredBlogs: FeaturedBlogsRenderer,
   siteStatsBlock: SiteStatsRenderer,
   richTextContent: RichTextContentBlockRenderer,
+  tabLayoutBlock: TabLayoutBlockRenderer,
 } as const
 
 /**

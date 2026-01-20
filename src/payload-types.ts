@@ -947,15 +947,15 @@ export interface Page {
             }
           | {
               /**
-               * Small text above the main heading (e.g., "Popular Categories,")
+               * Small text above the main heading (e.g., "How to Get Started")
                */
               preHeading?: string | null;
               /**
-               * Main hero heading (e.g., "Explore Our Most-Loved")
+               * Main hero heading (e.g., "Explore Our Learning Paths")
                */
               heading: string;
               /**
-               * Text to highlight in different color (e.g., "Learning Paths.")
+               * Text to highlight in different color
                */
               highlightedText?: string | null;
               highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;

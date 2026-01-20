@@ -10,6 +10,10 @@ interface RichTextContentBlockRendererProps extends BlockRendererProps<RichTextC
   className?: string
 }
 
+export function RichTextComponent({ content }: { content: SerializedEditorState }) {
+  return <RichText className="richtext-content" data={content as SerializedEditorState} />
+}
+
 export function RichTextContentBlockRenderer({ data }: RichTextContentBlockRendererProps) {
   const { content } = data
 
