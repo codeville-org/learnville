@@ -127,62 +127,6 @@ export const About: Block = {
       ],
     },
     {
-      name: 'aboutStats',
-      type: 'group',
-      label: 'About Section Stats',
-      fields: [
-        {
-          name: 'statsEnabled',
-          type: 'checkbox',
-          label: 'Enable Stats',
-          defaultValue: true,
-        },
-        {
-          name: 'activeLearners',
-          type: 'text',
-          label: 'Active Learners',
-          admin: {
-            condition: (_, siblingData) => siblingData?.statsEnabled,
-            description: 'E.g., "100K+"',
-          },
-        },
-        {
-          name: 'expertInstructors',
-          type: 'text',
-          label: 'Expert Instructors',
-          admin: {
-            condition: (_, siblingData) => siblingData?.statsEnabled,
-            description: 'E.g., "500+"',
-          },
-        },
-      ],
-    },
-    {
-      name: 'aboutFeatures',
-      type: 'group',
-      label: 'About Section Features',
-      fields: [
-        {
-          name: 'featuresList',
-          type: 'array',
-          fields: [
-            {
-              name: 'title',
-              type: 'text',
-              label: 'Feature Title',
-            },
-            {
-              name: 'description',
-              type: 'textarea',
-              label: 'Feature Description',
-            },
-          ],
-          minRows: 1,
-          maxRows: 3,
-        },
-      ],
-    },
-    {
       name: 'layout',
       type: 'select',
       label: 'Layout Style',

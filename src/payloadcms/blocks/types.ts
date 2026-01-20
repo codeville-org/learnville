@@ -24,17 +24,26 @@ export type ExtractBlockType<T extends PageBlock['blockType']> = Extract<
 export type HeroBlock = ExtractBlockType<'hero'>
 export type AboutBlock = ExtractBlockType<'about'>
 export type CTABlock = ExtractBlockType<'ctaBlock'>
+export type SiteStatsBlock = ExtractBlockType<'siteStatsBlock'>
+export type RichTextContentBlock = ExtractBlockType<'richTextContent'>
+export type TabLayoutBlock = ExtractBlockType<'tabLayoutBlock'>
 
 // Hydrated block types (with lightweight data from hydration)
 export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCategories'> & {
   topCategories?: HydratedCategoryData[] | null
 }
+
 export type FeaturedCoursesBlock = Omit<ExtractBlockType<'featuredCourses'>, 'featuredCourses'> & {
   featuredCourses?: HydratedCourseData[] | null
 }
+
 export type FeaturedBlogsBlock = Omit<ExtractBlockType<'featuredBlogs'>, 'featuredBlogs'> & {
   featuredBlogs?: HydratedFeaturedBlogData[] | null
 }
+
+// export type TabLayoutBlock = Omit<ExtractBlockType<'tabLayoutBlock'>, 'tabLayoutBlock'> & {
+//   tabLayoutBlock?:
+// }
 
 /**
  * Lesson Block Types (if used in Pages or separate Lesson collection)

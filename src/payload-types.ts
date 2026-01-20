@@ -115,11 +115,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     cta: Cta;
+    'site-stats': SiteStat;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     cta: CtaSelect<false> | CtaSelect<true>;
+    'site-stats': SiteStatsSelect<false> | SiteStatsSelect<true>;
   };
   locale: null;
   user:
@@ -847,26 +849,6 @@ export interface Page {
                   externalLink?: string | null;
                 };
               };
-              aboutStats?: {
-                statsEnabled?: boolean | null;
-                /**
-                 * E.g., "100K+"
-                 */
-                activeLearners?: string | null;
-                /**
-                 * E.g., "500+"
-                 */
-                expertInstructors?: string | null;
-              };
-              aboutFeatures?: {
-                featuresList?:
-                  | {
-                      title?: string | null;
-                      description?: string | null;
-                      id?: string | null;
-                    }[]
-                  | null;
-              };
               layout?: ('image-left' | 'image-right') | null;
               id?: string | null;
               blockName?: string | null;
@@ -937,6 +919,73 @@ export interface Page {
               id?: string | null;
               blockName?: string | null;
               blockType: 'featuredBlogs';
+            }
+          | {
+              variant?: ('secondary' | 'primary') | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'siteStatsBlock';
+            }
+          | {
+              content?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'richTextContent';
+            }
+          | {
+              /**
+               * Small text above the main heading (e.g., "How to Get Started")
+               */
+              preHeading?: string | null;
+              /**
+               * Main hero heading (e.g., "Explore Our Learning Paths")
+               */
+              heading: string;
+              /**
+               * Text to highlight in different color
+               */
+              highlightedText?: string | null;
+              highlightColor?: ('orange' | 'emerald' | 'teal' | 'purple' | 'blue') | null;
+              tabs?:
+                | {
+                    tabLabel?: string | null;
+                    content?: {
+                      root: {
+                        type: string;
+                        children: {
+                          type: any;
+                          version: number;
+                          [k: string]: unknown;
+                        }[];
+                        direction: ('ltr' | 'rtl') | null;
+                        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                        indent: number;
+                        version: number;
+                      };
+                      [k: string]: unknown;
+                    } | null;
+                    image?: (number | null) | Media;
+                    layout?: ('imageLeft' | 'imageRight') | null;
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'tabLayoutBlock';
             }
         )[]
       | null;
@@ -1565,24 +1614,6 @@ export interface PagesSelect<T extends boolean = true> {
                                 externalLink?: T;
                               };
                         };
-                    aboutStats?:
-                      | T
-                      | {
-                          statsEnabled?: T;
-                          activeLearners?: T;
-                          expertInstructors?: T;
-                        };
-                    aboutFeatures?:
-                      | T
-                      | {
-                          featuresList?:
-                            | T
-                            | {
-                                title?: T;
-                                description?: T;
-                                id?: T;
-                              };
-                        };
                     layout?: T;
                     id?: T;
                     blockName?: T;
@@ -1640,6 +1671,39 @@ export interface PagesSelect<T extends boolean = true> {
                               };
                         };
                     featuredBlogs?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              siteStatsBlock?:
+                | T
+                | {
+                    variant?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              richTextContent?:
+                | T
+                | {
+                    content?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              tabLayoutBlock?:
+                | T
+                | {
+                    preHeading?: T;
+                    heading?: T;
+                    highlightedText?: T;
+                    highlightColor?: T;
+                    tabs?:
+                      | T
+                      | {
+                          tabLabel?: T;
+                          content?: T;
+                          image?: T;
+                          layout?: T;
+                          id?: T;
+                        };
                     id?: T;
                     blockName?: T;
                   };
@@ -1906,6 +1970,28 @@ export interface Cta {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-stats".
+ */
+export interface SiteStat {
+  id: number;
+  stats?: {
+    activeLearners?: string | null;
+    expertInstructors?: string | null;
+    coursesAvailable?: string | null;
+    certificatesIssued?: string | null;
+  };
+  features?:
+    | {
+        title?: string | null;
+        description?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -2087,6 +2173,30 @@ export interface CtaSelect<T extends boolean = true> {
         externalLink?: T;
       };
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-stats_select".
+ */
+export interface SiteStatsSelect<T extends boolean = true> {
+  stats?:
+    | T
+    | {
+        activeLearners?: T;
+        expertInstructors?: T;
+        coursesAvailable?: T;
+        certificatesIssued?: T;
+      };
+  features?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

@@ -9,9 +9,12 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowRightIcon, BadgeCheckIcon, GraduationCap, Users2Icon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
+import { fetchSiteStats } from '@/lib/actions/fetch-stats'
 
-export function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock>) {
-  const { layout, content, aboutStats, aboutFeatures } = data
+export async function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock>) {
+  const { layout, content } = data
+
+  const { stats, features } = await fetchSiteStats()
 
   const highlightColor =
     (content?.highlightColor && highlightColorMap[content.highlightColor]) || '#f97316'
@@ -37,21 +40,21 @@ export function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock>) {
           )}
 
           {/* Stats */}
-          {aboutStats?.statsEnabled && (
+          {stats && (
             <div className="">
-              {aboutStats.activeLearners && (
+              {stats.activeLearners && (
                 <Card className="absolute z-30 top-[10%] right-11 animate-float-smooth delay-150 p-4 py-6 flex flex-col items-start justify-center shadow-none gap-4 border border-teal-300 bg-linear-to-tr from-teal-100 to-white">
                   <div className="p-2 rounded-xl bg-teal-400/10">
                     <GraduationCap className="size-12 text-teal-500" />
                   </div>
 
                   <div className="space-y-0">
-                    <h1 className="text-4xl text-teal-950">{aboutStats.activeLearners}</h1>
+                    <h1 className="text-4xl text-teal-950">{stats.activeLearners}</h1>
                     <h4 className="text-sm text-teal-950/60">{`Active Learners`}</h4>
                   </div>
                 </Card>
               )}
-              {aboutStats.expertInstructors && (
+              {stats.expertInstructors && (
                 <Card className="absolute z-30 bottom-[5%] left-11 animate-float-smooth delay-500 p-4 py-6 flex flex-col items-start justify-center shadow-none gap-4 border border-teal-200 bg-linear-to-tr from-teal-700 to-teal-400">
                   <div className="p-2 rounded-xl bg-teal-200/10">
                     <Users2Icon className="size-12 text-teal-200" />
@@ -59,7 +62,7 @@ export function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock>) {
 
                   <div className="space-y-0">
                     <h1 className="text-4xl text-teal-50 font-semibold">
-                      {aboutStats.expertInstructors}
+                      {stats.expertInstructors}
                     </h1>
                     <h4 className="text-sm text-teal-50/80">{`Expert Instructors`}</h4>
                   </div>
@@ -124,30 +127,28 @@ export function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock>) {
               <p className="mt-4 text-emerald-950/60">{content.description}</p>
             )}
 
-            {aboutFeatures &&
-              aboutFeatures?.featuresList &&
-              aboutFeatures.featuresList?.length > 0 && (
-                <div className="py-8 flex flex-col">
-                  {aboutFeatures.featuresList.map((feature, index) => (
-                    <div
-                      className={cn('flex items-start gap-6 border-b border-emerald-950/20 py-4', {
-                        'border-none': index === (aboutFeatures.featuresList as any)?.length - 1,
-                      })}
-                      key={feature.id}
-                    >
-                      <div>
-                        <BadgeCheckIcon className="mt-1 size-6 text-emerald-600" />
-                      </div>
-                      <div className="flex flex-col text-left">
-                        <h4 className="text-lg font-medium text-emerald-950">{feature.title}</h4>
-                        {feature.description && (
-                          <p className="text-emerald-950/70 text-sm">{feature.description}</p>
-                        )}
-                      </div>
+            {features && features.length > 0 && (
+              <div className="py-8 flex flex-col">
+                {features.map((feature, index) => (
+                  <div
+                    className={cn('flex items-start gap-6 border-b border-emerald-950/20 py-4', {
+                      'border-none': index === (features as any)?.length - 1,
+                    })}
+                    key={feature.id}
+                  >
+                    <div>
+                      <BadgeCheckIcon className="mt-1 size-6 text-emerald-600" />
                     </div>
-                  ))}
-                </div>
-              )}
+                    <div className="flex flex-col text-left">
+                      <h4 className="text-lg font-medium text-emerald-950">{feature.title}</h4>
+                      {feature.description && (
+                        <p className="text-emerald-950/70 text-sm">{feature.description}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="">
               {content?.cta && (
