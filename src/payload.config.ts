@@ -25,9 +25,19 @@ import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
 import { CTA } from './payloadcms/globals/CTA'
 import { SiteStats } from './payloadcms/globals/Stats'
+import editor from './payloadcms/collections/Users/access/editor'
+import {
+  placeholder,
+  width,
+  name,
+  label,
+  require,
+  defaultValue,
+  hidden,
+} from './payloadcms/forms/fieldConfig'
 
 import { FormSubmission } from '@/payload-types'
-import editor from './payloadcms/collections/Users/access/editor'
+import { TURBOPACK_CLIENT_MIDDLEWARE_MANIFEST } from 'next/dist/shared/lib/constants'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -139,7 +149,12 @@ export default buildConfig({
     formBuilderPlugin({
       fields: {
         phone: {
-          ...fields.text,
+          fields: [
+            { type: 'row', fields: [name, label] },
+            { type: 'row', fields: [placeholder, defaultValue] },
+            { type: 'row', fields: [width] },
+            { type: 'row', fields: [require, hidden] },
+          ],
           // @ts-ignore
           slug: 'phone',
           labels: {

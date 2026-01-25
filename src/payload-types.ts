@@ -991,6 +991,28 @@ export interface Page {
               blockName?: string | null;
               blockType: 'tabLayoutBlock';
             }
+          | {
+              form: number | Form;
+              enableCompanionText?: boolean | null;
+              companionText?: {
+                root: {
+                  type: string;
+                  children: {
+                    type: any;
+                    version: number;
+                    [k: string]: unknown;
+                  }[];
+                  direction: ('ltr' | 'rtl') | null;
+                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                  indent: number;
+                  version: number;
+                };
+                [k: string]: unknown;
+              } | null;
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'formBlock';
+            }
         )[]
       | null;
   };
@@ -1197,11 +1219,13 @@ export interface Form {
             blockType: 'textarea';
           }
         | {
-            name: string;
+            name?: string | null;
             label?: string | null;
-            width?: number | null;
+            placeholder?: string | null;
             defaultValue?: string | null;
+            fieldWidth?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
             required?: boolean | null;
+            hidden?: boolean | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'phone';
@@ -1926,6 +1950,15 @@ export interface PagesSelect<T extends boolean = true> {
                     id?: T;
                     blockName?: T;
                   };
+              formBlock?:
+                | T
+                | {
+                    form?: T;
+                    enableCompanionText?: T;
+                    companionText?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
             };
       };
   meta?:
@@ -2086,9 +2119,11 @@ export interface FormsSelect<T extends boolean = true> {
           | {
               name?: T;
               label?: T;
-              width?: T;
+              placeholder?: T;
               defaultValue?: T;
+              fieldWidth?: T;
               required?: T;
+              hidden?: T;
               id?: T;
               blockName?: T;
             };
