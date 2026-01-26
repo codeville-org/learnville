@@ -1,5 +1,3 @@
-import { s3Storage } from '@payloadcms/storage-s3'
-
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
@@ -8,6 +6,8 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { formBuilderPlugin, fields } from '@payloadcms/plugin-form-builder'
+import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
 
 import { Users } from './payloadcms/collections/Users/config'
 import { Media } from './payloadcms/collections/Media'
@@ -25,9 +25,40 @@ import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
 import { CTA } from './payloadcms/globals/CTA'
 import { SiteStats } from './payloadcms/globals/Stats'
+import editor from './payloadcms/collections/Users/access/editor'
+import {
+  placeholder,
+  width,
+  name,
+  label,
+  require,
+  defaultValue,
+  hidden,
+} from './payloadcms/forms/fieldConfig'
+
+import { FormSubmission } from '@/payload-types'
+import { TURBOPACK_CLIENT_MIDDLEWARE_MANIFEST } from 'next/dist/shared/lib/constants'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const beforeEmail: BeforeEmail<FormSubmission> = (emails, beforeChangeParams) => {
+  return emails.map((email) => ({
+    ...email,
+    html: `
+      <div>
+        <style>
+          h1 { font-size: 3rem }
+          p { font-size: 1rem; font-weight: bold; padding: 1rem; border: 1px solid darkgreen; border-radius: 0.5rem; }
+        </style>
+
+        <div>
+          ${email.html}
+        </div>
+      </div>
+    `,
+  }))
+}
 
 export default buildConfig({
   // --- Admin Configurations ---
@@ -114,6 +145,65 @@ export default buildConfig({
     //   acl: 'public-read',
     //   disableLocalStorage: true,
     // }),
+
+    formBuilderPlugin({
+      fields: {
+        phone: {
+          fields: [
+            { type: 'row', fields: [name, label] },
+            { type: 'row', fields: [placeholder, defaultValue] },
+            { type: 'row', fields: [width] },
+            { type: 'row', fields: [require, hidden] },
+          ],
+          // @ts-ignore
+          slug: 'phone',
+          labels: {
+            singular: 'Phone Number',
+            plural: 'Phone Numbers',
+          },
+        },
+      },
+      redirectRelationships: ['pages'],
+      beforeEmail: beforeEmail,
+      defaultToEmail: process?.env?.DEFAULT_TO_EMAIL || '',
+      formOverrides: {
+        slug: `forms`,
+        admin: {
+          group: 'Forms',
+        },
+        access: {
+          update: editor,
+        },
+        fields: ({ defaultFields }) => [
+          ...defaultFields.map((field) => {
+            if (field.type === 'radio' && field.name === 'confirmationType') {
+              return {
+                ...field,
+                hidden: true,
+              }
+            }
+
+            return field
+          }),
+          // Any additional field goes here
+          {
+            type: 'checkbox',
+            name: 'requireReCaptcha',
+            label: 'Require reCAPTCHA Verification',
+            defaultValue: false,
+            admin: {
+              position: 'sidebar',
+            },
+          },
+        ],
+      },
+      formSubmissionOverrides: {
+        slug: 'form-submissions',
+        admin: {
+          group: 'Forms',
+        },
+      },
+    }),
 
     vercelBlobStorage({
       enabled: true,

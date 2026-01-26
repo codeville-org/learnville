@@ -21,6 +21,7 @@ import { FeaturedBlogs } from '@/payloadcms/blocks/FeaturedBlogs/config'
 import { SiteStatsBlock } from '@/payloadcms/blocks/SiteStats/config'
 import { RichTextContentBlock } from '@/payloadcms/blocks/RichTextContent/config'
 import { TabLayoutBlock } from '@/payloadcms/blocks/TabLayout/config'
+import { FormBlock } from '@/payloadcms/forms/block/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -115,6 +116,7 @@ export const Pages: CollectionConfig = {
                 SiteStatsBlock,
                 RichTextContentBlock,
                 TabLayoutBlock,
+                FormBlock,
               ],
               admin: {
                 initCollapsed: true,
