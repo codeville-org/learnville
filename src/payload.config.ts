@@ -37,7 +37,6 @@ import {
 } from './payloadcms/forms/fieldConfig'
 
 import { FormSubmission } from '@/payload-types'
-import { TURBOPACK_CLIENT_MIDDLEWARE_MANIFEST } from 'next/dist/shared/lib/constants'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
