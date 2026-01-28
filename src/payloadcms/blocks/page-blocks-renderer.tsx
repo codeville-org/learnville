@@ -10,6 +10,7 @@ import { CTARenderer } from './CTA/renderer'
 import { SiteStatsRenderer } from './SiteStats/renderer'
 import { RichTextContentBlockRenderer } from './RichTextContent/renderer'
 import { TabLayoutBlockRenderer } from './TabLayout/renderer'
+import { FormBlockRenderer } from '../forms/block/renderer'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -26,6 +27,7 @@ export const blockRenderers = {
   siteStatsBlock: SiteStatsRenderer,
   richTextContent: RichTextContentBlockRenderer,
   tabLayoutBlock: TabLayoutBlockRenderer,
+  formBlock: FormBlockRenderer,
 } as const
 
 /**

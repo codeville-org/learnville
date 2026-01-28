@@ -27,6 +27,7 @@ export type CTABlock = ExtractBlockType<'ctaBlock'>
 export type SiteStatsBlock = ExtractBlockType<'siteStatsBlock'>
 export type RichTextContentBlock = ExtractBlockType<'richTextContent'>
 export type TabLayoutBlock = ExtractBlockType<'tabLayoutBlock'>
+export type FormBlock = ExtractBlockType<'formBlock'>
 
 // Hydrated block types (with lightweight data from hydration)
 export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCategories'> & {

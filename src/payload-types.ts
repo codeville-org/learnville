@@ -1223,7 +1223,7 @@ export interface Form {
             label?: string | null;
             placeholder?: string | null;
             defaultValue?: string | null;
-            fieldWidth?: ('full' | '3/4' | '2/3' | '1/2' | '1/3' | '1/4') | null;
+            fieldWidth?: ('100' | '75' | '66' | '50' | '33' | '25') | null;
             required?: boolean | null;
             hidden?: boolean | null;
             id?: string | null;

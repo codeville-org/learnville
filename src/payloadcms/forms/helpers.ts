@@ -1,6 +1,9 @@
 import type { Field } from 'payload'
 
-export function getPlaceholder(field: Field, customPlaceholder?: string): string {
+export function getPlaceholder(
+  field: Field | { type: string },
+  customPlaceholder?: string,
+): string {
   switch (field.type) {
     case 'text':
       return customPlaceholder || 'Enter text here'

@@ -50,12 +50,12 @@ const width: Field = {
   type: 'select',
   label: 'Width',
   options: [
-    { value: 'full', label: '100%' },
-    { value: '3/4', label: '75%' },
-    { value: '2/3', label: '66%' },
-    { value: '1/2', label: '50%' },
-    { value: '1/3', label: '33%' },
-    { value: '1/4', label: '25%' },
+    { value: '100', label: '100%' },
+    { value: '75', label: '75%' },
+    { value: '66', label: '66%' },
+    { value: '50', label: '50%' },
+    { value: '33', label: '33%' },
+    { value: '25', label: '25%' },
   ],
   admin: {
     width: '50%',
