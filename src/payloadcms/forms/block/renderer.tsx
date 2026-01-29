@@ -10,7 +10,7 @@ import { FormRendererClient } from './FormRendererClient'
  * Server component that fetches the full form data and renders the client form
  */
 export async function FormBlockRenderer({ data }: BlockRendererProps<FormBlock>) {
-  const { form: formRef, enableCompanionText, companionText } = data
+  const { form: formRef, layout } = data
 
   // Get form ID from relationship (can be number or populated Form object)
   const formId = typeof formRef === 'number' ? formRef : formRef?.id
@@ -52,11 +52,7 @@ export async function FormBlockRenderer({ data }: BlockRendererProps<FormBlock>)
     return (
       <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <FormRendererClient
-            form={form as FormType}
-            enableCompanionText={enableCompanionText}
-            companionText={companionText}
-          />
+          <FormRendererClient form={form as FormType} layout={layout} />
         </div>
       </section>
     )

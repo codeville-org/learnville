@@ -10,6 +10,7 @@ import type { Form as FormType } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
+import type { FormBlock } from '@/payloadcms/blocks/types'
 
 import {
   buildValidationSchema,
@@ -23,15 +24,15 @@ import type { z } from 'zod'
 interface FormRendererClientProps {
   form: FormType
   enableCompanionText?: boolean | null
-  companionText?: FormType['confirmationMessage']
   className?: string
+  layout?: FormBlock['layout']
 }
 
 export function FormRendererClient({
   form,
   enableCompanionText,
-  companionText,
   className,
+  layout,
 }: FormRendererClientProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -79,16 +80,17 @@ export function FormRendererClient({
     <div
       className={cn(
         'w-full',
-        enableCompanionText && companionText && 'grid md:grid-cols-2 gap-8 items-start',
+        layout && layout === 'twoColumn' && 'grid md:grid-cols-2 gap-8 items-start',
+        layout && layout === 'constrained' && 'max-w-3xl mx-auto',
         className,
       )}
     >
       {/* Companion Text */}
-      {enableCompanionText && companionText && (
-        <div className="prose max-w-none">
-          <RichText data={companionText} />
-        </div>
-      )}
+      <div className={cn('', layout === 'constrained' && 'text-center')}>
+        <h3>{form.subheading}</h3>
+        <h1>{form.heading}</h1>
+        <p>{form.description}</p>
+      </div>
 
       {/* Form */}
       <div className="w-full">
