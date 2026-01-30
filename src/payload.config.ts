@@ -42,8 +42,15 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const beforeEmail: BeforeEmail<FormSubmission> = (emails, beforeChangeParams) => {
+  // Default from address and name from environment variables
+  const defaultFromName = process.env.BREVO_SENDER_NAME || 'Learnville'
+  const defaultFromAddress = process.env.BREVO_SENDER_EMAIL || ''
+  const defaultFrom = `"${defaultFromName}" <${defaultFromAddress}>`
+
   return emails.map((email) => ({
     ...email,
+    // Ensure 'from' is always set to a valid Brevo verified sender
+    from: email.from && email.from.trim() !== '' ? email.from : defaultFrom,
     html: `
       <div>
         <style>
@@ -174,25 +181,58 @@ export default buildConfig({
           update: editor,
         },
         fields: ({ defaultFields }) => [
-          ...defaultFields.map((field) => {
-            if (field.type === 'radio' && field.name === 'confirmationType') {
-              return {
-                ...field,
-                hidden: true,
-              }
-            }
-
-            return field
-          }),
-          // Any additional field goes here
           {
-            type: 'checkbox',
-            name: 'requireReCaptcha',
-            label: 'Require reCAPTCHA Verification',
-            defaultValue: false,
-            admin: {
-              position: 'sidebar',
-            },
+            type: 'tabs',
+            tabs: [
+              {
+                label: 'Form Setup',
+                description: 'Configure basic form settings',
+                fields: [
+                  ...defaultFields.map((field) => {
+                    if (field.type === 'radio' && field.name === 'confirmationType') {
+                      return {
+                        ...field,
+                        hidden: true,
+                      }
+                    }
+
+                    return field
+                  }),
+                ],
+              },
+              {
+                label: 'Metadata',
+                description: 'Additional metadata for the form',
+                fields: [
+                  {
+                    type: 'group',
+                    fields: [
+                      {
+                        type: 'text',
+                        name: 'heading',
+                        label: 'Form Heading',
+                      },
+                      {
+                        type: 'text',
+                        name: 'subheading',
+                        label: 'Form Subheading',
+                      },
+                      {
+                        name: 'description',
+                        type: 'text',
+                        label: 'Form Description',
+                      },
+                    ],
+                  },
+                  {
+                    type: 'checkbox',
+                    name: 'requireReCaptcha',
+                    label: 'Require reCAPTCHA Verification',
+                    defaultValue: false,
+                  },
+                ],
+              },
+            ],
           },
         ],
       },

@@ -35,6 +35,7 @@ export function TextareaField({ name, label, required, defaultValue, className }
             aria-invalid={fieldState.invalid}
             aria-required={required ?? false}
             rows={4}
+            className="shadow-none bg-white rounded-md"
           />
           {fieldState.error && <FieldError errors={[fieldState.error]} />}
         </Field>

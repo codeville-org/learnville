@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useTransition } from 'react'
+import React, { useId, useState, useTransition } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -10,6 +10,7 @@ import type { Form as FormType } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { cn } from '@/lib/utils'
+import type { FormBlock } from '@/payloadcms/blocks/types'
 
 import {
   buildValidationSchema,
@@ -19,23 +20,27 @@ import {
 import { submitFormAction, type SubmitFormResult } from '../actions'
 import { RenderFields } from './field-registry'
 import type { z } from 'zod'
+import { TextAnimate } from '@/components/ui/text-animate'
+import { Highlighter } from '@/components/ui/highlighter'
+import { toast } from 'sonner'
 
 interface FormRendererClientProps {
   form: FormType
   enableCompanionText?: boolean | null
-  companionText?: FormType['confirmationMessage']
   className?: string
+  layout?: FormBlock['layout']
 }
 
 export function FormRendererClient({
   form,
   enableCompanionText,
-  companionText,
   className,
+  layout,
 }: FormRendererClientProps) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [submitResult, setSubmitResult] = useState<SubmitFormResult | null>(null)
+  const toastId = useId()
 
   // Build validation schema and default values from form fields
   const validationSchema = React.useMemo(() => buildValidationSchema(form.fields), [form.fields])
@@ -50,16 +55,20 @@ export function FormRendererClient({
 
   const onSubmit = (data: Record<string, unknown>) => {
     startTransition(async () => {
+      toast.loading('Submitting form...', { id: toastId })
       const result = await submitFormAction(form.id, data)
       setSubmitResult(result)
 
       if (result.success) {
         methods.reset()
+        toast.success('Form submitted successfully!', { id: toastId })
 
         // Handle redirect if specified
         if (result.redirectUrl) {
           router.push(result.redirectUrl)
         }
+      } else {
+        toast.error(result.error || 'There was an error submitting the form.', { id: toastId })
       }
     })
   }
@@ -79,16 +88,35 @@ export function FormRendererClient({
     <div
       className={cn(
         'w-full',
-        enableCompanionText && companionText && 'grid md:grid-cols-2 gap-8 items-start',
+        layout && layout === 'twoColumn' && 'grid md:grid-cols-2 gap-8 items-start',
+        layout && layout === 'constrained' && 'max-w-3xl mx-auto',
         className,
       )}
     >
       {/* Companion Text */}
-      {enableCompanionText && companionText && (
-        <div className="prose max-w-none">
-          <RichText data={companionText} />
+      <div className={cn('mb-12', layout === 'constrained' && 'text-center')}>
+        {form?.subheading && (
+          <TextAnimate
+            as="h3"
+            animation="slideRight"
+            className="text-emerald-800 font-medium font-heading text-lg mb-2"
+          >
+            {form.subheading}
+          </TextAnimate>
+        )}
+
+        <div className="space-y-2">
+          {form?.heading && (
+            <h1 className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading">
+              <Highlighter animationDuration={2500} action="underline" color={'#08a16e'}>
+                {form.heading}
+              </Highlighter>
+            </h1>
+          )}
         </div>
-      )}
+
+        {form?.description && <p className="mt-4 text-emerald-950/60">{form?.description}</p>}
+      </div>
 
       {/* Form */}
       <div className="w-full">
@@ -104,10 +132,14 @@ export function FormRendererClient({
             )}
 
             {/* Submit button */}
-            <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto h-11 rounded-md bg-emerald-800 hover:bg-emerald-900"
+            >
               {isPending ? (
                 <>
-                  <Spinner className="mr-2 size-4" />
+                  <Spinner />
                   Submitting...
                 </>
               ) : (

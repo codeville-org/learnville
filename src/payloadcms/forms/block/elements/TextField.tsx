@@ -36,6 +36,7 @@ export function TextField({ name, label, required, defaultValue, className }: Pr
             placeholder={placeholder}
             aria-invalid={fieldState.invalid}
             aria-required={required ?? false}
+            className="shadow-none bg-white h-11 rounded-md"
           />
           {fieldState.error && <FieldError errors={[fieldState.error]} />}
         </Field>

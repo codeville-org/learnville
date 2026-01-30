@@ -15,18 +15,15 @@ export const FormBlock: Block = {
       required: true,
     },
     {
-      name: 'enableCompanionText',
-      label: 'Enable Companion Text',
-      type: 'checkbox',
-    },
-    {
-      name: 'companionText',
-      label: 'Companion Text',
-      type: 'richText',
-      editor: lexicalEditor({}),
-      admin: {
-        condition: (_, siblingData) => Boolean(siblingData?.enableCompanionText),
-      },
+      type: 'select',
+      name: 'layout',
+      label: 'Section Layout',
+      options: [
+        { label: 'Full Width', value: 'fullWidth' },
+        { label: 'Constrained', value: 'constrained' },
+        { label: 'Two Column', value: 'twoColumn' },
+      ],
+      defaultValue: 'constrained',
     },
   ],
 }

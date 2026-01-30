@@ -993,22 +993,7 @@ export interface Page {
             }
           | {
               form: number | Form;
-              enableCompanionText?: boolean | null;
-              companionText?: {
-                root: {
-                  type: string;
-                  children: {
-                    type: any;
-                    version: number;
-                    [k: string]: unknown;
-                  }[];
-                  direction: ('ltr' | 'rtl') | null;
-                  format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                  indent: number;
-                  version: number;
-                };
-                [k: string]: unknown;
-              } | null;
+              layout?: ('fullWidth' | 'constrained' | 'twoColumn') | null;
               id?: string | null;
               blockName?: string | null;
               blockType: 'formBlock';
@@ -1292,6 +1277,9 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  heading?: string | null;
+  subheading?: string | null;
+  description?: string | null;
   requireReCaptcha?: boolean | null;
   updatedAt: string;
   createdAt: string;
@@ -1954,8 +1942,7 @@ export interface PagesSelect<T extends boolean = true> {
                 | T
                 | {
                     form?: T;
-                    enableCompanionText?: T;
-                    companionText?: T;
+                    layout?: T;
                     id?: T;
                     blockName?: T;
                   };
@@ -2150,6 +2137,9 @@ export interface FormsSelect<T extends boolean = true> {
         message?: T;
         id?: T;
       };
+  heading?: T;
+  subheading?: T;
+  description?: T;
   requireReCaptcha?: T;
   updatedAt?: T;
   createdAt?: T;
