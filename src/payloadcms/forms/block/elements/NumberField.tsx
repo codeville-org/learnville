@@ -39,6 +39,7 @@ export function NumberField({ name, label, required, defaultValue, className }: 
               const value = e.target.value
               field.onChange(value === '' ? '' : Number(value))
             }}
+            className="shadow-none bg-white h-11 rounded-md"
           />
           {fieldState.error && <FieldError errors={[fieldState.error]} />}
         </Field>

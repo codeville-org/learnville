@@ -211,8 +211,8 @@ export default buildConfig({
                         label: 'Form Subheading',
                       },
                       {
-                        type: 'textarea',
                         name: 'description',
+                        type: 'text',
                         label: 'Form Description',
                       },
                     ],

@@ -20,6 +20,8 @@ import {
 import { submitFormAction, type SubmitFormResult } from '../actions'
 import { RenderFields } from './field-registry'
 import type { z } from 'zod'
+import { TextAnimate } from '@/components/ui/text-animate'
+import { Highlighter } from '@/components/ui/highlighter'
 
 interface FormRendererClientProps {
   form: FormType
@@ -86,10 +88,28 @@ export function FormRendererClient({
       )}
     >
       {/* Companion Text */}
-      <div className={cn('', layout === 'constrained' && 'text-center')}>
-        <h3>{form.subheading}</h3>
-        <h1>{form.heading}</h1>
-        <p>{form.description}</p>
+      <div className={cn('mb-12', layout === 'constrained' && 'text-center')}>
+        {form?.subheading && (
+          <TextAnimate
+            as="h3"
+            animation="slideRight"
+            className="text-emerald-800 font-medium font-heading text-lg mb-2"
+          >
+            {form.subheading}
+          </TextAnimate>
+        )}
+
+        <div className="space-y-2">
+          {form?.heading && (
+            <h1 className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading">
+              <Highlighter animationDuration={2500} action="underline" color={'#08a16e'}>
+                {form.heading}
+              </Highlighter>
+            </h1>
+          )}
+        </div>
+
+        {form?.description && <p className="mt-4 text-emerald-950/60">{form?.description}</p>}
       </div>
 
       {/* Form */}
@@ -106,10 +126,14 @@ export function FormRendererClient({
             )}
 
             {/* Submit button */}
-            <Button type="submit" disabled={isPending} className="w-full sm:w-auto">
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full sm:w-auto h-11 rounded-md bg-emerald-800 hover:bg-emerald-900"
+            >
               {isPending ? (
                 <>
-                  <Spinner className="mr-2 size-4" />
+                  <Spinner />
                   Submitting...
                 </>
               ) : (

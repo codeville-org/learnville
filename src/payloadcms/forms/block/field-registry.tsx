@@ -60,9 +60,9 @@ export function RenderField({ field, index }: RenderFieldProps) {
   // For message blocks, don't wrap in FieldWrapper (they handle their own layout)
   if (blockType === 'message') {
     return (
-      <FieldWrapper key={field.id || index} width={width} fieldWidth={fieldWidth} hidden={hidden}>
+      <div className="" key={field.id || index}>
         <MessageBlock {...(field as any)} />
-      </FieldWrapper>
+      </div>
     )
   }
 

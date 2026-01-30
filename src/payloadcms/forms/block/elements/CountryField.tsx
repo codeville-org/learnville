@@ -35,7 +35,7 @@ export function CountryField({ name, label, required, className }: Props) {
           )}
           <Select name={field.name} value={field.value} onValueChange={field.onChange}>
             <SelectTrigger
-              className="w-full"
+              className="w-full shadow-none bg-white h-11 rounded-md"
               aria-invalid={fieldState.invalid}
               aria-required={required ?? false}
             >
