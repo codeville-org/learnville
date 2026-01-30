@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useTransition } from 'react'
+import React, { useId, useState, useTransition } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -22,6 +22,7 @@ import { RenderFields } from './field-registry'
 import type { z } from 'zod'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
+import { toast } from 'sonner'
 
 interface FormRendererClientProps {
   form: FormType
@@ -39,6 +40,7 @@ export function FormRendererClient({
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [submitResult, setSubmitResult] = useState<SubmitFormResult | null>(null)
+  const toastId = useId()
 
   // Build validation schema and default values from form fields
   const validationSchema = React.useMemo(() => buildValidationSchema(form.fields), [form.fields])
@@ -53,16 +55,20 @@ export function FormRendererClient({
 
   const onSubmit = (data: Record<string, unknown>) => {
     startTransition(async () => {
+      toast.loading('Submitting form...', { id: toastId })
       const result = await submitFormAction(form.id, data)
       setSubmitResult(result)
 
       if (result.success) {
         methods.reset()
+        toast.success('Form submitted successfully!', { id: toastId })
 
         // Handle redirect if specified
         if (result.redirectUrl) {
           router.push(result.redirectUrl)
         }
+      } else {
+        toast.error(result.error || 'There was an error submitting the form.', { id: toastId })
       }
     })
   }

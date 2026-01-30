@@ -42,8 +42,15 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const beforeEmail: BeforeEmail<FormSubmission> = (emails, beforeChangeParams) => {
+  // Default from address and name from environment variables
+  const defaultFromName = process.env.BREVO_SENDER_NAME || 'Learnville'
+  const defaultFromAddress = process.env.BREVO_SENDER_EMAIL || ''
+  const defaultFrom = `"${defaultFromName}" <${defaultFromAddress}>`
+
   return emails.map((email) => ({
     ...email,
+    // Ensure 'from' is always set to a valid Brevo verified sender
+    from: email.from && email.from.trim() !== '' ? email.from : defaultFrom,
     html: `
       <div>
         <style>

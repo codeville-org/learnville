@@ -7,6 +7,7 @@ import { Footer } from '@/components/global/footer'
 import type { Footer as FooterType, Header as HeaderType } from '@/payload-types'
 import { LivePreviewListener } from '@/components/live-preview-listener'
 import { Header } from '@/components/global/header'
+import { Toaster } from 'sonner'
 
 type Props = {
   children: React.ReactNode
@@ -43,6 +44,8 @@ export default async function PagesLayout({ children }: Props) {
 
   return (
     <div>
+      <Toaster position="top-center" />
+
       {user && <LivePreviewListener />}
 
       {header && <Header data={header} user={user} />}
