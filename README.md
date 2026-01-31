@@ -73,3 +73,9 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
 ### Developer Notes
 
 - Local build test - success (31st of January)
+
+
+### Todo List
+
+- About Section's CTA is showing even CTA Disabled
+- 
