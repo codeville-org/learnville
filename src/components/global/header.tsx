@@ -16,6 +16,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 
 type Props = {
   data: HeaderType
@@ -63,12 +64,9 @@ export function Header({ data, user }: Props) {
         >
           <div className="container mx-auto px-4 py-2 flex items-center justify-between">
             <div className="flex-1 text-center text-sm">
-              <span className="font-bold">50% OFF</span> - For Every Students Joins In This January
-              -{' '}
-              <a href="#" className="underline hover:no-underline">
-                Claim Offer
-              </a>
+              <RichText data={data.topBanner.message} />
             </div>
+
             {data.topBanner.closeable && (
               <button
                 onClick={() => setBannerVisible(false)}

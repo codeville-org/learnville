@@ -151,7 +151,7 @@ export async function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock
             )}
 
             <div className="">
-              {content?.cta && (
+              {content?.cta && content?.cta?.enabled && (
                 <Button
                   asChild
                   size="lg"
