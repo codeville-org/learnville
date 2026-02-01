@@ -812,9 +812,9 @@ export interface Page {
                 cta?: {
                   enabled?: boolean | null;
                   label?: string | null;
-                  linkType?: ('internal' | 'external') | null;
-                  internalLink?: (number | null) | Page;
-                  externalLink?: string | null;
+                  type?: ('page' | 'external' | 'custom') | null;
+                  page?: (number | null) | Page;
+                  url?: string | null;
                 };
               };
               topCategories: (number | Category)[];
@@ -1814,9 +1814,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 enabled?: T;
                                 label?: T;
-                                linkType?: T;
-                                internalLink?: T;
-                                externalLink?: T;
+                                type?: T;
+                                page?: T;
+                                url?: T;
                               };
                         };
                     topCategories?: T;
@@ -2254,7 +2254,9 @@ export interface Header {
     viewAllLink?: {
       enabled?: boolean | null;
       label?: string | null;
+      type?: ('page' | 'external' | 'custom') | null;
       page?: (number | null) | Page;
+      url?: string | null;
     };
   };
   ctaButtons?: {
@@ -2305,10 +2307,10 @@ export interface Footer {
         links?:
           | {
               label: string;
-              type: 'internal' | 'external' | 'category';
-              internalLink?: (number | null) | Page;
-              categoryLink?: (number | null) | Category;
-              externalLink?: string | null;
+              type?: ('page' | 'external' | 'custom' | 'category') | null;
+              page?: (number | null) | Page;
+              category?: (number | null) | Category;
+              url?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -2358,18 +2360,18 @@ export interface Cta {
     title?: string | null;
     description?: string | null;
     buttonLabel?: string | null;
-    linkType?: ('internal' | 'external') | null;
-    internalLink?: (number | null) | Page;
-    externalLink?: string | null;
+    type?: ('page' | 'external' | 'custom') | null;
+    page?: (number | null) | Page;
+    url?: string | null;
   };
   studentCTA?: {
     image?: (number | null) | Media;
     title?: string | null;
     description?: string | null;
     buttonLabel?: string | null;
-    linkType?: ('internal' | 'external') | null;
-    internalLink?: (number | null) | Page;
-    externalLink?: string | null;
+    type?: ('page' | 'external' | 'custom') | null;
+    page?: (number | null) | Page;
+    url?: string | null;
   };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
@@ -2443,7 +2445,9 @@ export interface HeaderSelect<T extends boolean = true> {
           | {
               enabled?: T;
               label?: T;
+              type?: T;
               page?: T;
+              url?: T;
             };
       };
   ctaButtons?:
@@ -2509,9 +2513,9 @@ export interface FooterSelect<T extends boolean = true> {
           | {
               label?: T;
               type?: T;
-              internalLink?: T;
-              categoryLink?: T;
-              externalLink?: T;
+              page?: T;
+              category?: T;
+              url?: T;
               id?: T;
             };
         id?: T;
@@ -2564,9 +2568,9 @@ export interface CtaSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         buttonLabel?: T;
-        linkType?: T;
-        internalLink?: T;
-        externalLink?: T;
+        type?: T;
+        page?: T;
+        url?: T;
       };
   studentCTA?:
     | T
@@ -2575,9 +2579,9 @@ export interface CtaSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         buttonLabel?: T;
-        linkType?: T;
-        internalLink?: T;
-        externalLink?: T;
+        type?: T;
+        page?: T;
+        url?: T;
       };
   _status?: T;
   updatedAt?: T;

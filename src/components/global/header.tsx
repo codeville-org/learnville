@@ -17,6 +17,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getNavigationLinkHref } from '@/lib/utils'
 
 type Props = {
   data: HeaderType
@@ -36,16 +37,6 @@ const bgColorMap = {
   purple: 'bg-purple-500',
   red: 'bg-red-500',
   orange: 'bg-orange-500',
-}
-
-function getNavigationLinkHref(link: any): string {
-  if (link.type === 'page' && link.page) {
-    return `/${link.page.slug}`
-  }
-  if ((link.type === 'external' || link.type === 'custom') && link.url) {
-    return link.url
-  }
-  return '#'
 }
 
 export function Header({ data, user }: Props) {
@@ -136,7 +127,12 @@ export function Header({ data, user }: Props) {
                             )}
                             {data.exploreMenu.viewAllLink?.enabled && (
                               <Link
-                                href={`/${(data.exploreMenu.viewAllLink.page as any)?.slug || 'categories'}`}
+                                href={getNavigationLinkHref(data?.exploreMenu?.viewAllLink)}
+                                target={
+                                  data?.exploreMenu?.viewAllLink?.type === 'external'
+                                    ? '_blank'
+                                    : undefined
+                                }
                                 className="block px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 mt-2"
                               >
                                 {data.exploreMenu.viewAllLink.label || 'View All Categories'} →

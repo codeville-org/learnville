@@ -6,6 +6,7 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube, Github, ArrowRight } f
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import type { Footer as FooterType } from '@/payload-types'
+import { getNavigationLinkHref } from '@/lib/utils'
 
 interface Props {
   data: FooterType
@@ -18,22 +19,6 @@ const socialIcons = {
   linkedin: Linkedin,
   youtube: Youtube,
   github: Github,
-}
-
-function getLinkHref(link: any): string {
-  if (link.type === 'external' && link.externalLink) {
-    return link.externalLink
-  }
-
-  if (link.type === 'category' && link.categoryLink) {
-    return `/courses?category=${link.categoryLink.slug}`
-  }
-
-  if (link.type === 'internal' && link.internalLink) {
-    return `/${link.internalLink.slug}`
-  }
-
-  return '#'
 }
 
 export async function Footer({ data }: Props) {
@@ -112,7 +97,11 @@ export async function Footer({ data }: Props) {
                   {column.links?.map((link) => (
                     <li key={link.id}>
                       <Link
-                        href={getLinkHref(link)}
+                        href={
+                          link.type === 'category'
+                            ? `/courses?category=${link.category instanceof Object ? link.category.slug : ''}`
+                            : getNavigationLinkHref(link)
+                        }
                         className="text-gray-600 hover:text-emerald-500 text-sm transition-colors"
                       >
                         {link.label}

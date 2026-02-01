@@ -167,27 +167,29 @@ export const CTA: GlobalConfig = {
           defaultValue: 'Start Teaching Today',
         },
         {
-          name: 'linkType',
+          name: 'type',
           type: 'select',
-          defaultValue: 'internal',
+          defaultValue: 'page',
           options: [
-            { label: 'Internal Page', value: 'internal' },
-            { label: 'External URL', value: 'external' },
+            { label: 'Internal Page', value: 'page' },
+            { label: 'External Link', value: 'external' },
+            { label: 'Custom Link', value: 'custom' },
           ],
         },
         {
-          name: 'internalLink',
+          name: 'page',
           type: 'relationship',
           relationTo: 'pages',
           admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'internal',
+            condition: (_, siblingData) => siblingData?.type === 'page',
           },
         },
         {
-          name: 'externalLink',
+          name: 'url',
           type: 'text',
           admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'external',
+            condition: (_, siblingData) =>
+              siblingData?.type === 'external' || siblingData?.type === 'custom',
           },
         },
       ],
@@ -222,27 +224,29 @@ export const CTA: GlobalConfig = {
           defaultValue: 'Browse Courses',
         },
         {
-          name: 'linkType',
+          name: 'type',
           type: 'select',
-          defaultValue: 'internal',
+          defaultValue: 'page',
           options: [
-            { label: 'Internal Page', value: 'internal' },
-            { label: 'External URL', value: 'external' },
+            { label: 'Internal Page', value: 'page' },
+            { label: 'External Link', value: 'external' },
+            { label: 'Custom Link', value: 'custom' },
           ],
         },
         {
-          name: 'internalLink',
+          name: 'page',
           type: 'relationship',
           relationTo: 'pages',
           admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'internal',
+            condition: (_, siblingData) => siblingData?.type === 'page',
           },
         },
         {
-          name: 'externalLink',
+          name: 'url',
           type: 'text',
           admin: {
-            condition: (_, siblingData) => siblingData?.linkType === 'external',
+            condition: (_, siblingData) =>
+              siblingData?.type === 'external' || siblingData?.type === 'custom',
           },
         },
       ],
