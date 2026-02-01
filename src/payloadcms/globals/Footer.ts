@@ -129,24 +129,24 @@ export const Footer: GlobalConfig = {
             {
               name: 'type',
               type: 'select',
-              required: true,
-              defaultValue: 'internal',
+              defaultValue: 'page',
               options: [
-                { label: 'Internal Link', value: 'internal' },
+                { label: 'Internal Page', value: 'page' },
                 { label: 'External Link', value: 'external' },
-                { label: 'Category Page', value: 'category' },
+                { label: 'Custom Link', value: 'custom' },
+                { label: 'Category', value: 'category' },
               ],
             },
             {
-              name: 'internalLink',
+              name: 'page',
               type: 'relationship',
               relationTo: 'pages',
               admin: {
-                condition: (_, siblingData) => siblingData?.type === 'internal',
+                condition: (_, siblingData) => siblingData?.type === 'page',
               },
             },
             {
-              name: 'categoryLink',
+              name: 'category',
               type: 'relationship',
               relationTo: 'categories',
               admin: {
@@ -154,10 +154,11 @@ export const Footer: GlobalConfig = {
               },
             },
             {
-              name: 'externalLink',
+              name: 'url',
               type: 'text',
               admin: {
-                condition: (_, siblingData) => siblingData?.type === 'external',
+                condition: (_, siblingData) =>
+                  siblingData?.type === 'external' || siblingData?.type === 'custom',
               },
             },
           ],

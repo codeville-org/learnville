@@ -4,7 +4,7 @@ import { ArrowRightIcon } from 'lucide-react'
 
 import { BlockRendererProps, TopCategoriesBlock } from '../types'
 import { Highlighter } from '@/components/ui/highlighter'
-import { getCTAHref, highlightColorMap } from '@/lib/utils'
+import { getCTAHref, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { TextAnimate } from '@/components/ui/text-animate'
@@ -58,7 +58,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
                   size="lg"
                   className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
                 >
-                  <Link href={getCTAHref(content.cta)}>
+                  <Link href={getNavigationLinkHref(content.cta)}>
                     {content.cta?.label}
 
                     <ArrowRightIcon />
@@ -73,7 +73,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
             {topCategories &&
               topCategories.length > 0 &&
               topCategories.map((category) => (
-                <Link key={category.id} href={`/categories/${category.slug}`}>
+                <Link key={category.id} href={`/courses?category=${category.slug}`}>
                   <Card className="p-4 group cursor-pointer shadow-none flex flex-row items-center gap-2 bg-linear-to-t from-emerald-50/30 to-white hover:shadow-sm">
                     {category.icon && category.icon.url && (
                       <Image
@@ -105,7 +105,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
                 size="lg"
                 className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
               >
-                <Link href={getCTAHref(content.cta)}>
+                <Link href={getNavigationLinkHref(content.cta)}>
                   {content.cta?.label}
 
                   <ArrowRightIcon />

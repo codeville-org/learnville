@@ -16,6 +16,8 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
+import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getNavigationLinkHref } from '@/lib/utils'
 
 type Props = {
   data: HeaderType
@@ -37,16 +39,6 @@ const bgColorMap = {
   orange: 'bg-orange-500',
 }
 
-function getNavigationLinkHref(link: any): string {
-  if (link.type === 'page' && link.page) {
-    return `/${link.page.slug}`
-  }
-  if ((link.type === 'external' || link.type === 'custom') && link.url) {
-    return link.url
-  }
-  return '#'
-}
-
 export function Header({ data, user }: Props) {
   const [bannerVisible, setBannerVisible] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -63,12 +55,9 @@ export function Header({ data, user }: Props) {
         >
           <div className="container mx-auto px-4 py-2 flex items-center justify-between">
             <div className="flex-1 text-center text-sm">
-              <span className="font-bold">50% OFF</span> - For Every Students Joins In This January
-              -{' '}
-              <a href="#" className="underline hover:no-underline">
-                Claim Offer
-              </a>
+              <RichText data={data.topBanner.message} />
             </div>
+
             {data.topBanner.closeable && (
               <button
                 onClick={() => setBannerVisible(false)}
@@ -138,7 +127,12 @@ export function Header({ data, user }: Props) {
                             )}
                             {data.exploreMenu.viewAllLink?.enabled && (
                               <Link
-                                href={`/${(data.exploreMenu.viewAllLink.page as any)?.slug || 'categories'}`}
+                                href={getNavigationLinkHref(data?.exploreMenu?.viewAllLink)}
+                                target={
+                                  data?.exploreMenu?.viewAllLink?.type === 'external'
+                                    ? '_blank'
+                                    : undefined
+                                }
                                 className="block px-4 py-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 mt-2"
                               >
                                 {data.exploreMenu.viewAllLink.label || 'View All Categories'} →

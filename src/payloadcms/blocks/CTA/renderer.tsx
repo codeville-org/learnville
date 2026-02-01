@@ -7,7 +7,7 @@ import { BlockRendererProps, CTABlock } from '../types'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
-import { cn, getCTAHref, highlightColorMap } from '@/lib/utils'
+import { cn, getCTAHref, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -188,7 +188,7 @@ export async function CTARenderer({ data }: BlockRendererProps<CTABlock>) {
                               asChild
                               className="mt-2 rounded-xl bg-green-600 hover:bg-green-700 text-green-100 hover:text-green-50"
                             >
-                              <Link href={getCTAHref(ctaData?.instructorCTA)}>
+                              <Link href={getNavigationLinkHref(ctaData?.instructorCTA)}>
                                 {ctaData?.instructorCTA.buttonLabel || 'Become an Instructor'}
 
                                 <ArrowRightIcon className="size-4" />
@@ -229,7 +229,7 @@ export async function CTARenderer({ data }: BlockRendererProps<CTABlock>) {
                               asChild
                               className="mt-2 rounded-xl bg-green-600 hover:bg-green-700 text-green-100 hover:text-green-50"
                             >
-                              <Link href={getCTAHref(ctaData?.studentCTA)}>
+                              <Link href={getNavigationLinkHref(ctaData?.studentCTA)}>
                                 {ctaData?.studentCTA.buttonLabel || 'Become an Student'}
 
                                 <ArrowRightIcon className="size-4" />

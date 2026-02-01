@@ -200,9 +200,30 @@ export const Header: GlobalConfig = {
               defaultValue: 'View All Categories',
             },
             {
+              name: 'type',
+              type: 'select',
+              defaultValue: 'page',
+              options: [
+                { label: 'Internal Page', value: 'page' },
+                { label: 'External Link', value: 'external' },
+                { label: 'Custom Link', value: 'custom' },
+              ],
+            },
+            {
               name: 'page',
               type: 'relationship',
               relationTo: 'pages',
+              admin: {
+                condition: (_, siblingData) => siblingData?.type === 'page',
+              },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              admin: {
+                condition: (_, siblingData) =>
+                  siblingData?.type === 'external' || siblingData?.type === 'custom',
+              },
             },
           ],
         },

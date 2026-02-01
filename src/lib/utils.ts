@@ -22,3 +22,13 @@ export function getCTAHref(cta: any): string {
   }
   return '#'
 }
+
+export function getNavigationLinkHref(link: any): string {
+  if (link.type === 'page' && link.page) {
+    return `/${link.page.slug}`
+  }
+  if ((link.type === 'external' || link.type === 'custom') && link.url) {
+    return link.url
+  }
+  return '#'
+}
