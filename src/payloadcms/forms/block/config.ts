@@ -9,6 +9,12 @@ export const FormBlock: Block = {
   },
   fields: [
     {
+      name: 'headingEnabled',
+      type: 'checkbox',
+      label: 'Enable Heading',
+      defaultValue: true,
+    },
+    {
       name: 'form',
       relationTo: 'forms',
       type: 'relationship',

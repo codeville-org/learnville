@@ -992,6 +992,7 @@ export interface Page {
               blockType: 'tabLayoutBlock';
             }
           | {
+              headingEnabled?: boolean | null;
               form: number | Form;
               layout?: ('fullWidth' | 'constrained' | 'twoColumn') | null;
               id?: string | null;
@@ -1941,6 +1942,7 @@ export interface PagesSelect<T extends boolean = true> {
               formBlock?:
                 | T
                 | {
+                    headingEnabled?: T;
                     form?: T;
                     layout?: T;
                     id?: T;

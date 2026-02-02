@@ -26,14 +26,14 @@ import { toast } from 'sonner'
 
 interface FormRendererClientProps {
   form: FormType
-  enableCompanionText?: boolean | null
+  headingEnabled?: boolean | null
   className?: string
   layout?: FormBlock['layout']
 }
 
 export function FormRendererClient({
   form,
-  enableCompanionText,
+  headingEnabled = true,
   className,
   layout,
 }: FormRendererClientProps) {
@@ -94,29 +94,31 @@ export function FormRendererClient({
       )}
     >
       {/* Companion Text */}
-      <div className={cn('mb-12', layout === 'constrained' && 'text-center')}>
-        {form?.subheading && (
-          <TextAnimate
-            as="h3"
-            animation="slideRight"
-            className="text-emerald-800 font-medium font-heading text-lg mb-2"
-          >
-            {form.subheading}
-          </TextAnimate>
-        )}
-
-        <div className="space-y-2">
-          {form?.heading && (
-            <h1 className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading">
-              <Highlighter animationDuration={2500} action="underline" color={'#08a16e'}>
-                {form.heading}
-              </Highlighter>
-            </h1>
+      {headingEnabled && (
+        <div className={cn('mb-12', layout === 'constrained' && 'text-center')}>
+          {form?.subheading && (
+            <TextAnimate
+              as="h3"
+              animation="slideRight"
+              className="text-emerald-800 font-medium font-heading text-lg mb-2"
+            >
+              {form.subheading}
+            </TextAnimate>
           )}
-        </div>
 
-        {form?.description && <p className="mt-4 text-emerald-950/60">{form?.description}</p>}
-      </div>
+          <div className="space-y-2">
+            {form?.heading && (
+              <h1 className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading">
+                <Highlighter animationDuration={2500} action="underline" color={'#08a16e'}>
+                  {form.heading}
+                </Highlighter>
+              </h1>
+            )}
+          </div>
+
+          {form?.description && <p className="mt-4 text-emerald-950/60">{form?.description}</p>}
+        </div>
+      )}
 
       {/* Form */}
       <div className="w-full">
