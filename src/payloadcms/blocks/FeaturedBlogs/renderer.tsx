@@ -9,6 +9,7 @@ import { ArrowRightIcon, CalendarIcon, ClockIcon } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
+import { DEFAULT_BLOG_PAGE_SLUG } from '@/lib/constants'
 
 export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogsBlock>) {
   const { content, featuredBlogs } = data
@@ -76,7 +77,10 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {firstBlog && (
               <Card className="shadow-none p-4 w-full">
-                <Link href={`/blog/${firstBlog.slug}`} className="space-y-3 w-full h-full group">
+                <Link
+                  href={`/${DEFAULT_BLOG_PAGE_SLUG}/${firstBlog.slug}`}
+                  className="space-y-3 w-full h-full group"
+                >
                   <div className="w-full aspect-video relative overflow-hidden rounded-md">
                     <Badge className="absolute top-2 left-2 z-10 text-sm py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">
                       <ClockIcon /> {firstBlog.readTimeMinutes}
@@ -116,7 +120,7 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
               <Card className="shadow-none p-4 col-span-2 flex flex-col gap-4">
                 {/* Second Blog - Row Layout */}
                 <Link
-                  href={`/blog/${secondBlog.slug}`}
+                  href={`/${DEFAULT_BLOG_PAGE_SLUG}/${secondBlog.slug}`}
                   className="flex gap-4 group flex-1 items-center"
                 >
                   <div className="w-1/3 h-full relative overflow-hidden rounded-md flex-shrink-0">
@@ -151,7 +155,7 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
 
                 {/* Third Blog - Row Layout */}
                 <Link
-                  href={`/blog/${thirdBlog.slug}`}
+                  href={`/${DEFAULT_BLOG_PAGE_SLUG}/${thirdBlog.slug}`}
                   className="flex gap-4 group flex-1 items-center"
                 >
                   <div className="w-1/3 h-full relative overflow-hidden rounded-md flex-shrink-0">

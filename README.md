@@ -83,3 +83,7 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
   - Fix category item link to courses page - Done
   - Fix CTA cards and buttons Link Type - Done
   - Fix Site Footer Link Column Link Types - Done
+
+- Minor Fixes
+  - dynamic blog page slug for post links - done
+  - Fix toast issue - done
