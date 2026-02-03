@@ -999,6 +999,11 @@ export interface Page {
               blockName?: string | null;
               blockType: 'formBlock';
             }
+          | {
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'allCategories';
+            }
         )[]
       | null;
   };
@@ -1945,6 +1950,12 @@ export interface PagesSelect<T extends boolean = true> {
                     headingEnabled?: T;
                     form?: T;
                     layout?: T;
+                    id?: T;
+                    blockName?: T;
+                  };
+              allCategories?:
+                | T
+                | {
                     id?: T;
                     blockName?: T;
                   };

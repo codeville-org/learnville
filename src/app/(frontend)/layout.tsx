@@ -1,8 +1,9 @@
 import React from 'react'
+
 import './styles.css'
 import { cn } from '@/lib/utils'
 import { fontClass } from '@/lib/fonts'
-import { Toaster } from 'sonner'
+
 import { Providers } from '@/components/providers'
 
 import { SpeedInsights } from '@vercel/speed-insights/next'

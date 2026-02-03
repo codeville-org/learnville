@@ -18,10 +18,15 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import Link from 'next/link'
+import { SearchParams } from 'nuqs/server'
 
 type Props = {
   params: Promise<{ slug?: string }>
+  searchParams: Promise<SearchParams>
 }
+
+// NextJS Incremental Static Regeneration (ISR) revalidation time
+export const revalidate = process.env.NODE_ENV === 'production' ? 3600 : 60
 
 async function getPageBySlug(slug: string = '/') {
   const headers = await getHeaders()
@@ -30,13 +35,20 @@ async function getPageBySlug(slug: string = '/') {
 
   const { user } = await payload.auth({ headers })
 
+  // ------------------------
+  let depth = 1
+  if (slug === 'categories' || slug.startsWith('/categories')) {
+    depth = 2
+  }
+  // ------------------------
+
   const res = await payload.find({
     collection: 'pages',
     limit: 1,
     where: {
       slug: { equals: slug },
     },
-    depth: 1,
+    depth,
     overrideAccess: Boolean(user),
     pagination: false,
     draft: Boolean(user),
@@ -49,7 +61,7 @@ async function getPageBySlug(slug: string = '/') {
   return page
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   const { slug } = await params
 
   if (!slug) notFound()
@@ -104,7 +116,7 @@ export default async function Page({ params }: Props) {
         <GridPattern className=" opacity-20 max-h-full" />
       </div>
 
-      <RenderPageBlocks blocks={page?.content?.sections} />
+      <RenderPageBlocks blocks={page?.content?.sections} searchParams={searchParams} />
     </div>
   )
 }

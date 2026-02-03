@@ -52,7 +52,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
             </div>
 
             <div className="hidden sm:flex">
-              {content?.cta && (
+              {content?.cta && content?.cta?.enabled && (
                 <Button
                   asChild
                   size="lg"
@@ -99,7 +99,7 @@ export function TopCategoriesBlockRenderer({ data }: BlockRendererProps<TopCateg
           </div>
 
           <div className="flex sm:hidden mt-8 justify-center">
-            {content?.cta && (
+            {content?.cta && content?.cta?.enabled && (
               <Button
                 asChild
                 size="lg"
