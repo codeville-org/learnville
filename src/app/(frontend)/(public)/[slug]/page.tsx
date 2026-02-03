@@ -26,7 +26,8 @@ type Props = {
 }
 
 // NextJS Incremental Static Regeneration (ISR) revalidation time
-export const revalidate = process.env.NODE_ENV === 'production' ? 3600 : 60
+const revalidateValue = process.env.NODE_ENV === 'production' ? 3600 : 60
+export const revalidate = revalidateValue
 
 async function getPageBySlug(slug: string = '/') {
   const headers = await getHeaders()
