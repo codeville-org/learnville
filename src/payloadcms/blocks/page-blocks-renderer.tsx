@@ -1,4 +1,5 @@
 import React from 'react'
+import { SearchParams } from 'nuqs/server'
 
 import { HeroBlockRenderer } from './Hero/renderer'
 import { TopCategoriesBlockRenderer } from './TopCategories/renderer'
@@ -11,6 +12,7 @@ import { SiteStatsRenderer } from './SiteStats/renderer'
 import { RichTextContentBlockRenderer } from './RichTextContent/renderer'
 import { TabLayoutBlockRenderer } from './TabLayout/renderer'
 import { FormBlockRenderer } from '../forms/block/renderer'
+import { AllCategoriesBlockRenderer } from './AllCategories/renderer-layout'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -28,6 +30,7 @@ export const blockRenderers = {
   richTextContent: RichTextContentBlockRenderer,
   tabLayoutBlock: TabLayoutBlockRenderer,
   formBlock: FormBlockRenderer,
+  allCategories: AllCategoriesBlockRenderer,
 } as const
 
 /**
@@ -36,9 +39,10 @@ export const blockRenderers = {
  */
 interface RenderBlocksProps {
   blocks: PageBlock[] | null | undefined
+  searchParams?: Promise<SearchParams>
 }
 
-export function RenderPageBlocks({ blocks }: RenderBlocksProps) {
+export function RenderPageBlocks({ blocks, searchParams }: RenderBlocksProps) {
   if (!blocks || blocks.length === 0) {
     return null
   }
@@ -73,7 +77,7 @@ export function RenderPageBlocks({ blocks }: RenderBlocksProps) {
         // Render the block with type assertion
         // TypeScript can't narrow union types in this pattern, so we assert the type is correct
         // @ts-ignore
-        return <Renderer key={block.id || index} data={block as any} />
+        return <Renderer key={block.id || index} data={block as any} searchParams={searchParams} />
       })}
     </>
   )

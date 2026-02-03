@@ -4,6 +4,7 @@ import type {
   HydratedCategoryData,
   HydratedFeaturedBlogData,
 } from '@/lib/hydrate-page-blocks'
+import type { SearchParams } from 'nuqs/server'
 
 /**
  * Extract block type from Page content sections
@@ -28,6 +29,7 @@ export type SiteStatsBlock = ExtractBlockType<'siteStatsBlock'>
 export type RichTextContentBlock = ExtractBlockType<'richTextContent'>
 export type TabLayoutBlock = ExtractBlockType<'tabLayoutBlock'>
 export type FormBlock = ExtractBlockType<'formBlock'>
+export type AllCategoriesBlock = ExtractBlockType<'allCategories'>
 
 // Hydrated block types (with lightweight data from hydration)
 export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCategories'> & {
@@ -61,4 +63,5 @@ export type LessonQuizBlock = Extract<LessonBlock, { blockType: 'lessonQuiz' }>
  */
 export interface BlockRendererProps<T> {
   data: T
+  searchParams?: Promise<SearchParams>
 }
