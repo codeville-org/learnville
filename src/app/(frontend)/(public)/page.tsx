@@ -12,8 +12,7 @@ import { hydratePageBlocks } from '@/lib/hydrate-page-blocks'
 type Props = {}
 
 // NextJS Incremental Static Regeneration (ISR) revalidation time
-const revalidateValue = process.env.NODE_ENV === 'production' ? 3600 : 60
-export const revalidate = revalidateValue
+export const revalidate = 3600
 
 async function getHomepage() {
   const headers = await getHeaders()
