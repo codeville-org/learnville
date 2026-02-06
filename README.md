@@ -87,3 +87,9 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
 - Minor Fixes
   - dynamic blog page slug for post links - done
   - Fix toast issue - done
+
+- Course Showcasing
+  - Add youtube / bunny video feature for lesson videos - (up next)
+  - Prepare 1 - 3 (at least) courses for feature showcasing purposes - ongoing
+  - Develop courses listing page on landing page
+  - Develop single course page in landing page with payment page
