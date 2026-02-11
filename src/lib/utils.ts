@@ -1,3 +1,4 @@
+import { Media } from '@/payload-types'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -31,4 +32,10 @@ export function getNavigationLinkHref(link: any): string {
     return link.url
   }
   return '#'
+}
+
+export function fetchMediaImageUrl(media: Media | number): { url: string; alt?: string } {
+  if (media instanceof Object) {
+    return { url: media?.url || '', alt: media?.alt }
+  } else return { url: '', alt: '' }
 }
