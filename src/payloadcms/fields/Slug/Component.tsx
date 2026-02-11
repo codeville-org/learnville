@@ -3,6 +3,7 @@
 import React, { useEffect, useRef } from 'react'
 import { TextFieldClientComponent } from 'payload'
 import { useField, useFormFields, TextInput } from '@payloadcms/ui'
+import slugify from 'slugify'
 
 interface SlugComponentProps {
   trackingField?: string
@@ -22,16 +23,23 @@ export const SlugComponent: TextFieldClientComponent = (props) => {
     const currentName = nameField.value.toString()
     const prevName = prevNameRef.current?.toString() || ''
 
+    // Configure slugify to handle special characters properly
+    const slugifyOptions = {
+      lower: true,
+      strict: true, // Remove special characters
+      remove: /[*+~.()'"!:@]/g, // Remove these characters
+    }
+
     // Only auto-generate if:
     // 1. Slug is empty/undefined (new document), OR
     // 2. Slug matches the previous auto-generated value
-    const prevSlug = prevName.replace(/ /g, '-').toLowerCase()
+    const prevSlug = prevName ? slugify(prevName, slugifyOptions) : ''
     const isEmpty = !value || value === ''
 
     if (!isEmpty && prevSlug !== value) return
 
     prevNameRef.current = nameField.value
-    const slugValue = currentName.replace(/ /g, '-').toLowerCase()
+    const slugValue = slugify(currentName, slugifyOptions)
 
     setValue(slugValue)
   }, [nameField?.value, value, setValue])
