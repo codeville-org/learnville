@@ -1,79 +1,68 @@
 import React from 'react'
-import { BlockRendererProps, FeaturedBlogsBlock } from '../types'
-import { TextAnimate } from '@/components/ui/text-animate'
-import { Highlighter } from '@/components/ui/highlighter'
-import { getCTAHref, highlightColorMap } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
+import { getPayload, PaginatedDocs } from 'payload'
+import config from '@payload-config'
+import { headers as getHeaders } from 'next/headers'
+import type { SearchParams } from 'nuqs/server'
+
+import { filterSearchParamsCache } from '@/lib/seachparams'
+import { Blog } from '@/payload-types'
+import { Pagination } from '@/components/ui/pagination'
+import { Card, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
-import { ArrowRightIcon, CalendarIcon, ClockIcon } from 'lucide-react'
-import { Card } from '@/components/ui/card'
-import Image from 'next/image'
-import { Badge } from '@/components/ui/badge'
 import { DEFAULT_BLOG_PAGE_SLUG } from '@/lib/constants'
+import { Badge } from '@/components/ui/badge'
+import { CalendarIcon, ClockIcon } from 'lucide-react'
+import Image from 'next/image'
+import { fetchMediaImageUrl } from '@/lib/utils'
 
-export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogsBlock>) {
-  const { content, featuredBlogs } = data
+interface Props {
+  searchParams: Promise<SearchParams>
+}
 
-  const highlightColor =
-    (content?.highlightColor && highlightColorMap[content.highlightColor]) || '#f97316'
+async function fetchBlogs(page: number, limit: number): Promise<PaginatedDocs<Blog> | null> {
+  try {
+    const headers = await getHeaders()
 
-  if (!featuredBlogs || featuredBlogs?.length === 0) return null
+    const payload = await getPayload({ config })
 
-  const [firstBlog, secondBlog, thirdBlog] = featuredBlogs
+    const { user } = await payload.auth({ headers })
+
+    const res = await payload.find({
+      collection: 'blog',
+      page,
+      limit,
+      depth: 2,
+      overrideAccess: Boolean(user),
+      pagination: true,
+    })
+
+    return res
+  } catch (error) {
+    return null
+  }
+}
+
+export async function AllBlogsRendererClient({ searchParams }: Props) {
+  const { page, limit } = filterSearchParamsCache.parse(await searchParams)
+
+  const blogsRes = await fetchBlogs(page, limit)
+
+  if (blogsRes === null || blogsRes.totalDocs === 0) {
+    return <div>No blogs found.</div>
+  }
+
+  const { docs, totalPages, hasNextPage, hasPrevPage } = blogsRes
+
+  // Filter features + first three posts and rest,
+  const featuredArticles = docs.length > 3 ? docs.slice(0, 3) : null
+  const restArticles = featuredArticles ? docs.slice(3) : docs
+
+  const [firstBlog, secondBlog, thirdBlog] = featuredArticles || []
 
   return (
-    <div className="w-full overflow-hidden min-h-[400px] relative bg-emerald-50">
-      <div className="container mx-auto px-4">
-        <div className="py-16 md:pt-28 md:pb-16">
-          <div className="w-full flex items-center justify-between">
-            <div className="text-center sm:text-left">
-              {content?.preHeading && (
-                <TextAnimate
-                  as="h3"
-                  animation="slideRight"
-                  className="text-emerald-800 font-medium font-heading text-lg mb-2"
-                >
-                  {content.preHeading}
-                </TextAnimate>
-              )}
-
-              {content?.heading && (
-                <TextAnimate
-                  as={'h1'}
-                  animation="slideRight"
-                  className="text-3xl sm:text-4xl font-semibold text-emerald-950 font-heading"
-                >
-                  {content.heading}
-                </TextAnimate>
-              )}
-
-              {content?.highlightedText && (
-                <h2 className="text-emerald-950 font-black font-heading text-3xl sm:text-4xl whitespace-nowrap">
-                  <Highlighter animationDuration={2500} action="underline" color={highlightColor}>
-                    {content?.highlightedText}
-                  </Highlighter>
-                </h2>
-              )}
-            </div>
-
-            <div className="hidden sm:flex">
-              {content?.cta && (
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
-                >
-                  <Link href={getCTAHref(content.cta)}>
-                    {content.cta?.label}
-
-                    <ArrowRightIcon />
-                  </Link>
-                </Button>
-              )}
-            </div>
-          </div>
-
-          {/* Blogs Section */}
+    <>
+      <div className="mt-12">
+        {featuredArticles ? (
           <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
             {firstBlog && (
               <Card className="shadow-none p-4 w-full">
@@ -83,12 +72,12 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                 >
                   <div className="w-full aspect-video relative overflow-hidden rounded-md">
                     <Badge className="absolute top-2 left-2 z-10 text-sm py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">
-                      <ClockIcon /> {firstBlog.readTimeMinutes}
+                      <ClockIcon /> {firstBlog.readTime}
                       <span className="text-xs font-medium">min read</span>
                     </Badge>
                     <Image
-                      src={firstBlog.featuredImage?.url || ''}
-                      alt={firstBlog.featuredImage?.alt || firstBlog.title}
+                      src={fetchMediaImageUrl(firstBlog.featuredImage).url}
+                      alt={fetchMediaImageUrl(firstBlog.featuredImage).alt || firstBlog.title}
                       fill
                       className="object-cover rounded-md group-hover:scale-105 transition-transform"
                     />
@@ -125,12 +114,12 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                 >
                   <div className="w-1/3 h-full relative overflow-hidden rounded-md flex-shrink-0">
                     <Badge className="absolute top-2 left-2 z-10 text-xs py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">
-                      <ClockIcon className="size-3" /> {secondBlog.readTimeMinutes}
+                      <ClockIcon className="size-3" /> {secondBlog.readTime}
                       <span className="text-xs font-medium">min</span>
                     </Badge>
                     <Image
-                      src={secondBlog.featuredImage?.url || ''}
-                      alt={secondBlog.featuredImage?.alt || secondBlog.title}
+                      src={fetchMediaImageUrl(secondBlog.featuredImage)?.url}
+                      alt={fetchMediaImageUrl(secondBlog.featuredImage)?.alt || secondBlog.title}
                       fill
                       className="object-cover rounded-md group-hover:scale-105 transition-transform"
                     />
@@ -160,12 +149,12 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                 >
                   <div className="w-1/3 h-full relative overflow-hidden rounded-md flex-shrink-0">
                     <Badge className="absolute top-2 left-2 z-10 text-xs py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">
-                      <ClockIcon className="size-3" /> {thirdBlog.readTimeMinutes}
+                      <ClockIcon className="size-3" /> {thirdBlog.readTime}
                       <span className="text-xs font-medium">min</span>
                     </Badge>
                     <Image
-                      src={thirdBlog.featuredImage?.url || ''}
-                      alt={thirdBlog.featuredImage?.alt || thirdBlog.title}
+                      src={fetchMediaImageUrl(thirdBlog.featuredImage)?.url}
+                      alt={fetchMediaImageUrl(thirdBlog.featuredImage)?.alt || thirdBlog.title}
                       fill
                       className="object-cover rounded-md group-hover:scale-105 transition-transform"
                     />
@@ -190,24 +179,60 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
               </Card>
             )}
           </div>
+        ) : (
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {restArticles.map((article) => (
+              <Card className="shadow-none p-4 w-full">
+                <Link
+                  href={`/${DEFAULT_BLOG_PAGE_SLUG}/${article.slug}`}
+                  className="space-y-3 w-full h-full group"
+                >
+                  <div className="w-full aspect-video relative overflow-hidden rounded-md">
+                    <Badge className="absolute top-2 left-2 z-10 text-sm py-1 px-2 rounded-md font-semibold bg-amber-500 text-emerald-900">
+                      <ClockIcon /> {article.readTime}
+                      <span className="text-xs font-medium">min read</span>
+                    </Badge>
+                    <Image
+                      src={fetchMediaImageUrl(article.featuredImage).url}
+                      alt={fetchMediaImageUrl(article.featuredImage).alt || article.title}
+                      fill
+                      className="object-cover rounded-md group-hover:scale-105 transition-transform"
+                    />
+                  </div>
 
-          <div className="flex sm:hidden mt-8 justify-center">
-            {content?.cta && (
-              <Button
-                asChild
-                size="lg"
-                className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
-              >
-                <Link href={getCTAHref(content.cta)}>
-                  {content.cta?.label}
+                  <div className="space-y-1 px-2">
+                    <h2 className="text-xl font-semibold text-emerald-950 font-heading group-hover:underline">
+                      {article.title}
+                    </h2>
+                    <p className="text-emerald-950/60 text-sm line-clamp-3">{article.excerpt}</p>
+                  </div>
 
-                  <ArrowRightIcon />
+                  <div className="mt-4 px-2 flex items-center gap-3">
+                    <p className="flex text-sm items-center gap-1 text-emerald-950/70">
+                      <CalendarIcon className="size-4" />
+                      {article.publishedAt &&
+                        new Date(article.publishedAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                    </p>
+                  </div>
                 </Link>
-              </Button>
-            )}
+              </Card>
+            ))}
           </div>
-        </div>
+        )}
       </div>
-    </div>
+
+      <div className="pb-6">
+        <Pagination
+          totalPages={totalPages}
+          currentPage={page}
+          hasNextPage={hasNextPage}
+          hasPrevPage={hasPrevPage}
+        />
+      </div>
+    </>
   )
 }

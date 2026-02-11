@@ -1004,6 +1004,11 @@ export interface Page {
               blockName?: string | null;
               blockType: 'allCategories';
             }
+          | {
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'allBlogs';
+            }
         )[]
       | null;
   };
@@ -1954,6 +1959,12 @@ export interface PagesSelect<T extends boolean = true> {
                     blockName?: T;
                   };
               allCategories?:
+                | T
+                | {
+                    id?: T;
+                    blockName?: T;
+                  };
+              allBlogs?:
                 | T
                 | {
                     id?: T;

@@ -23,6 +23,7 @@ import { RichTextContentBlock } from '@/payloadcms/blocks/RichTextContent/config
 import { TabLayoutBlock } from '@/payloadcms/blocks/TabLayout/config'
 import { FormBlock } from '@/payloadcms/forms/block/config'
 import { AllCategories } from '@/payloadcms/blocks/AllCategories/config'
+import { AllBlogs } from '@/payloadcms/blocks/AllBlogs/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -119,6 +120,7 @@ export const Pages: CollectionConfig = {
                 TabLayoutBlock,
                 FormBlock,
                 AllCategories,
+                AllBlogs,
               ],
               admin: {
                 initCollapsed: true,

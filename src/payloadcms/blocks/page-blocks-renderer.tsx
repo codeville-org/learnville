@@ -13,6 +13,7 @@ import { RichTextContentBlockRenderer } from './RichTextContent/renderer'
 import { TabLayoutBlockRenderer } from './TabLayout/renderer'
 import { FormBlockRenderer } from '../forms/block/renderer'
 import { AllCategoriesBlockRenderer } from './AllCategories/renderer-layout'
+import { AllBlogsBlockRenderer } from './AllBlogs/renderer-layout'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -31,6 +32,7 @@ export const blockRenderers = {
   tabLayoutBlock: TabLayoutBlockRenderer,
   formBlock: FormBlockRenderer,
   allCategories: AllCategoriesBlockRenderer,
+  allBlogs: AllBlogsBlockRenderer,
 } as const
 
 /**
