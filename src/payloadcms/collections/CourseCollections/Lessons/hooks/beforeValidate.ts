@@ -18,8 +18,10 @@ export const beforeValidate: CollectionBeforeValidateHook<Lesson> = async ({
     const course = await req.payload.findByID({
       collection: 'courses',
       id: courseId,
-      depth: 0, // Only get course data, don't populate relationships
+      depth: 1,
+      draft: true,
       req, // Pass req for transaction safety
+      overrideAccess: true,
     })
 
     if (course && course.instructor) {

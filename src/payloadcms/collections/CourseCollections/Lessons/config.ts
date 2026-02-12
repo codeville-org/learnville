@@ -54,7 +54,6 @@ export const Lessons: CollectionConfig = {
         description: 'Auto-populated from the selected course',
       },
     },
-
     {
       name: 'lessonName',
       type: 'text',
