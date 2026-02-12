@@ -24,7 +24,7 @@ export const LessonVideoBlock: Block = {
       name: 'youtubeEmbed',
       type: 'text',
       admin: {
-        condition: (data) => data.videoType === 'youtube',
+        condition: (_, siblingData) => siblingData?.videoType === 'youtube',
       },
     },
     {
@@ -34,7 +34,7 @@ export const LessonVideoBlock: Block = {
       required: true,
       admin: {
         description: 'Upload a lesson video (streamed via Bunny Stream)',
-        condition: (data) => data.videoType === 'bunnyStream',
+        condition: (_, siblingData) => siblingData?.videoType === 'bunnyStream',
       },
     },
     {
