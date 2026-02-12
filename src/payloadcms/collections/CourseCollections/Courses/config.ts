@@ -138,13 +138,11 @@ export const Courses: CollectionConfig = {
             {
               name: 'chapters',
               type: 'array',
-              required: true,
               minRows: 1,
               fields: [
                 {
                   name: 'chapterTitle',
                   type: 'text',
-                  required: true,
                 },
                 {
                   name: 'chapterDescription',
@@ -155,7 +153,6 @@ export const Courses: CollectionConfig = {
                   type: 'relationship',
                   relationTo: 'lessons',
                   hasMany: true,
-                  required: true,
                 },
               ],
               admin: {

@@ -418,12 +418,14 @@ export interface Course {
   /**
    * Course chapters containing lessons
    */
-  chapters: {
-    chapterTitle: string;
-    chapterDescription?: string | null;
-    lessons: (number | Lesson)[];
-    id?: string | null;
-  }[];
+  chapters?:
+    | {
+        chapterTitle?: string | null;
+        chapterDescription?: string | null;
+        lessons?: (number | Lesson)[] | null;
+        id?: string | null;
+      }[]
+    | null;
   learningOutcomes?:
     | {
         outcome: string;
