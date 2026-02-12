@@ -13,12 +13,28 @@ export const LessonVideoBlock: Block = {
       required: true,
     },
     {
-      name: 'videoURL',
+      name: 'videoType',
+      type: 'select',
+      options: [
+        { label: 'YouTube', value: 'youtube' },
+        { label: 'Bunny Stream', value: 'bunnyStream' },
+      ],
+    },
+    {
+      name: 'youtubeEmbed',
       type: 'text',
+      admin: {
+        condition: (data) => data.videoType === 'youtube',
+      },
+    },
+    {
+      name: 'video',
+      type: 'upload',
+      relationTo: 'videos',
       required: true,
       admin: {
-        description: 'Bunny.net embedded video URL',
-        placeholder: 'https://iframe.mediadelivery.net/embed/...',
+        description: 'Upload a lesson video (streamed via Bunny Stream)',
+        condition: (data) => data.videoType === 'bunnyStream',
       },
     },
     {
