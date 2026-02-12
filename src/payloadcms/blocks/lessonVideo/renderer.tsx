@@ -6,6 +6,10 @@ import type { BlockRendererProps, LessonVideoBlock } from '../types'
 
 export function LessonVideoRenderer({ data }: BlockRendererProps<LessonVideoBlock>) {
   const thumbnailData = typeof data.thumbnail === 'object' ? data.thumbnail : null
+  const videoData = typeof data.video === 'object' ? data.video : null
+
+  // The Bunny Stream plugin populates the upload doc with a `url` pointing to the stream
+  const videoURL = videoData?.url || null
 
   return (
     <div className="space-y-6">
@@ -23,9 +27,9 @@ export function LessonVideoRenderer({ data }: BlockRendererProps<LessonVideoBloc
 
       {/* Video Player */}
       <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
-        {data.videoURL ? (
+        {videoURL ? (
           <iframe
-            src={data.videoURL}
+            src={videoURL}
             title={data.videoTitle || 'Lesson Video'}
             className="absolute inset-0 w-full h-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

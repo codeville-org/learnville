@@ -8,9 +8,11 @@ import { seoPlugin } from '@payloadcms/plugin-seo'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import { formBuilderPlugin, fields } from '@payloadcms/plugin-form-builder'
 import type { BeforeEmail } from '@payloadcms/plugin-form-builder/types'
+import { bunnyStorage } from '@seshuk/payload-storage-bunny'
 
 import { Users } from './payloadcms/collections/Users/config'
 import { Media } from './payloadcms/collections/Media'
+import { Videos } from './payloadcms/collections/Videos'
 import brevoAdapter from './lib/adapters/brevo'
 import { Customers } from './payloadcms/collections/Customers/config'
 import { Categories } from './payloadcms/collections/Categories/config'
@@ -110,6 +112,7 @@ export default buildConfig({
   collections: [
     Users,
     Media,
+    Videos,
     Customers,
     Categories,
     Lessons,
@@ -134,24 +137,35 @@ export default buildConfig({
 
   // --- Plugins ---
   plugins: [
-    // ------- Storage Adapters -------
-    // s3Storage({
-    //   collections: {
-    //     media: true,
-    //   },
-    //   bucket: process.env?.R2_BUCKET || '',
-    //   config: {
-    //     credentials: {
-    //       accessKeyId: process.env?.R2_ACCESS_KEY_ID || '',
-    //       secretAccessKey: process.env?.R2_SECRET_ACCESS_KEY || '',
-    //     },
-    //     region: 'auto',
-    //     endpoint: process.env?.S3_ENDPOINT || '',
-    //   },
-    //   acl: 'public-read',
-    //   disableLocalStorage: true,
-    // }),
+    // Bunny Stream Plugin (for lesson videos)
+    bunnyStorage({
+      collections: {
+        videos: {
+          prefix: 'lesson-videos',
+          disablePayloadAccessControl: true,
+          // @ts-ignore
+          storage: false, // Stream-only, no raw file storage
+        },
+      },
+      stream: {
+        apiKey: process.env.BUNNY_STREAM_API_KEY!,
+        hostname: process.env.BUNNY_STREAM_HOSTNAME!,
+        libraryId: Number(process.env.BUNNY_STREAM_LIBRARY_ID),
+        tus: true, // Enable resumable uploads for large videos
+        mp4Fallback: true, // Allow MP4 download fallback
+      },
+    }),
 
+    // Vercel Blob Storage Plugin
+    vercelBlobStorage({
+      enabled: true,
+      collections: {
+        media: true,
+      },
+      token: process?.env?.BLOB_READ_WRITE_TOKEN,
+    }),
+
+    // Payload Form Builder Plugin
     formBuilderPlugin({
       fields: {
         phone: {
@@ -244,13 +258,6 @@ export default buildConfig({
       },
     }),
 
-    vercelBlobStorage({
-      enabled: true,
-      collections: {
-        media: true,
-      },
-      token: process?.env?.BLOB_READ_WRITE_TOKEN,
-    }),
     // ----------------------------------
 
     seoPlugin({

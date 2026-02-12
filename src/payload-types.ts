@@ -75,6 +75,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    videos: Video;
     customers: Customer;
     categories: Category;
     lessons: Lesson;
@@ -95,6 +96,7 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    videos: VideosSelect<false> | VideosSelect<true>;
     customers: CustomersSelect<false> | CustomersSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     lessons: LessonsSelect<false> | LessonsSelect<true>;
@@ -311,6 +313,31 @@ export interface Category {
   createdAt: string;
 }
 /**
+ * Upload and manage lesson videos via Bunny Stream
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos".
+ */
+export interface Video {
+  id: number;
+  /**
+   * Brief description of the video content (for accessibility)
+   */
+  alt: string;
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "customers".
  */
@@ -418,12 +445,14 @@ export interface Course {
   /**
    * Course chapters containing lessons
    */
-  chapters: {
-    chapterTitle: string;
-    chapterDescription?: string | null;
-    lessons: (number | Lesson)[];
-    id?: string | null;
-  }[];
+  chapters?:
+    | {
+        chapterTitle?: string | null;
+        chapterDescription?: string | null;
+        lessons?: (number | Lesson)[] | null;
+        id?: string | null;
+      }[]
+    | null;
   learningOutcomes?:
     | {
         outcome: string;
@@ -494,10 +523,12 @@ export interface Lesson {
   curriculum: (
     | {
         videoTitle: string;
+        videoType?: ('youtube' | 'bunnyStream') | null;
+        youtubeEmbed?: string | null;
         /**
-         * Bunny.net embedded video URL
+         * Upload a lesson video (streamed via Bunny Stream)
          */
-        videoURL: string;
+        video?: (number | null) | Video;
         /**
          * Video duration in minutes
          */
@@ -1345,6 +1376,10 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'videos';
+        value: number | Video;
+      } | null)
+    | ({
         relationTo: 'customers';
         value: number | Customer;
       } | null)
@@ -1521,6 +1556,25 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "videos_select".
+ */
+export interface VideosSelect<T extends boolean = true> {
+  alt?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "customers_select".
  */
 export interface CustomersSelect<T extends boolean = true> {
@@ -1580,7 +1634,9 @@ export interface LessonsSelect<T extends boolean = true> {
           | T
           | {
               videoTitle?: T;
-              videoURL?: T;
+              videoType?: T;
+              youtubeEmbed?: T;
+              video?: T;
               videoDuration?: T;
               thumbnail?: T;
               transcript?: T;

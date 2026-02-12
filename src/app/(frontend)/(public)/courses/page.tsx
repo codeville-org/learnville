@@ -24,7 +24,7 @@ export default async function CoursesPage() {
           >
             <Card className="p-0 w-full aspect-video overflow-hidden">
               <Image
-                src={course.thumbnail instanceof Object ? `${course?.thumbnail?.url}` : '#'}
+                src={course.thumbnail instanceof Object ? `${course?.thumbnail?.url}` : ''}
                 alt={course.title || 'Course Thumbnail'}
                 width={600}
                 height={400}
