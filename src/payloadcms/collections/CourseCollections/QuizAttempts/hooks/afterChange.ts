@@ -16,6 +16,7 @@ export const afterChange: CollectionAfterChangeHook<QuizAttempt> = async ({
           : await req.payload.findByID({
               collection: 'customers',
               id: doc.customer,
+              req,
             })
 
       const customerId = customerDoc.id
@@ -24,6 +25,7 @@ export const afterChange: CollectionAfterChangeHook<QuizAttempt> = async ({
       const customer = await req.payload.findByID({
         collection: 'customers',
         id: customerId,
+        req,
       })
 
       await req.payload.update({
@@ -32,12 +34,14 @@ export const afterChange: CollectionAfterChangeHook<QuizAttempt> = async ({
         data: {
           totalXP: (customer.totalXP || 0) + doc.xpEarned,
         },
+        req,
       })
 
       // Update enrollment's course XP
       const enrollment = await req.payload.findByID({
         collection: 'course-enrollments',
         id: doc.enrollment instanceof Object ? doc.enrollment.id : doc.enrollment,
+        req,
       })
 
       await req.payload.update({
@@ -46,6 +50,7 @@ export const afterChange: CollectionAfterChangeHook<QuizAttempt> = async ({
         data: {
           totalXPEarned: (enrollment.totalXPEarned || 0) + doc.xpEarned,
         },
+        req,
       })
     } catch (error) {
       console.error('Error updating XP:', error)

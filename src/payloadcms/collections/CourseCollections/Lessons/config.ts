@@ -18,6 +18,9 @@ export const Lessons: CollectionConfig = {
     listSearchableFields: ['lessonName', 'description'],
     groupBy: true,
   },
+  lockDocuments: {
+    duration: 300,
+  },
   versions: {
     drafts: true,
   },

@@ -93,3 +93,8 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
   - Prepare 1 - 3 (at least) courses for feature showcasing purposes - ongoing
   - Develop courses listing page on landing page
   - Develop single course page in landing page with payment page
+
+- Bugs noted
+  - pdf (etc.) files aren't uploading
+  - inconsistancy of relationship between lessons and chapters (_in production_)
+  - generates duplicated copies of lessons, courses with same id when creating/updating from production / live site (_in production_)

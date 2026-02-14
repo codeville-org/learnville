@@ -11,6 +11,8 @@ export const beforeChange: CollectionBeforeChangeHook<CourseEnrollment> = async 
       const course = await req.payload.findByID({
         collection: 'courses',
         id,
+        req,
+        draft: true,
       })
 
       // Count total lessons in course

@@ -21,6 +21,9 @@ export const Courses: CollectionConfig = {
     defaultColumns: ['title', 'instructor', 'status'],
     group: 'Learning',
   },
+  lockDocuments: {
+    duration: 300,
+  },
   versions: {
     drafts: true,
   },
