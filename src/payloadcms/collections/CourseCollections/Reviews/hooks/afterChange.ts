@@ -60,5 +60,6 @@ async function updateCourseRating(
       overallRating,
     },
     req,
+    context: { skipChapterRecalc: true },
   })
 }

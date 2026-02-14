@@ -35,6 +35,7 @@ export const afterDelete: CollectionAfterDeleteHook = async ({ doc, req }) => {
         overallRating,
       },
       req,
+      context: { skipChapterRecalc: true },
     })
   } catch (error) {
     console.error('Error updating course rating after delete:', error)
