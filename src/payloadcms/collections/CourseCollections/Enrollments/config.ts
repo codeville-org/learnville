@@ -2,6 +2,10 @@ import { CollectionConfig } from 'payload'
 import customer from '../../Users/access/customer'
 import admin from '../../Users/access/admin'
 import { beforeChange } from './hooks/beforeChange'
+import { beforeValidate } from './hooks/beforeValidate'
+import { afterChange } from './hooks/afterChange'
+import { afterDelete } from './hooks/afterDelete'
+import { completeLessonEndpoint } from './endpoints/completeLesson'
 
 export const CourseEnrollments: CollectionConfig = {
   slug: 'course-enrollments',
@@ -16,6 +20,7 @@ export const CourseEnrollments: CollectionConfig = {
     update: customer,
     delete: admin,
   },
+  endpoints: [completeLessonEndpoint],
   fields: [
     {
       name: 'customer',
@@ -102,6 +107,9 @@ export const CourseEnrollments: CollectionConfig = {
     },
   ],
   hooks: {
+    beforeValidate: [beforeValidate],
     beforeChange: [beforeChange],
+    afterChange: [afterChange],
+    afterDelete: [afterDelete],
   },
 }

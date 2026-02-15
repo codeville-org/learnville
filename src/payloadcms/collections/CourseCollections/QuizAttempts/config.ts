@@ -1,6 +1,8 @@
 import { CollectionConfig } from 'payload'
 import customer from '../../Users/access/customer'
 import admin from '../../Users/access/admin'
+import { afterChange } from './hooks/afterChange'
+import { beforeValidate } from './hooks/beforeValidate'
 
 export const QuizAttempts: CollectionConfig = {
   slug: 'quiz-attempts',
@@ -100,4 +102,8 @@ export const QuizAttempts: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeValidate: [beforeValidate],
+    afterChange: [afterChange],
+  },
 }

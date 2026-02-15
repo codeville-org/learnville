@@ -8,6 +8,7 @@ import { LessonQuizBlock } from '@/payloadcms/blocks/lessonQuiz/config'
 import { beforeChange } from './hooks/beforeChange'
 import instructorOwn from '../../Users/access/instructorOwn'
 import { beforeValidate } from './hooks/beforeValidate'
+import { lessonRead } from './access/lessonRead'
 
 export const Lessons: CollectionConfig = {
   slug: 'lessons',
@@ -25,7 +26,7 @@ export const Lessons: CollectionConfig = {
     drafts: true,
   },
   access: {
-    read: instructorOwn,
+    read: lessonRead,
     create: instructor,
     update: instructorOwn,
     delete: instructorOwn,

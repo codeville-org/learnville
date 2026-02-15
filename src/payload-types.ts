@@ -83,6 +83,8 @@ export interface Config {
     'course-enrollments': CourseEnrollment;
     'quiz-attempts': QuizAttempt;
     reviews: Review;
+    'certificate-templates': CertificateTemplate;
+    certificates: Certificate;
     pages: Page;
     blog: Blog;
     forms: Form;
@@ -104,6 +106,8 @@ export interface Config {
     'course-enrollments': CourseEnrollmentsSelect<false> | CourseEnrollmentsSelect<true>;
     'quiz-attempts': QuizAttemptsSelect<false> | QuizAttemptsSelect<true>;
     reviews: ReviewsSelect<false> | ReviewsSelect<true>;
+    'certificate-templates': CertificateTemplatesSelect<false> | CertificateTemplatesSelect<true>;
+    certificates: CertificatesSelect<false> | CertificatesSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     blog: BlogSelect<false> | BlogSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -477,6 +481,14 @@ export interface Course {
    * Estimated duration to complete the course in hours.
    */
   estimatedDuration?: number | null;
+  /**
+   * Enable certificate generation for students who complete this course
+   */
+  certificateEnabled?: boolean | null;
+  /**
+   * Select a certificate template. If not set, the default template will be used.
+   */
+  certificateTemplate?: (number | null) | CertificateTemplate;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -672,6 +684,58 @@ export interface Lesson {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Design and manage certificate templates for course completions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificate-templates".
+ */
+export interface CertificateTemplate {
+  id: number;
+  /**
+   * Template name (e.g. "Classic Gold", "Modern Blue")
+   */
+  name: string;
+  /**
+   * Internal notes about this template
+   */
+  description?: string | null;
+  /**
+   * Mark as the default template for new courses
+   */
+  isDefault?: boolean | null;
+  /**
+   * Certificate width in pixels (A4 landscape @ 96dpi = 1122)
+   */
+  canvasWidth: number;
+  /**
+   * Certificate height in pixels (A4 landscape @ 96dpi = 793)
+   */
+  canvasHeight: number;
+  /**
+   * Background image/texture for the certificate
+   */
+  backgroundImage?: (number | null) | Media;
+  /**
+   * Canvas state data (auto-managed by the certificate designer)
+   */
+  canvasData:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Auto-generated preview thumbnail
+   */
+  previewImage?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "quiz-attempts".
  */
@@ -747,6 +811,46 @@ export interface Review {
    * Admin can moderate reviews
    */
   isApproved?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Issued certificates for course completions
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificates".
+ */
+export interface Certificate {
+  id: number;
+  customer: number | Customer;
+  course: number | Course;
+  enrollment: number | CourseEnrollment;
+  template: number | CertificateTemplate;
+  /**
+   * Unique certificate identifier (auto-generated)
+   */
+  certificateNumber: string;
+  issuedAt: string;
+  /**
+   * Snapshot of student name at time of issue
+   */
+  studentName: string;
+  /**
+   * Snapshot of course title at time of issue
+   */
+  courseName: string;
+  /**
+   * Snapshot of instructor name at time of issue
+   */
+  instructorName?: string | null;
+  /**
+   * Date the course was completed
+   */
+  completionDate?: string | null;
+  /**
+   * Total XP earned in the course
+   */
+  totalXPEarned?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1408,6 +1512,14 @@ export interface PayloadLockedDocument {
         value: number | Review;
       } | null)
     | ({
+        relationTo: 'certificate-templates';
+        value: number | CertificateTemplate;
+      } | null)
+    | ({
+        relationTo: 'certificates';
+        value: number | Certificate;
+      } | null)
+    | ({
         relationTo: 'pages';
         value: number | Page;
       } | null)
@@ -1738,6 +1850,8 @@ export interface CoursesSelect<T extends boolean = true> {
   totalXP?: T;
   overallRating?: T;
   estimatedDuration?: T;
+  certificateEnabled?: T;
+  certificateTemplate?: T;
   meta?:
     | T
     | {
@@ -1804,6 +1918,42 @@ export interface ReviewsSelect<T extends boolean = true> {
   content?: T;
   isVerifiedPurchase?: T;
   isApproved?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificate-templates_select".
+ */
+export interface CertificateTemplatesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  isDefault?: T;
+  canvasWidth?: T;
+  canvasHeight?: T;
+  backgroundImage?: T;
+  canvasData?: T;
+  previewImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "certificates_select".
+ */
+export interface CertificatesSelect<T extends boolean = true> {
+  customer?: T;
+  course?: T;
+  enrollment?: T;
+  template?: T;
+  certificateNumber?: T;
+  issuedAt?: T;
+  studentName?: T;
+  courseName?: T;
+  instructorName?: T;
+  completionDate?: T;
+  totalXPEarned?: T;
   updatedAt?: T;
   createdAt?: T;
 }
