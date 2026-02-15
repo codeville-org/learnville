@@ -30,14 +30,15 @@ export const calculateInstructorStats: CollectionBeforeChangeHook<User> = async 
       depth: 0,
       limit: 1000,
       req,
+      overrideAccess: true,
     })
 
     const courseIds = courses.docs.map((course) => course.id)
 
     // Initialize stats
     let totalStudents = 0
-    let totalRating = 0
     let totalReviews = 0
+    let weightedRatingSum = 0
 
     if (courseIds.length > 0) {
       // Get unique students enrolled across all instructor's courses
@@ -51,6 +52,7 @@ export const calculateInstructorStats: CollectionBeforeChangeHook<User> = async 
         depth: 0,
         limit: 10000,
         req,
+        overrideAccess: true,
       })
 
       // Count unique students
@@ -61,15 +63,20 @@ export const calculateInstructorStats: CollectionBeforeChangeHook<User> = async 
       )
       totalStudents = uniqueStudents.size
 
-      // Calculate average rating across all courses
-      // Note: This assumes courses have a 'rating' and 'reviewCount' field
-      // Adjust based on your actual schema
-      courses.docs.forEach((course: any) => {
-        if (course.rating && course.reviewCount) {
-          totalRating += course.rating * course.reviewCount
-          totalReviews += course.reviewCount
-        }
+      // Fetch all approved reviews for instructor's courses
+      const reviews = await req.payload.find({
+        collection: 'reviews',
+        where: {
+          and: [{ course: { in: courseIds } }, { isApproved: { equals: true } }],
+        },
+        depth: 0,
+        limit: 0, // Get all reviews
+        req,
+        overrideAccess: true,
       })
+
+      totalReviews = reviews.totalDocs
+      weightedRatingSum = reviews.docs.reduce((sum, review) => sum + (review.rating || 0), 0)
     }
 
     // Update instructor stats
@@ -79,7 +86,8 @@ export const calculateInstructorStats: CollectionBeforeChangeHook<User> = async 
 
     data.instructorStats.totalCourses = courses.totalDocs
     data.instructorStats.totalStudents = totalStudents
-    data.instructorStats.averageRating = totalReviews > 0 ? totalRating / totalReviews : 0
+    data.instructorStats.averageRating =
+      totalReviews > 0 ? Math.round((weightedRatingSum / totalReviews) * 10) / 10 : 0
     data.instructorStats.totalReviews = totalReviews
   } catch (error) {
     // Log error but don't fail the save operation
