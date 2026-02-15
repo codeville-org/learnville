@@ -23,6 +23,8 @@ import { QuizAttempts } from './payloadcms/collections/CourseCollections/QuizAtt
 import { Reviews } from './payloadcms/collections/CourseCollections/Reviews/config'
 import { Pages } from './payloadcms/collections/Pages/config'
 import { Blog } from './payloadcms/collections/Blog/config'
+import { CertificateTemplates } from './payloadcms/collections/CourseCollections/CertificateTemplates/config'
+import { Certificates } from './payloadcms/collections/CourseCollections/Certificates/config'
 import { Footer } from './payloadcms/globals/Footer'
 import { Header } from './payloadcms/globals/Header'
 import { CTA } from './payloadcms/globals/CTA'
@@ -120,6 +122,8 @@ export default buildConfig({
     CourseEnrollments,
     QuizAttempts,
     Reviews,
+    CertificateTemplates,
+    Certificates,
     Pages,
     Blog,
   ],

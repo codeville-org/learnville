@@ -224,6 +224,33 @@ export const Courses: CollectionConfig = {
           ],
         },
         {
+          label: 'Certificate',
+          description: 'Configure certificate issuance for this course',
+          fields: [
+            {
+              name: 'certificateEnabled',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: {
+                description: 'Enable certificate generation for students who complete this course',
+              },
+            },
+            {
+              name: 'certificateTemplate',
+              type: 'relationship',
+              relationTo: 'certificate-templates',
+              filterOptions: {
+                status: { equals: 'active' },
+              },
+              admin: {
+                condition: (data) => data?.certificateEnabled === true,
+                description:
+                  'Select a certificate template. If not set, the default template will be used.',
+              },
+            },
+          ],
+        },
+        {
           label: 'SEO',
           name: 'meta',
           fields: [
