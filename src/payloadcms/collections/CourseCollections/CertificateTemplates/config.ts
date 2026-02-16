@@ -6,7 +6,7 @@ export const CertificateTemplates: CollectionConfig = {
   slug: 'certificate-templates',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'status', 'isDefault', 'updatedAt'],
+    defaultColumns: ['name', '_status', 'isDefault', 'updatedAt'],
     group: 'Certificates',
     description: 'Design and manage certificate templates for course completions',
   },
