@@ -14,16 +14,6 @@ export const highlightColorMap: Record<string, string> = {
   blue: '#3b82f6',
 }
 
-export function getCTAHref(cta: any): string {
-  if (cta.linkType === 'external' && cta.externalLink) {
-    return cta.externalLink
-  }
-  if (cta.linkType === 'internal' && cta.internalLink) {
-    return `/${cta.internalLink.slug}`
-  }
-  return '#'
-}
-
 export function getNavigationLinkHref(link: any): string {
   if (link.type === 'page' && link.page) {
     return `/${link.page.slug}`

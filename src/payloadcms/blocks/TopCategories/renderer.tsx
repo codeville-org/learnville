@@ -4,7 +4,7 @@ import { ArrowRightIcon } from 'lucide-react'
 
 import { BlockRendererProps, TopCategoriesBlock } from '../types'
 import { Highlighter } from '@/components/ui/highlighter'
-import { getCTAHref, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
+import { getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { TextAnimate } from '@/components/ui/text-animate'

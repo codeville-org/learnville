@@ -892,9 +892,9 @@ export interface Page {
                 cta?: {
                   enabled?: boolean | null;
                   label?: string | null;
-                  linkType?: ('internal' | 'external') | null;
-                  internalLink?: (number | null) | Page;
-                  externalLink?: string | null;
+                  type?: ('page' | 'external' | 'custom') | null;
+                  page?: (number | null) | Page;
+                  url?: string | null;
                 };
               };
               image: {
@@ -983,9 +983,9 @@ export interface Page {
                 cta?: {
                   enabled?: boolean | null;
                   label?: string | null;
-                  linkType?: ('internal' | 'external') | null;
-                  internalLink?: (number | null) | Page;
-                  externalLink?: string | null;
+                  type?: ('page' | 'external' | 'custom') | null;
+                  page?: (number | null) | Page;
+                  url?: string | null;
                 };
               };
               layout?: ('image-left' | 'image-right') | null;
@@ -1011,9 +1011,9 @@ export interface Page {
                 cta?: {
                   enabled?: boolean | null;
                   label?: string | null;
-                  linkType?: ('internal' | 'external') | null;
-                  internalLink?: (number | null) | Page;
-                  externalLink?: string | null;
+                  type?: ('page' | 'external' | 'custom') | null;
+                  page?: (number | null) | Page;
+                  url?: string | null;
                 };
               };
               featuredCourses: (number | Course)[];
@@ -1049,9 +1049,9 @@ export interface Page {
                 cta?: {
                   enabled?: boolean | null;
                   label?: string | null;
-                  linkType?: ('internal' | 'external') | null;
-                  internalLink?: (number | null) | Page;
-                  externalLink?: string | null;
+                  type?: ('page' | 'external' | 'custom') | null;
+                  page?: (number | null) | Page;
+                  url?: string | null;
                 };
               };
               featuredBlogs: (number | Blog)[];
@@ -1988,9 +1988,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 enabled?: T;
                                 label?: T;
-                                linkType?: T;
-                                internalLink?: T;
-                                externalLink?: T;
+                                type?: T;
+                                page?: T;
+                                url?: T;
                               };
                         };
                     image?:
@@ -2057,9 +2057,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 enabled?: T;
                                 label?: T;
-                                linkType?: T;
-                                internalLink?: T;
-                                externalLink?: T;
+                                type?: T;
+                                page?: T;
+                                url?: T;
                               };
                         };
                     layout?: T;
@@ -2081,9 +2081,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 enabled?: T;
                                 label?: T;
-                                linkType?: T;
-                                internalLink?: T;
-                                externalLink?: T;
+                                type?: T;
+                                page?: T;
+                                url?: T;
                               };
                         };
                     featuredCourses?: T;
@@ -2113,9 +2113,9 @@ export interface PagesSelect<T extends boolean = true> {
                             | {
                                 enabled?: T;
                                 label?: T;
-                                linkType?: T;
-                                internalLink?: T;
-                                externalLink?: T;
+                                type?: T;
+                                page?: T;
+                                url?: T;
                               };
                         };
                     featuredBlogs?: T;

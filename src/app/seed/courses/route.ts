@@ -1279,6 +1279,10 @@ async function seed(force: boolean) {
 
 export async function POST(req: NextRequest) {
   try {
+    if (process.env.NODE_ENV !== 'development') {
+      return NextResponse.json({ success: false, message: 'Path is invalid' }, { status: 403 })
+    }
+
     const force = req.nextUrl.searchParams.get('force') === '1'
     const result = await seed(force)
     return NextResponse.json(result, { status: result.success ? 200 : 409 })

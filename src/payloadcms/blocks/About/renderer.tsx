@@ -2,7 +2,7 @@ import React from 'react'
 
 import { BlockRendererProps, AboutBlock } from '../types'
 import Image from 'next/image'
-import { cn, getCTAHref, highlightColorMap } from '@/lib/utils'
+import { cn, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
 import { Button } from '@/components/ui/button'
@@ -157,7 +157,7 @@ export async function AboutBlockRenderer({ data }: BlockRendererProps<AboutBlock
                   size="lg"
                   className="bg-teal-950 hover:bg-teal-900 text-white hover:text-white"
                 >
-                  <Link href={getCTAHref(content.cta)}>
+                  <Link href={getNavigationLinkHref(content.cta)}>
                     {content.cta?.label}
 
                     <ArrowRightIcon />

@@ -81,32 +81,29 @@ export const Hero: Block = {
               },
             },
             {
-              name: 'linkType',
+              name: 'type',
               type: 'select',
-              defaultValue: 'internal',
-              admin: {
-                condition: (_, siblingData) => siblingData?.enabled,
-              },
+              defaultValue: 'page',
               options: [
-                { label: 'Internal Page', value: 'internal' },
-                { label: 'External URL', value: 'external' },
+                { label: 'Internal Page', value: 'page' },
+                { label: 'External Link', value: 'external' },
+                { label: 'Custom Link', value: 'custom' },
               ],
             },
             {
-              name: 'internalLink',
+              name: 'page',
               type: 'relationship',
               relationTo: 'pages',
               admin: {
-                condition: (_, siblingData) =>
-                  siblingData?.enabled && siblingData?.linkType === 'internal',
+                condition: (_, siblingData) => siblingData?.type === 'page',
               },
             },
             {
-              name: 'externalLink',
+              name: 'url',
               type: 'text',
               admin: {
                 condition: (_, siblingData) =>
-                  siblingData?.enabled && siblingData?.linkType === 'external',
+                  siblingData?.type === 'external' || siblingData?.type === 'custom',
               },
             },
           ],

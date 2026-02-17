@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRightIcon } from 'lucide-react'
 
 import type { BlockRendererProps, FeaturedCoursesBlock } from '../types'
-import { getCTAHref, highlightColorMap } from '@/lib/utils'
+import { getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import { Highlighter } from '@/components/ui/highlighter'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Button } from '@/components/ui/button'
@@ -133,7 +133,7 @@ export function FeaturedCoursesBlockRenderer({ data }: BlockRendererProps<Featur
               size="lg"
               className="bg-teal-950 hover:bg-teal-900 text-white hover:text-white"
             >
-              <Link href={getCTAHref(content.cta)}>
+              <Link href={getNavigationLinkHref(content.cta)}>
                 {content.cta?.label}
 
                 <ArrowRightIcon />

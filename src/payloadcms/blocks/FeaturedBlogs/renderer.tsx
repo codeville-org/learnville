@@ -2,7 +2,7 @@ import React from 'react'
 import { BlockRendererProps, FeaturedBlogsBlock } from '../types'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
-import { getCTAHref, highlightColorMap } from '@/lib/utils'
+import { getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ArrowRightIcon, CalendarIcon, ClockIcon } from 'lucide-react'
@@ -63,7 +63,7 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                   size="lg"
                   className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
                 >
-                  <Link href={getCTAHref(content.cta)}>
+                  <Link href={getNavigationLinkHref(content.cta)}>
                     {content.cta?.label}
 
                     <ArrowRightIcon />
@@ -198,7 +198,7 @@ export function FeaturedBlogsRenderer({ data }: BlockRendererProps<FeaturedBlogs
                 size="lg"
                 className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
               >
-                <Link href={getCTAHref(content.cta)}>
+                <Link href={getNavigationLinkHref(content.cta)}>
                   {content.cta?.label}
 
                   <ArrowRightIcon />
