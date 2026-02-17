@@ -26,7 +26,13 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircleIcon, BellIcon, LogInIcon } from 'lucide-react'
+import {
+  AlertCircleIcon,
+  ArrowRightCircleIcon,
+  ArrowRightIcon,
+  BellIcon,
+  LogInIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 import { signin } from '../actions/signin.action'
 import { Alert, AlertTitle } from '@/components/ui/alert'
@@ -69,10 +75,12 @@ export default function SigninForm({ message }: Props) {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold font-heading">Welcome Back</CardTitle>
-        <CardDescription>{`Signin with Learnville account to explore your portal`}</CardDescription>
+    <Card className="w-full shadow-none border-none bg-transparent">
+      <CardHeader className="mb-3 w-full flex flex-col gap-1 items-center justify-center">
+        <CardTitle className="text-3xl font-thin tracking-tighter font-heading text-dark-green">
+          Welcome Back
+        </CardTitle>
+        <CardDescription className="text-sm font-thin font-heading text-cafe-noir/80">{`Signin with Learnville account to explore your portal`}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -96,12 +104,13 @@ export default function SigninForm({ message }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Email</FieldLabel>
+                  <FieldLabel className="text-base font-light">Email</FieldLabel>
                   <Input
                     {...field}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your email"
                     type="email"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -113,8 +122,11 @@ export default function SigninForm({ message }: Props) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <div className="w-full flex items-center justify-between">
-                    <FieldLabel>Password</FieldLabel>
-                    <Link href="/forgot-password" className="text-xs text-foreground/50 underline">
+                    <FieldLabel className="text-base font-light">Password</FieldLabel>
+                    <Link
+                      href="/forgot-password"
+                      className="text-sm text-raw-umber/90 hover:text-raw-umber underline"
+                    >
                       Forgot password?
                     </Link>
                   </div>
@@ -123,6 +135,7 @@ export default function SigninForm({ message }: Props) {
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your password"
                     autoComplete="new-password"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -139,16 +152,19 @@ export default function SigninForm({ message }: Props) {
             size="lg"
             type="submit"
             form="signin-form"
-            className="w-full"
+            className="w-full group h-12 rounded-lg bg-dark-green hover:bg-dark-green/90 text-khaki hover:text-khaki"
           >
-            {isPending ? <Spinner /> : <LogInIcon />}
+            {isPending && <Spinner className="mr-2" />}
             Sign in
+            {!isPending && (
+              <ArrowRightIcon className="group-hover:ml-2 transition-all duration-200" />
+            )}
           </Button>
         </Field>
 
         <div className="flex items-center justify-center text-sm text-muted-foreground gap-1">
           <span>Don't have an account ?</span>
-          <Link href={'/signup'} className="underline">
+          <Link href={'/signup'} className="underline text-hunter-green hover:text-dark-green">
             Sign up
           </Link>
         </div>

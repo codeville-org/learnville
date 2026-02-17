@@ -20,7 +20,7 @@ import { signup } from '../actions/signup.action'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/ui/spinner'
-import { UserRoundPlusIcon } from 'lucide-react'
+import { ArrowRightIcon, UserRoundPlusIcon } from 'lucide-react'
 import Link from 'next/link'
 
 type Props = {
@@ -71,10 +71,12 @@ export default function SignupForm({ className }: Props) {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold font-heading">Get Started</CardTitle>
-        <CardDescription>
+    <Card className="w-full border-none bg-transparent shadow-none">
+      <CardHeader className="mb-3 w-full flex flex-col gap-1 items-center justify-center">
+        <CardTitle className="text-3xl font-thin tracking-tighter font-heading text-dark-green">
+          Get Started
+        </CardTitle>
+        <CardDescription className="text-sm font-thin font-heading text-cafe-noir/80">
           {`Signup with Learnville to access exclusive course contents`}
         </CardDescription>
       </CardHeader>
@@ -88,8 +90,13 @@ export default function SignupForm({ className }: Props) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>First Name</FieldLabel>
-                    <Input {...field} aria-invalid={fieldState.invalid} placeholder="John" />
+                    <FieldLabel className="text-base font-light">First Name</FieldLabel>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="John"
+                      className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
+                    />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
@@ -99,8 +106,13 @@ export default function SignupForm({ className }: Props) {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Last Name</FieldLabel>
-                    <Input {...field} aria-invalid={fieldState.invalid} placeholder="Doe" />
+                    <FieldLabel className="text-base font-light">Last Name</FieldLabel>
+                    <Input
+                      {...field}
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Doe"
+                      className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
+                    />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
                 )}
@@ -112,12 +124,13 @@ export default function SignupForm({ className }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Email</FieldLabel>
+                  <FieldLabel className="text-base font-light">Email</FieldLabel>
                   <Input
                     {...field}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your email"
                     type="email"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -128,12 +141,13 @@ export default function SignupForm({ className }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Password</FieldLabel>
+                  <FieldLabel className="text-base font-light">Password</FieldLabel>
                   <PasswordInput
                     {...field}
                     aria-invalid={fieldState.invalid}
                     placeholder="Enter your password"
                     autoComplete="new-password"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -144,12 +158,13 @@ export default function SignupForm({ className }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Confirm Password</FieldLabel>
+                  <FieldLabel className="text-base font-light">Confirm Password</FieldLabel>
                   <PasswordInput
                     {...field}
                     aria-invalid={fieldState.invalid}
                     placeholder="Confirm your password"
                     autoComplete="new-password"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -166,16 +181,19 @@ export default function SignupForm({ className }: Props) {
             size="lg"
             type="submit"
             form="signup-form"
-            className="w-full"
+            className="w-full group h-12 rounded-lg bg-dark-green hover:bg-dark-green/90 text-khaki hover:text-khaki"
           >
-            {isPending ? <Spinner /> : <UserRoundPlusIcon />}
+            {isPending && <Spinner className="mr-2" />}
             Create Account
+            {!isPending && (
+              <ArrowRightIcon className="group-hover:ml-2 transition-all duration-200" />
+            )}
           </Button>
         </Field>
 
         <div className="flex items-center justify-center text-sm text-muted-foreground gap-1">
           <span>Already have an account ?</span>
-          <Link href={'/signin'} className="underline">
+          <Link href={'/signin'} className="underline text-hunter-green hover:text-dark-green">
             Sign in
           </Link>
         </div>
