@@ -83,7 +83,7 @@ export function ResetPasswordForm({ token }: Props) {
   }
 
   return (
-    <Card className="w-full shadow-none border-none bg-transparent">
+    <Card className="w-full max-w-md mx-auto shadow-none border-none bg-transparent">
       <CardHeader className="mb-3 w-full flex flex-col gap-1 items-center justify-center">
         <CardTitle className="text-3xl font-thin tracking-tighter font-heading text-dark-green">
           Reset Password
