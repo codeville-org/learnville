@@ -8,9 +8,9 @@ type Props = {
 export default function AuthLayout({ children }: Props) {
   return (
     <div className="w-full h-screen overflow-hidden bg-khaki/70 flex items-center justify-center">
-      <div className="flex w-full h-full items-stretch overflow-hidden">
-        <div className="flex-3/5 h-full p-4 pr-0">
-          <div className="flex-2/3 h-full w-full relative rounded-xl overflow-hidden shrink-0">
+      <div className="flex flex-col lg:flex-row w-full h-full items-stretch overflow-hidden">
+        <div className="hidden lg:block lg:flex-3/5 h-full p-4 pr-0">
+          <div className="h-full w-full relative rounded-xl overflow-hidden shrink-0">
             <Image
               src="/assets/auth-bg.webp"
               alt="Background Image"
@@ -32,8 +32,10 @@ export default function AuthLayout({ children }: Props) {
           </div>
         </div>
 
-        <div className="flex-2/5 overflow-y-auto w-full h-full flex flex-col min-h-0">
-          <div className="flex-1 flex items-center justify-center px-8">{children}</div>
+        <div className="flex-1 lg:flex-2/5 overflow-y-auto w-full h-full flex flex-col min-h-0">
+          <div className="flex-1 flex items-center justify-center px-4 sm:px-8 py-8 lg:py-0">
+            {children}
+          </div>
 
           <div className="text-center pb-6 shrink-0">
             <p>{``}</p>

@@ -71,7 +71,7 @@ export default function SignupForm({ className }: Props) {
   }
 
   return (
-    <Card className="w-full border-none bg-transparent shadow-none">
+    <Card className="w-full max-w-md mx-auto border-none bg-transparent shadow-none">
       <CardHeader className="mb-3 w-full flex flex-col gap-1 items-center justify-center">
         <CardTitle className="text-3xl font-thin tracking-tighter font-heading text-dark-green">
           Get Started
@@ -84,7 +84,7 @@ export default function SignupForm({ className }: Props) {
       <CardContent>
         <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup className="gap-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Controller
                 name="firstName"
                 control={form.control}
