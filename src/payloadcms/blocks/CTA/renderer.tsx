@@ -7,7 +7,7 @@ import { BlockRendererProps, CTABlock } from '../types'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
-import { cn, getCTAHref, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
+import { cn, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -129,7 +129,7 @@ export async function CTARenderer({ data }: BlockRendererProps<CTABlock>) {
                       size="lg"
                       className="rounded-xl bg-green-600 hover:bg-green-700 text-green-100 hover:text-green-50"
                     >
-                      <Link href={getCTAHref(ctaData?.instructorCTA)}>
+                      <Link href={getNavigationLinkHref(ctaData?.instructorCTA)}>
                         <UserSquare2Icon className="size-6" />
 
                         {ctaData?.instructorCTA.buttonLabel || 'Become an Instructor'}
@@ -142,7 +142,7 @@ export async function CTARenderer({ data }: BlockRendererProps<CTABlock>) {
                       size="lg"
                       className="rounded-xl bg-emerald-950 hover:bg-emerald-900 text-emerald-100 hover:text-emerald-50"
                     >
-                      <Link href={getCTAHref(ctaData?.instructorCTA)}>
+                      <Link href={getNavigationLinkHref(ctaData?.instructorCTA)}>
                         <GraduationCapIcon className="size-6" />
 
                         {ctaData?.studentCTA.buttonLabel || 'Become a Student'}

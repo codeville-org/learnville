@@ -10,7 +10,7 @@ import type { BlockRendererProps, HeroBlock } from '../types'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { Highlighter } from '@/components/ui/highlighter'
-import { cn, getCTAHref, highlightColorMap } from '@/lib/utils'
+import { cn, getNavigationLinkHref, highlightColorMap } from '@/lib/utils'
 
 const iconMap = {
   none: null,
@@ -73,7 +73,7 @@ export function HeroBlockRenderer({ data }: BlockRendererProps<HeroBlock>) {
                 size="lg"
                 className="bg-emerald-950 hover:bg-emerald-900 text-white hover:text-white"
               >
-                <Link href={getCTAHref(content.cta)}>
+                <Link href={getNavigationLinkHref(content.cta)}>
                   {content.cta?.label}
 
                   <ArrowRightIcon />
