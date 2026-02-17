@@ -33,7 +33,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 import { Spinner } from '@/components/ui/spinner'
-import { AlertCircleIcon, BellIcon, EditIcon, LogInIcon } from 'lucide-react'
+import { AlertCircleIcon, ArrowRightIcon, BellIcon, EditIcon, LogInIcon } from 'lucide-react'
 import Link from 'next/link'
 import { forgotPassword } from '../actions/forgot-password.action'
 import { Alert, AlertTitle } from '@/components/ui/alert'
@@ -83,10 +83,12 @@ export function ResetPasswordForm({ token }: Props) {
   }
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold font-heading">Reset Password</CardTitle>
-        <CardDescription>{`Enter new password you expect to use`}</CardDescription>
+    <Card className="w-full shadow-none border-none bg-transparent">
+      <CardHeader className="mb-3 w-full flex flex-col gap-1 items-center justify-center">
+        <CardTitle className="text-3xl font-thin tracking-tighter font-heading text-dark-green">
+          Reset Password
+        </CardTitle>
+        <CardDescription className="text-sm font-thin font-heading text-cafe-noir/80">{`Enter new password you expect to use`}</CardDescription>
       </CardHeader>
 
       <CardContent>
@@ -104,12 +106,13 @@ export function ResetPasswordForm({ token }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>New Password</FieldLabel>
+                  <FieldLabel className="text-base font-light">New Password</FieldLabel>
                   <PasswordInput
                     {...field}
                     aria-invalid={fieldState.invalid}
                     placeholder="Your new password"
                     autoComplete="new-password"
+                    className="h-11 shadow-none bg-white/30 border-cafe-noir/20 focus:ring-2 focus:ring-hunter-green/60 focus:ring-offset-0 focus-visible:ring-1 focus-visible:ring-hunter-green/60 focus-visible:ring-offset-0"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -126,16 +129,19 @@ export function ResetPasswordForm({ token }: Props) {
             size="lg"
             type="submit"
             form="reset-password-form"
-            className="w-full"
+            className="w-full group h-12 rounded-lg bg-dark-green hover:bg-dark-green/90 text-khaki hover:text-khaki"
           >
-            {isPending ? <Spinner /> : <EditIcon />}
+            {isPending && <Spinner className="mr-2" />}
             Reset Password
+            {!isPending && (
+              <ArrowRightIcon className="group-hover:ml-2 transition-all duration-200" />
+            )}
           </Button>
         </Field>
 
         <div className="flex items-center justify-center text-sm text-muted-foreground gap-1">
           <span>Don't have an account ?</span>
-          <Link href={'/signup'} className="underline">
+          <Link href={'/signup'} className="underline text-hunter-green hover:text-dark-green">
             Sign up
           </Link>
         </div>

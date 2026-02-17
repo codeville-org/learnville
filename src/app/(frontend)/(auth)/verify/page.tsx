@@ -29,9 +29,9 @@ export default async function VerifyPage({ searchParams }: Props) {
     )
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <h1>There was a problem</h1>
-      <p>Please contact an administrator</p>
+    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-cafe-noir/10 bg-white/60 backdrop-blur-sm p-8">
+      <h1 className="text-xl font-semibold font-heading text-dark-green">There was a problem</h1>
+      <p className="text-sm text-cafe-noir/60">Please contact an administrator</p>
     </div>
   )
 }

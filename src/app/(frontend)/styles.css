@@ -43,6 +43,13 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  /* Custom Color Palette */
+  --color-dark-green: #102820;
+  --color-hunter-green: #4c6444;
+  --color-khaki: #caba9c;
+  --color-raw-umber: #8a6240;
+  --color-cafe-noir: #4d2d18;
+
   /* Font Configurations */
   --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-dm-mono);

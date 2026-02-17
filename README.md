@@ -89,12 +89,12 @@ If you have any issues or questions, reach out to us on [Discord](https://discor
   - Fix toast issue - done
 
 - Course Showcasing
-  - Add youtube / bunny video feature for lesson videos - (up next)
-  - Prepare 1 - 3 (at least) courses for feature showcasing purposes - ongoing
-  - Develop courses listing page on landing page
-  - Develop single course page in landing page with payment page
+  - Add youtube / bunny video feature for lesson videos - Done (bunny test pending)
+  - Prepare 1 - 3 (at least) courses for feature showcasing purposes - Done
+  - Develop courses listing page on landing page - up next
+  - Develop single course page in landing page with payment page - Up next
 
 - Bugs noted
   - pdf (etc.) files aren't uploading
-  - inconsistancy of relationship between lessons and chapters (_in production_)
-  - generates duplicated copies of lessons, courses with same id when creating/updating from production / live site (_in production_)
+  - inconsistancy of relationship between lessons and chapters (_in production_) - Fixed
+  - generates duplicated copies of lessons, courses with same id when creating/updating from production / live site (_in production_) - Fixed
