@@ -1,24 +1,33 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { getAuthStatusAction } from '../actions/get-auth-status.action'
 
 /**
- * Client-side hook that checks for the presence of the `payload-token` cookie
- * to determine if the user is authenticated. This avoids server-side `headers()`
- * calls that would force dynamic rendering.
- *
- * Note: This only checks cookie presence, not validity. The middleware and
- * Payload's auth system handle actual token validation.
+ * Client-side hook that checks auth status via a lightweight API call.
+ * The payload-token cookie is httpOnly (not accessible via document.cookie),
+ * so we hit a server endpoint that can read it from the request.
  */
 export function useAuthStatus() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [role, setRole] = useState<'user' | 'customer' | null>(null)
 
   useEffect(() => {
-    const hasToken = document.cookie.split(';').some((c) => c.trim().startsWith('payload-token='))
-    setIsAuthenticated(hasToken)
-    setIsLoading(false)
+    checkAuthStatus()
   }, [])
 
-  return { isAuthenticated, isLoading }
+  const checkAuthStatus = async () => {
+    setIsLoading(true)
+
+    const { authenticated, payload } = await getAuthStatusAction()
+
+    setIsAuthenticated(authenticated)
+
+    if (payload) setRole(payload?.collection === 'customers' ? 'customer' : 'user')
+
+    setIsLoading(false)
+  }
+
+  return { isAuthenticated, role, isLoading }
 }

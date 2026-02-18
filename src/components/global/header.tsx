@@ -3,7 +3,16 @@
 import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Search, Menu, X, ChevronDown, ShoppingCart, UserIcon, User2Icon } from 'lucide-react'
+import {
+  Search,
+  Menu,
+  X,
+  ChevronDown,
+  ShoppingCart,
+  UserIcon,
+  User2Icon,
+  BoltIcon,
+} from 'lucide-react'
 
 import type { Header as HeaderType } from '@/payload-types'
 import { Button } from '@/components/ui/button'
@@ -35,7 +44,7 @@ const bgColorMap = {
 export function Header({ data }: Props) {
   const [bannerVisible, setBannerVisible] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const { isAuthenticated, isLoading } = useAuthStatus()
+  const { isAuthenticated, isLoading, role } = useAuthStatus()
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -191,7 +200,7 @@ export function Header({ data }: Props) {
                       </Link>
                     </Button>
                   </>
-                ) : (
+                ) : role === 'customer' ? (
                   <Button
                     variant="ghost"
                     className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
@@ -202,6 +211,19 @@ export function Header({ data }: Props) {
                       {data.ctaButtons?.myAccountButton?.label || 'My Account'}
                     </Link>
                   </Button>
+                ) : role === 'user' ? (
+                  <Button
+                    variant="ghost"
+                    className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
+                    asChild
+                  >
+                    <Link href={'/admin'} target="_blank">
+                      <BoltIcon />
+                      {'Dashboard'}
+                    </Link>
+                  </Button>
+                ) : (
+                  <></>
                 )}
               </div>
 
