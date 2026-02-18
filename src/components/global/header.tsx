@@ -297,19 +297,30 @@ export function Header({ data, user }: Props) {
             <div className="pt-4 border-t space-y-2">
               {!isAuthenticated ? (
                 <>
-                  <Button variant="outline" className="w-full" asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full border-none h-10 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 hover:text-emerald-950"
+                    asChild
+                  >
                     <Link href={data.ctaButtons?.loginButton?.url || '/login'}>
                       {data.ctaButtons?.loginButton?.label || 'Log in'}
                     </Link>
                   </Button>
-                  <Button className="w-full bg-gray-900 hover:bg-gray-800" asChild>
+                  <Button
+                    className="w-full h-10 bg-emerald-950 hover:bg-emerald-900 text-emerald-50 hover:text-emerald-100"
+                    asChild
+                  >
                     <Link href={data.ctaButtons?.signupButton?.url || '/signup'}>
                       {data.ctaButtons?.signupButton?.label || 'Sign up'}
                     </Link>
                   </Button>
                 </>
               ) : (
-                <Button variant="outline" className="w-full" asChild>
+                <Button
+                  variant="outline"
+                  className="w-full h-10 bg-emerald-950 hover:bg-emerald-900 text-emerald-50 hover:text-emerald-100"
+                  asChild
+                >
                   <Link href={data.ctaButtons?.myAccountButton?.url || '/account'}>
                     {data.ctaButtons?.myAccountButton?.label || 'My Account'}
                   </Link>
