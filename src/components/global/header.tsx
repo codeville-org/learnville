@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Search, Menu, X, ChevronDown, ShoppingCart, UserIcon, User2Icon } from 'lucide-react'
 
-import type { Customer, Header as HeaderType, User } from '@/payload-types'
+import type { Header as HeaderType } from '@/payload-types'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -18,17 +18,10 @@ import {
 } from '@/components/ui/navigation-menu'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 import { getNavigationLinkHref } from '@/lib/utils'
+import { useAuthStatus } from '@/modules/auth/hooks/use-auth-status'
 
 type Props = {
   data: HeaderType
-  user:
-    | (User & {
-        collection: 'users'
-      })
-    | (Customer & {
-        collection: 'customers'
-      })
-    | null
 }
 
 const bgColorMap = {
@@ -39,12 +32,10 @@ const bgColorMap = {
   orange: 'bg-orange-500',
 }
 
-export function Header({ data, user }: Props) {
+export function Header({ data }: Props) {
   const [bannerVisible, setBannerVisible] = useState(true)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // Check if user is authenticated (you'll need to implement this based on your auth)
-  const isAuthenticated = Boolean(user)
+  const { isAuthenticated, isLoading } = useAuthStatus()
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white shadow-sm">
@@ -178,7 +169,9 @@ export function Header({ data, user }: Props) {
             <div className="flex items-center gap-3">
               {/* CTA Buttons - Desktop */}
               <div className="hidden lg:flex items-center gap-2">
-                {!isAuthenticated ? (
+                {isLoading ? (
+                  <div className="h-11 w-24 rounded-full bg-gray-100 animate-pulse" />
+                ) : !isAuthenticated ? (
                   <>
                     <Button
                       variant="ghost"
@@ -198,7 +191,7 @@ export function Header({ data, user }: Props) {
                       </Link>
                     </Button>
                   </>
-                ) : user?.collection === 'customers' ? (
+                ) : (
                   <Button
                     variant="ghost"
                     className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
@@ -206,21 +199,10 @@ export function Header({ data, user }: Props) {
                   >
                     <Link href={data.ctaButtons?.myAccountButton?.url || '/portal'}>
                       <User2Icon />
-
                       {data.ctaButtons?.myAccountButton?.label || 'My Account'}
                     </Link>
                   </Button>
-                ) : user?.collection === 'users' ? (
-                  <Button
-                    variant="ghost"
-                    className="h-11 bg-emerald-600 hover:bg-emerald-700 rounded-full text-white hover:text-white"
-                    asChild
-                  >
-                    <Link href={'/admin'} target="_blank" rel="noopener noreferrer">
-                      {'Dashboard'}
-                    </Link>
-                  </Button>
-                ) : null}
+                )}
               </div>
 
               {/* Mobile Menu Toggle */}
@@ -295,7 +277,9 @@ export function Header({ data, user }: Props) {
 
             {/* Mobile CTA Buttons */}
             <div className="pt-4 border-t space-y-2">
-              {!isAuthenticated ? (
+              {isLoading ? (
+                <div className="h-10 w-full rounded-md bg-gray-100 animate-pulse" />
+              ) : !isAuthenticated ? (
                 <>
                   <Button
                     variant="outline"

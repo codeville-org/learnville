@@ -3,10 +3,11 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { headers as getHeaders } from 'next/headers'
+import { draftMode } from 'next/headers'
 
 import { generateMeta } from '@/lib/seo/generateMetadata'
 import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
+import { hydratePageBlocks } from '@/lib/hydrate-page-blocks'
 import { TextAnimate } from '@/components/ui/text-animate'
 import { GridPattern } from '@/components/ui/grid-pattern'
 import {
@@ -28,12 +29,8 @@ type Props = {
 // NextJS Incremental Static Regeneration (ISR) revalidation time
 export const revalidate = 3600
 
-async function getPageBySlug(slug: string = '/') {
-  const headers = await getHeaders()
-
+async function getPageBySlug(slug: string = '/', isDraftMode: boolean) {
   const payload = await getPayload({ config })
-
-  const { user } = await payload.auth({ headers })
 
   // ------------------------
   let depth = 1
@@ -49,16 +46,41 @@ async function getPageBySlug(slug: string = '/') {
       slug: { equals: slug },
     },
     depth,
-    overrideAccess: Boolean(user),
+    draft: isDraftMode,
     pagination: false,
-    draft: Boolean(user),
   })
 
   if (res.totalDocs === 0) return null
 
   const page = res.docs[0]
 
+  // Hydrate all blocks with their required relationship data
+  if (page.content?.sections) {
+    page.content.sections = await hydratePageBlocks(page.content.sections)
+  }
+
   return page
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+
+  const pages = await payload.find({
+    collection: 'pages',
+    limit: 100,
+    where: {
+      isHomepage: { not_equals: true },
+      slug: { exists: true },
+    },
+    select: { slug: true },
+    pagination: false,
+  })
+
+  return pages.docs
+    .filter((page) => page.slug)
+    .map((page) => ({
+      slug: page.slug!,
+    }))
 }
 
 export default async function Page({ params, searchParams }: Props) {
@@ -66,7 +88,8 @@ export default async function Page({ params, searchParams }: Props) {
 
   if (!slug) notFound()
 
-  const page = await getPageBySlug(slug)
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getPageBySlug(slug, isDraftMode)
 
   if (!page) notFound()
 
@@ -126,7 +149,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!slug) return {}
 
-  const page = await getPageBySlug(slug)
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getPageBySlug(slug, isDraftMode)
 
   if (!page) return {}
 

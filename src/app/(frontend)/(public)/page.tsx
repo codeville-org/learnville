@@ -3,7 +3,7 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
-import { headers as getHeaders } from 'next/headers'
+import { draftMode } from 'next/headers'
 
 import { generateMeta } from '@/lib/seo/generateMetadata'
 import { RenderPageBlocks } from '@/payloadcms/blocks/page-blocks-renderer'
@@ -14,12 +14,8 @@ type Props = {}
 // NextJS Incremental Static Regeneration (ISR) revalidation time
 export const revalidate = 3600
 
-async function getHomepage() {
-  const headers = await getHeaders()
-
+async function getHomepage(isDraftMode: boolean) {
   const payload = await getPayload({ config })
-
-  const { user } = await payload.auth({ headers })
 
   const res = await payload.find({
     collection: 'pages',
@@ -28,9 +24,8 @@ async function getHomepage() {
       isHomepage: { equals: true },
     },
     depth: 1,
-    overrideAccess: Boolean(user),
+    draft: isDraftMode,
     pagination: false,
-    draft: Boolean(user),
   })
 
   if (res.totalDocs === 0) return null
@@ -46,7 +41,8 @@ async function getHomepage() {
 }
 
 export default async function Homepage({}: Props) {
-  const page = await getHomepage()
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getHomepage(isDraftMode)
 
   if (!page) notFound()
 
@@ -54,7 +50,8 @@ export default async function Homepage({}: Props) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const page = await getHomepage()
+  const { isEnabled: isDraftMode } = await draftMode()
+  const page = await getHomepage(isDraftMode)
 
   if (!page) return {}
 
