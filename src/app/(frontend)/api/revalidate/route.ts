@@ -23,6 +23,13 @@ export async function POST(req: NextRequest) {
         // Homepage changed
         revalidatePath('/(frontend)/(public)', 'page')
       }
+    } else if (collection === 'courses') {
+      // Course created/updated/published — bust courses listing cache
+      revalidatePath('/(frontend)/(public)/courses', 'page')
+      if (slug) {
+        // Also revalidate the individual course detail page
+        revalidatePath(`/(frontend)/(public)/courses/${slug}`, 'page')
+      }
     }
 
     return Response.json({ revalidated: true, now: Date.now() })

@@ -7,10 +7,12 @@ interface Props {
 
 export default function CoursesPageLayout({ children }: Props) {
   return (
-    <div className="w-full max-w-xl mx-auto py-8">
-      <CoursesBreadcrumb />
+    <div className="w-full h-full bg-secondary/10">
+      <div className="container mx-auto pt-8">
+        {/* <CoursesBreadcrumb /> */}
 
-      <div className="w-full">{children}</div>
+        <div className="w-full">{children}</div>
+      </div>
     </div>
   )
 }
