@@ -60,47 +60,34 @@ function AuthFooter() {
 
 export default function AuthLayout({ children }: Props) {
   return (
-    <div className="w-full h-screen overflow-hidden bg-khaki/70">
-      {/* ─── Desktop layout (lg+): side-by-side ─── */}
-      <div className="hidden lg:flex w-full h-full items-stretch overflow-hidden">
-        <div className="flex-3/5 h-full p-4 pr-0">
-          <div className="h-full w-full relative rounded-xl overflow-hidden shrink-0">
-            <AuthImage />
-          </div>
-        </div>
-
-        <div className="flex-2/5 overflow-y-auto w-full h-full flex flex-col min-h-0">
-          <div className="flex-1 flex items-center justify-center px-8">{children}</div>
-          <AuthFooter />
+    <div className="w-full h-screen overflow-hidden bg-khaki/70 relative lg:flex lg:items-stretch">
+      {/* Image panel */}
+      {/* Mobile: absolute behind sheet | Desktop: flex child 3/5 */}
+      <div className="absolute inset-0 z-0 lg:relative lg:z-auto lg:flex-3/5 lg:h-full lg:p-4 lg:pr-0">
+        <div className="w-full h-full relative lg:rounded-xl overflow-hidden">
+          <AuthImage />
         </div>
       </div>
 
-      {/* ─── Mobile layout (<lg): bottom sheet over background image ─── */}
-      <div className="lg:hidden w-full h-full relative">
-        {/* Background image — fixed behind the sheet */}
-        <div className="absolute inset-0 z-0">
-          <div className="w-full h-full relative">
-            <AuthImage />
+      {/* Form panel */}
+      {/* Mobile: scrollable overlay sheet | Desktop: flex child 2/5 */}
+      <div className="relative z-10 h-full overflow-y-auto pointer-events-none lg:pointer-events-auto lg:flex-2/5 lg:flex lg:flex-col lg:min-h-0">
+        {/* Mobile spacer — lets background image peek through */}
+        <div className="h-[40vh] shrink-0 lg:hidden" />
+
+        {/* Sheet surface (mobile) / plain container (desktop) */}
+        <div className="relative pointer-events-auto min-h-[60vh] bg-khaki/90 backdrop-blur-md rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)] lg:min-h-0 lg:flex-1 lg:flex lg:flex-col lg:bg-transparent lg:backdrop-blur-none lg:rounded-none lg:shadow-none">
+          {/* Drag indicator — mobile only */}
+          <div className="flex justify-center pt-3 pb-1 lg:hidden">
+            <div className="w-10 h-1 rounded-full bg-cafe-noir/20" />
           </div>
-        </div>
 
-        {/* Scrollable sheet container */}
-        <div className="relative z-10 h-full overflow-y-auto">
-          {/* Spacer — lets the background image peek through */}
-          <div className="h-[40vh] shrink-0 pointer-events-none" />
-
-          {/* Sheet surface */}
-          <div className="relative min-h-[60vh] bg-khaki/90 backdrop-blur-md rounded-t-3xl shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
-            {/* Drag indicator */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="w-10 h-1 rounded-full bg-cafe-noir/20" />
-            </div>
-
-            {/* Form content */}
-            <div className="px-4 sm:px-8 pt-2 pb-4">{children}</div>
-
-            <AuthFooter />
+          {/* Form content */}
+          <div className="px-4 sm:px-8 pt-2 pb-4 lg:flex-1 lg:flex lg:items-center lg:justify-center lg:px-8 lg:pt-0 lg:pb-0">
+            {children}
           </div>
+
+          <AuthFooter />
         </div>
       </div>
     </div>
