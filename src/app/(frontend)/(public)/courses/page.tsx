@@ -1,48 +1,125 @@
 import React from 'react'
 import { getPayload } from 'payload'
 import config from '@payload-config'
-import { Card } from '@/components/ui/card'
-import Image from 'next/image'
-import Link from 'next/link'
+import type { Where } from 'payload'
+import { BookOpenIcon } from 'lucide-react'
 
-export default async function CoursesPage() {
+import { CourseCard } from '@/components/shared/course-card'
+import { Pagination } from '@/components/ui/pagination'
+import { transformCoursesToHydrated } from '@/lib/hydrate-page-blocks'
+import { CategoryFilter } from './components/category-filter'
+import { parseSearchParams } from '@/lib/seachparams'
+
+// Dynamic rendering: this page depends on searchParams (category, page, limit)
+// On-demand revalidation is handled via /api/revalidate for course content changes
+export const dynamic = 'force-dynamic'
+
+interface Props {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
+
+/** Select only the fields needed for HydratedCourseData */
+const COURSE_SELECT = {
+  title: true,
+  slug: true,
+  shortDescription: true,
+  thumbnail: true,
+  overallRating: true,
+  level: true,
+  pricingType: true,
+  price: true,
+  instructor: true,
+  chapters: { lessons: true },
+  estimatedDuration: true,
+  category: true,
+} as const
+
+export default async function CoursesPage({ searchParams }: Props) {
+  const { category, page, limit } = parseSearchParams(await searchParams)
+
   const payload = await getPayload({ config })
 
-  const courses = await payload.find({
-    collection: 'courses',
-    overrideAccess: true,
-  })
+  // Build where clause: only published courses + optional category filter
+  const where: Where = {
+    _status: { equals: 'published' },
+  }
+
+  if (category) {
+    where['category.slug'] = { equals: category }
+  }
+
+  // Fetch courses and categories in parallel for performance
+  const [coursesResult, categoriesResult] = await Promise.all([
+    payload.find({
+      collection: 'courses',
+      where,
+      page,
+      limit,
+      depth: 2, // Populate thumbnail (Media), instructor (User → avatar), category
+      sort: '-createdAt',
+      select: COURSE_SELECT,
+      overrideAccess: true, // Required: courses read access blocks unauthenticated users
+      pagination: true,
+    }),
+    payload.find({
+      collection: 'categories',
+      depth: 0,
+      limit: 50,
+      sort: 'name',
+      select: { name: true, slug: true },
+      overrideAccess: true,
+    }),
+  ])
+
+  // Transform raw Course docs → HydratedCourseData for CourseCard
+  const courses = transformCoursesToHydrated(coursesResult.docs)
+
+  const categories = categoriesResult.docs.map((cat) => ({
+    name: cat.name,
+    slug: cat.slug,
+  }))
 
   return (
-    <div className="w-full space-y-5">
-      <div className="grid grid-cols-2 gap-4">
-        {courses.docs.map((course) => (
-          <Link
-            href={`/courses/${course.slug}`}
-            key={course.id}
-            className="group cursor-pointer rounded-md space-y-1"
-          >
-            <Card className="p-0 w-full aspect-video overflow-hidden">
-              <Image
-                src={course.thumbnail instanceof Object ? `${course?.thumbnail?.url}` : ''}
-                alt={course.title || 'Course Thumbnail'}
-                width={600}
-                height={400}
-                className="object-cover w-full h-full"
-              />
-            </Card>
+    <div className="w-full space-y-8 pb-8">
+      {/* Category Filter Bar */}
+      <CategoryFilter categories={categories} activeCategory={category} />
 
-            <div className="space-y-0.5 px-2">
-              <p className="text-sm font-semibold line-clamp-1 group-hover:underline">
-                {course.title}
-              </p>
-              <p className="text-xs text-foreground/60 line-clamp-2">{course.shortDescription}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* Courses Grid */}
+      {courses.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {courses.map((course) => (
+              <CourseCard key={course.id} data={course} />
+            ))}
+          </div>
 
-      <p>{courses.totalDocs} courses found.</p>
+          {/* Results Summary */}
+          <p className="text-sm text-gray-500">
+            Showing {courses.length} of {coursesResult.totalDocs} course
+            {coursesResult.totalDocs !== 1 ? 's' : ''}
+          </p>
+
+          {/* Pagination */}
+          <Pagination
+            totalPages={coursesResult.totalPages}
+            currentPage={page}
+            hasNextPage={coursesResult.hasNextPage}
+            hasPrevPage={coursesResult.hasPrevPage}
+          />
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <div className="p-4 rounded-full bg-gray-100 mb-4">
+            <BookOpenIcon className="size-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-900">No courses found</h3>
+          <p className="text-sm text-gray-500 mt-1">
+            {category
+              ? 'Try selecting a different category or browse all courses.'
+              : 'Check back soon for new courses.'}
+          </p>
+        </div>
+      )}
     </div>
   )
 }

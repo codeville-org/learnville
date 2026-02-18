@@ -137,6 +137,61 @@ async function hydrateTopCategoriesBlock(
 }
 
 /**
+ * Transform raw Course documents (with depth >= 2) into lightweight HydratedCourseData.
+ * Reusable for any context that needs to display course cards (blocks, listing pages, etc.)
+ *
+ * Accepts partial Course types to support queries using `select` that omit some fields.
+ *
+ * @param rawCourses - Course documents fetched with depth >= 2 (relationships populated)
+ * @returns Array of HydratedCourseData ready for CourseCard rendering
+ */
+export function transformCoursesToHydrated(
+  rawCourses: Partial<import('@/payload-types').Course>[],
+): HydratedCourseData[] {
+  return rawCourses.map((course) => {
+    // Count lessons across all chapters
+    let lessonCount = 0
+    if (course.chapters) {
+      course.chapters.forEach((chapter) => {
+        lessonCount += chapter.lessons?.length || 0
+      })
+    }
+
+    const thumbnail =
+      typeof course.thumbnail === 'object' && course.thumbnail
+        ? { url: course.thumbnail.url, alt: course.thumbnail.alt }
+        : null
+
+    const instructor =
+      typeof course.instructor === 'object' && course.instructor
+        ? {
+            id: course.instructor.id,
+            displayName:
+              course.instructor.instructorProfile?.displayName || course.instructor.email,
+            avatarUrl:
+              course.instructor.avatar instanceof Object ? course.instructor.avatar.url : null,
+          }
+        : null
+
+    return {
+      id: course.id!,
+      title: course.title!,
+      slug: course.slug!,
+      shortDescription: course.shortDescription,
+      thumbnail,
+      overallRating: course.overallRating || 0,
+      lessonCount,
+      level: course.level!,
+      pricingType: course.pricingType!,
+      price: course.price || 0,
+      instructor,
+      estimatedDuration: course.estimatedDuration,
+      category: course.category instanceof Object ? course.category.name : null,
+    }
+  })
+}
+
+/**
  * Hydrate FeaturedCourses block with lightweight course data
  */
 async function hydrateFeaturedCoursesBlock(
@@ -177,49 +232,10 @@ async function hydrateFeaturedCoursesBlock(
     overrideAccess: true,
   })
 
-  // Create hydrated course data
+  // Transform and map by ID for ordered output
+  const hydrated = transformCoursesToHydrated(coursesResult.docs)
   const courseMap = new Map<number, HydratedCourseData>()
-  coursesResult.docs.forEach((course) => {
-    // Count lessons
-    let lessonCount = 0
-    if (course.chapters) {
-      course.chapters.forEach((chapter) => {
-        lessonCount += chapter.lessons?.length || 0
-      })
-    }
-
-    const thumbnail =
-      typeof course.thumbnail === 'object' && course.thumbnail
-        ? { url: course.thumbnail.url, alt: course.thumbnail.alt }
-        : null
-
-    const instructor =
-      typeof course.instructor === 'object' && course.instructor
-        ? {
-            id: course.instructor.id,
-            displayName:
-              course.instructor.instructorProfile?.displayName || course.instructor.email,
-            avatarUrl:
-              course.instructor.avatar instanceof Object ? course.instructor.avatar.url : null,
-          }
-        : null
-
-    courseMap.set(course.id, {
-      id: course.id,
-      title: course.title,
-      slug: course.slug,
-      shortDescription: course.shortDescription,
-      thumbnail,
-      overallRating: course.overallRating || 0,
-      lessonCount,
-      level: course.level,
-      pricingType: course.pricingType,
-      price: course.price || 0,
-      instructor,
-      estimatedDuration: course.estimatedDuration,
-      category: course.category instanceof Object ? course.category.name : null,
-    })
-  })
+  hydrated.forEach((course) => courseMap.set(course.id, course))
 
   return {
     ...block,
