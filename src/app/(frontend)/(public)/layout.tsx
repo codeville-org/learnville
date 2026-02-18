@@ -1,5 +1,5 @@
 import React from 'react'
-import { headers as getHeaders } from 'next/headers'
+import { draftMode } from 'next/headers'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
@@ -13,42 +13,37 @@ type Props = {
   children: React.ReactNode
 }
 
-async function getGlobalsData() {
+async function getGlobalsData(isDraftMode: boolean) {
   try {
-    const headers = await getHeaders()
-
     const payload = await getPayload({ config })
-
-    const { user } = await payload.auth({ headers })
 
     const footerRes = await payload.findGlobal({
       slug: 'footer',
-      overrideAccess: Boolean(user),
-      draft: Boolean(user),
+      draft: isDraftMode,
     })
 
     const headerRes = await payload.findGlobal({
       slug: 'header',
-      overrideAccess: Boolean(user),
-      draft: Boolean(user),
+      draft: isDraftMode,
     })
 
-    return { footer: footerRes as FooterType, header: headerRes as HeaderType, user }
+    return { footer: footerRes as FooterType, header: headerRes as HeaderType }
   } catch (error) {
-    return { footer: null, header: null, user: null }
+    return { footer: null, header: null }
   }
 }
 
 export default async function PagesLayout({ children }: Props) {
-  const { footer, header, user } = await getGlobalsData()
+  const { isEnabled: isDraftMode } = await draftMode()
+  const { footer, header } = await getGlobalsData(isDraftMode)
 
   return (
     <div>
       <Toaster position="top-center" />
 
-      {user && <LivePreviewListener />}
+      {isDraftMode && <LivePreviewListener />}
 
-      {header && <Header data={header} user={user} />}
+      {header && <Header data={header} />}
 
       {children}
 

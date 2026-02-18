@@ -10,6 +10,7 @@ import {
 import editor from '../Users/access/editor'
 import { checkRole } from '../Users/access/check-role'
 import { ensureSingleHomepage } from './hooks/ensureSingleHomepage'
+import { revalidatePage } from './hooks/revalidatePage'
 
 // Blocks
 import { Hero } from '@/payloadcms/blocks/Hero/config'
@@ -64,6 +65,7 @@ export const Pages: CollectionConfig = {
   },
   hooks: {
     beforeChange: [ensureSingleHomepage],
+    afterChange: [revalidatePage],
   },
   fields: [
     {

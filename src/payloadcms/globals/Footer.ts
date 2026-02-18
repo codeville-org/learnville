@@ -1,10 +1,14 @@
 import { GlobalConfig } from 'payload'
 import editor from '../collections/Users/access/editor'
 import { checkRole } from '../collections/Users/access/check-role'
+import { revalidateGlobal } from './hooks/revalidateGlobal'
 
 export const Footer: GlobalConfig = {
   slug: 'footer',
   label: 'Site Footer',
+  hooks: {
+    afterChange: [revalidateGlobal],
+  },
   access: {
     read: ({ req: { user } }) => {
       // Admins can see everything (published and drafts)
