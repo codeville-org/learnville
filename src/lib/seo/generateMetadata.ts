@@ -29,6 +29,13 @@ export const generateMeta = async (args: { doc: DocType }): Promise<Metadata> =>
   return {
     title,
     description,
+    icons: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        url: '/favicon.png',
+      },
+    ],
     openGraph: mergeOpenGraph({
       title,
       description,
