@@ -1,21 +1,17 @@
 import React from 'react'
-import { getPayload } from 'payload'
+import { getPayload, Where } from 'payload'
 import config from '@payload-config'
-import type { Where } from 'payload'
-import { BookOpenIcon } from 'lucide-react'
+import type { SearchParams } from 'nuqs/server'
 
-import { CourseCard } from '@/components/shared/course-card'
+import { parseSearchParams } from '@/lib/seachparams'
 import { Pagination } from '@/components/ui/pagination'
 import { transformCoursesToHydrated } from '@/lib/hydrate-page-blocks'
-import { CategoryFilter } from './components/category-filter'
-import { parseSearchParams } from '@/lib/seachparams'
-
-// Dynamic rendering: this page depends on searchParams (category, page, limit)
-// On-demand revalidation is handled via /api/revalidate for course content changes
-export const dynamic = 'force-dynamic'
+import { CategoryFilter } from './_components/category-filter'
+import { CourseCard } from '@/components/shared/course-card'
+import { BookOpenIcon } from 'lucide-react'
 
 interface Props {
-  searchParams: Promise<Record<string, string | string[] | undefined>>
+  searchParams: Promise<SearchParams>
 }
 
 /** Select only the fields needed for HydratedCourseData */
@@ -34,7 +30,7 @@ const COURSE_SELECT = {
   category: true,
 } as const
 
-export default async function CoursesPage({ searchParams }: Props) {
+export async function AllCoursesRendererClient({ searchParams }: Props) {
   const { category, page, limit } = parseSearchParams(await searchParams)
 
   const payload = await getPayload({ config })
@@ -86,7 +82,7 @@ export default async function CoursesPage({ searchParams }: Props) {
 
       {/* Courses Grid */}
       {courses.length > 0 ? (
-        <>
+        <div className="w-full px-0 space-y-8 sm:px-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {courses.map((course) => (
               <CourseCard key={course.id} data={course} />
@@ -106,7 +102,7 @@ export default async function CoursesPage({ searchParams }: Props) {
             hasNextPage={coursesResult.hasNextPage}
             hasPrevPage={coursesResult.hasPrevPage}
           />
-        </>
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <div className="p-4 rounded-full bg-gray-100 mb-4">
