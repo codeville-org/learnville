@@ -82,7 +82,7 @@ export async function AllCoursesRendererClient({ searchParams }: Props) {
 
       {/* Courses Grid */}
       {courses.length > 0 ? (
-        <div className="w-full px-0 space-y-8 sm:px-4">
+        <div className="w-full px-4 space-y-8 sm:px-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {courses.map((course) => (
               <CourseCard key={course.id} data={course} />
