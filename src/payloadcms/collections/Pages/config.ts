@@ -25,6 +25,7 @@ import { TabLayoutBlock } from '@/payloadcms/blocks/TabLayout/config'
 import { FormBlock } from '@/payloadcms/forms/block/config'
 import { AllCategories } from '@/payloadcms/blocks/AllCategories/config'
 import { AllBlogs } from '@/payloadcms/blocks/AllBlogs/config'
+import { AllCourses } from '@/payloadcms/blocks/AllCourses/config'
 
 export const Pages: CollectionConfig = {
   slug: 'pages',
@@ -123,6 +124,7 @@ export const Pages: CollectionConfig = {
                 FormBlock,
                 AllCategories,
                 AllBlogs,
+                AllCourses,
               ],
               admin: {
                 initCollapsed: true,

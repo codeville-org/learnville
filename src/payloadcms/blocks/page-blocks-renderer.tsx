@@ -14,6 +14,7 @@ import { TabLayoutBlockRenderer } from './TabLayout/renderer'
 import { FormBlockRenderer } from '../forms/block/renderer'
 import { AllCategoriesBlockRenderer } from './AllCategories/renderer-layout'
 import { AllBlogsBlockRenderer } from './AllBlogs/renderer-layout'
+import { AllCoursesBlockRenderer } from './AllCourses/renderer-layout'
 
 /**
  * Central registry mapping block types to their renderer components
@@ -33,6 +34,7 @@ export const blockRenderers = {
   formBlock: FormBlockRenderer,
   allCategories: AllCategoriesBlockRenderer,
   allBlogs: AllBlogsBlockRenderer,
+  allCourses: AllCoursesBlockRenderer,
 } as const
 
 /**

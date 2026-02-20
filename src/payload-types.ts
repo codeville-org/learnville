@@ -1144,6 +1144,11 @@ export interface Page {
               blockName?: string | null;
               blockType: 'allBlogs';
             }
+          | {
+              id?: string | null;
+              blockName?: string | null;
+              blockType: 'allCourses';
+            }
         )[]
       | null;
   };
@@ -2171,6 +2176,12 @@ export interface PagesSelect<T extends boolean = true> {
                     blockName?: T;
                   };
               allBlogs?:
+                | T
+                | {
+                    id?: T;
+                    blockName?: T;
+                  };
+              allCourses?:
                 | T
                 | {
                     id?: T;

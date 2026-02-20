@@ -4,7 +4,6 @@ import React from 'react'
 import { useQueryStates, parseAsString, parseAsInteger } from 'nuqs'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import {
   Carousel,
   CarouselContent,

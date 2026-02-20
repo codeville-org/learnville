@@ -1,7 +1,7 @@
-import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
 
-export default function CoursesLoadingPage() {
+export function AllCoursesSkeleton() {
   return (
     <div className="w-full space-y-8 pb-8">
       {/* Category Filter Skeleton */}

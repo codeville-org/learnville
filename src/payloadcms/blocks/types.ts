@@ -31,6 +31,7 @@ export type TabLayoutBlock = ExtractBlockType<'tabLayoutBlock'>
 export type FormBlock = ExtractBlockType<'formBlock'>
 export type AllCategoriesBlock = ExtractBlockType<'allCategories'>
 export type AllBlogsBlock = ExtractBlockType<'allBlogs'>
+export type AllCoursesBlock = ExtractBlockType<'allCourses'>
 
 // Hydrated block types (with lightweight data from hydration)
 export type TopCategoriesBlock = Omit<ExtractBlockType<'topCategories'>, 'topCategories'> & {
