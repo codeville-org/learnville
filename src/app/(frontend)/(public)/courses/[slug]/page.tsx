@@ -23,22 +23,33 @@ import { Badge } from '@/components/ui/badge'
 import { CourseRating } from '../_components/course-rating'
 import {
   ArrowRightCircle,
+  ArrowUpRightFromSquare,
   AwardIcon,
   BadgeDollarSignIcon,
   BadgeQuestionMarkIcon,
+  BookOpenIcon,
   BookTextIcon,
+  BriefcaseIcon,
   Calendar,
   CalendarIcon,
   CheckCircle2Icon,
   CheckIcon,
+  ExternalLinkIcon,
+  GlobeIcon,
+  GraduationCapIcon,
   InfinityIcon,
+  LinkedinIcon,
   LogInIcon,
   PlayCircleIcon,
   PlayIcon,
   Share2Icon,
   SmartphoneIcon,
+  StarIcon,
+  TwitterIcon,
   UsersRoundIcon,
   VideoIcon,
+  GithubIcon,
+  YoutubeIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -60,6 +71,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { InstructorProfileCard } from '../_components/instructor-profile-card'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -421,6 +433,9 @@ export default async function SingleCoursePage({ params }: Props) {
                   </div>
                 </div>
               )}
+
+              {/* Instructor Profile */}
+              <InstructorProfileCard course={course} />
 
               {/* Course Description */}
               {course.description && <RichTextComponent content={course.description} />}
