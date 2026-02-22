@@ -240,7 +240,7 @@ export const Courses: CollectionConfig = {
               type: 'relationship',
               relationTo: 'certificate-templates',
               filterOptions: {
-                status: { equals: 'active' },
+                _status: { equals: 'published' },
               },
               admin: {
                 condition: (data) => data?.certificateEnabled === true,

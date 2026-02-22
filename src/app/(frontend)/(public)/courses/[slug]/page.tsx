@@ -26,12 +26,15 @@ import {
   AwardIcon,
   BadgeDollarSignIcon,
   BadgeQuestionMarkIcon,
+  BookTextIcon,
   Calendar,
   CalendarIcon,
   CheckCircle2Icon,
   CheckIcon,
   InfinityIcon,
   LogInIcon,
+  PlayCircleIcon,
+  PlayIcon,
   Share2Icon,
   SmartphoneIcon,
   UsersRoundIcon,
@@ -42,6 +45,20 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { RichTextComponent } from '@/payloadcms/blocks/RichTextContent/renderer'
 import { Card } from '@/components/ui/card'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -100,6 +117,8 @@ export default async function SingleCoursePage({ params }: Props) {
   const course = await getCourseBySlug(slug, isDraftMode)
 
   if (!course) notFound()
+
+  console.log({ lesson: course.chapters?.[0]?.lessons?.[0] })
 
   return (
     <div>
@@ -191,7 +210,7 @@ export default async function SingleCoursePage({ params }: Props) {
         <div className="lg:flex lg:gap-8">
           {/* Main Content */}
           <div className="flex-1 min-w-0 space-y-6">
-            <div className="space-y-1">
+            <div className="space-y-9">
               {/* Learning Outcomes */}
               <div className="border rounded-xl border-foreground/20 p-4 space-y-4">
                 <div className="space-y-1">
@@ -216,6 +235,142 @@ export default async function SingleCoursePage({ params }: Props) {
                   ))}
                 </div>
               </div>
+
+              {/* Course Curriculum */}
+              {course.chapters && course.chapters?.length > 0 && (
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-emerald-950">Course Curriculum</h2>
+                    <p className="text-sm text-foreground/60">
+                      Dive into the course content and explore the curriculum.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-3">
+                      <p className="text-sm text-foreground/80">
+                        {course.chapters.length} Chapters
+                      </p>
+                      <p className="text-sm text-foreground/80">{`•`}</p>
+                      <p className="text-sm text-foreground/80">
+                        {course.chapters.reduce(
+                          (acc, chapter) => acc + (chapter.lessons?.length || 0),
+                          0,
+                        )}{' '}
+                        Lessons
+                      </p>
+                    </div>
+
+                    <Accordion
+                      type="single"
+                      collapsible
+                      className="rounded border border-foreground/20"
+                    >
+                      {course.chapters.map((chapter) => (
+                        <AccordionItem
+                          value={`item-${chapter.id}`}
+                          key={chapter.id}
+                          className="bg-foreground/5 text-foreground border-foreground/20"
+                        >
+                          <AccordionTrigger className="px-5">
+                            {chapter.chapterTitle}
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="w-full px-5 pb-3 text-sm text-foreground/70">
+                              {`• ${chapter.chapterDescription}`}
+                            </div>
+
+                            <div className="bg-white px-5 w-full space-y-7 py-5">
+                              {chapter.lessons && chapter.lessons.length > 0 ? (
+                                chapter.lessons.map(
+                                  (lesson) =>
+                                    lesson instanceof Object && (
+                                      <div
+                                        key={lesson.id}
+                                        className="flex items-center justify-between"
+                                      >
+                                        <p className="text-foreground/90 flex items-center gap-4">
+                                          <BookTextIcon className="size-4" />{' '}
+                                          {`${lesson.order}. ${lesson.lessonName}`}
+                                        </p>
+
+                                        <div className="flex items-center gap-5">
+                                          {lesson.isPreview && (
+                                            <Dialog>
+                                              <DialogTrigger asChild>
+                                                <Button
+                                                  variant={'link'}
+                                                  className="p-0 h-fit flex items-center gap-1 cursor-pointer"
+                                                >
+                                                  <span className="p-1 rounded-full bg-emerald-600">
+                                                    <PlayIcon className="size-3 text-white" />
+                                                  </span>
+
+                                                  <span className="underline text-sm text-foreground/80">
+                                                    Preview
+                                                  </span>
+                                                </Button>
+                                              </DialogTrigger>
+                                              <DialogContent>
+                                                <DialogHeader>
+                                                  <DialogTitle>
+                                                    {lesson.lessonName} - Preview
+                                                  </DialogTitle>
+                                                  <DialogDescription>
+                                                    {lesson.description}
+                                                  </DialogDescription>
+                                                </DialogHeader>
+
+                                                <div className="space-y-4">
+                                                  {lesson.curriculum.map((block, index) => (
+                                                    <Card
+                                                      key={index}
+                                                      className="p-0 shadow-none overflow-hidden"
+                                                    >
+                                                      {block.blockType === 'lessonVideo' &&
+                                                        block.videoType === 'youtube' && (
+                                                          <div className="aspect-video w-full">
+                                                            <iframe
+                                                              width="100%"
+                                                              height="100%"
+                                                              src={block.youtubeEmbed!}
+                                                              title={
+                                                                block.videoTitle ||
+                                                                'Lesson Video Preview'
+                                                              }
+                                                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                              allowFullScreen={false}
+                                                              className="w-full h-full object-cover rounded"
+                                                            />
+                                                          </div>
+                                                        )}
+                                                    </Card>
+                                                  ))}
+                                                </div>
+                                              </DialogContent>
+                                            </Dialog>
+                                          )}
+
+                                          <p className="text-sm text-foreground/70">
+                                            {lesson.duration} Minutes
+                                          </p>
+                                        </div>
+                                      </div>
+                                    ),
+                                )
+                              ) : (
+                                <div className="text-center text-sm text-foreground/80">
+                                  {`No lessons added yet for this chapter. Please check back later as we are continuously updating our course content to provide you with the best learning experience.`}
+                                </div>
+                              )}
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                </div>
+              )}
 
               {/* Course Description */}
               {course.description && <RichTextComponent content={course.description} />}
@@ -281,7 +436,7 @@ export default async function SingleCoursePage({ params }: Props) {
                     <Button
                       size={'lg'}
                       className={cn(
-                        'flex-1 w-full hover:bg-emerald-900/20 bg-emerald-950/20 hover:text-emerald-800 text-emerald-900 h-12 rounded-lg',
+                        'flex-1 w-full hover:bg-emerald-800/20 bg-emerald-700/20 hover:text-emerald-800 text-emerald-900 h-12 rounded-lg',
                       )}
                     >
                       Add to Wishlist
