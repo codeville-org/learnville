@@ -59,6 +59,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -117,8 +118,6 @@ export default async function SingleCoursePage({ params }: Props) {
   const course = await getCourseBySlug(slug, isDraftMode)
 
   if (!course) notFound()
-
-  console.log({ lesson: course.chapters?.[0]?.lessons?.[0] })
 
   return (
     <div>
@@ -311,7 +310,7 @@ export default async function SingleCoursePage({ params }: Props) {
                                                   </span>
                                                 </Button>
                                               </DialogTrigger>
-                                              <DialogContent>
+                                              <DialogContent className="sm:max-w-2xl max-h-[90vh] grid-rows-[auto_1fr] overflow-hidden">
                                                 <DialogHeader>
                                                   <DialogTitle>
                                                     {lesson.lessonName} - Preview
@@ -321,32 +320,83 @@ export default async function SingleCoursePage({ params }: Props) {
                                                   </DialogDescription>
                                                 </DialogHeader>
 
-                                                <div className="space-y-4">
-                                                  {lesson.curriculum.map((block, index) => (
-                                                    <Card
-                                                      key={index}
-                                                      className="p-0 shadow-none overflow-hidden"
-                                                    >
-                                                      {block.blockType === 'lessonVideo' &&
-                                                        block.videoType === 'youtube' && (
-                                                          <div className="aspect-video w-full">
-                                                            <iframe
-                                                              width="100%"
-                                                              height="100%"
-                                                              src={block.youtubeEmbed!}
-                                                              title={
-                                                                block.videoTitle ||
-                                                                'Lesson Video Preview'
-                                                              }
-                                                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                              allowFullScreen={false}
-                                                              className="w-full h-full object-cover rounded"
+                                                <ScrollArea className="min-h-0 overflow-hidden">
+                                                  <div className="space-y-4 pr-4 pb-6">
+                                                    {lesson.curriculum.map((block, index) =>
+                                                      block.blockType === 'lessonVideo' ? (
+                                                        <Card
+                                                          key={index}
+                                                          className="p-0 shadow-none overflow-hidden flex items-center justify-center"
+                                                        >
+                                                          {block.videoType === 'youtube' ? (
+                                                            <div
+                                                              className="aspect-video w-full"
+                                                              dangerouslySetInnerHTML={{
+                                                                // Refine width="" and height="" values to "100%"
+                                                                __html:
+                                                                  block.youtubeEmbed
+                                                                    ?.replace(
+                                                                      /width="\d+"/g,
+                                                                      'width="100%"',
+                                                                    )
+                                                                    .replace(
+                                                                      /height="\d+"/g,
+                                                                      'height="100%"',
+                                                                    ) || '',
+                                                              }}
                                                             />
+                                                          ) : block.blockType === 'lessonVideo' ? (
+                                                            <video
+                                                              controls
+                                                              className="w-full aspect-video"
+                                                            >
+                                                              <source
+                                                                src={
+                                                                  (block.video instanceof Object &&
+                                                                    block.video.url) ||
+                                                                  ''
+                                                                }
+                                                                type={
+                                                                  (block.video instanceof Object &&
+                                                                    block.video.mimeType) ||
+                                                                  'video/mp4'
+                                                                }
+                                                              />
+                                                              Your browser does not support the
+                                                              video tag.
+                                                            </video>
+                                                          ) : (
+                                                            <></>
+                                                          )}
+                                                        </Card>
+                                                      ) : block.blockType === 'lessonContent' ? (
+                                                        <RichTextComponent
+                                                          key={index}
+                                                          content={block.content}
+                                                        />
+                                                      ) : block.blockType === 'lessonQuiz' ? (
+                                                        <div
+                                                          key={index}
+                                                          className="w-full min-h-12 rounded-md p-2 bg-emerald-600/10 border border-emerald-600/80 flex items-center gap-3"
+                                                        >
+                                                          <div className="size-10 bg-emerald-600/70 rounded-md flex items-center justify-center">
+                                                            <BadgeQuestionMarkIcon className="size-5 text-emerald-50" />
                                                           </div>
-                                                        )}
-                                                    </Card>
-                                                  ))}
-                                                </div>
+
+                                                          <div className="space-y-0">
+                                                            <h2 className="text-base text-emerald-950 font-semibold">
+                                                              Quiz Included
+                                                            </h2>
+                                                            <p className="text-sm text-foreground/80">
+                                                              {block.questions.length} Quiz
+                                                              Questions
+                                                            </p>
+                                                          </div>
+                                                        </div>
+                                                      ) : null,
+                                                    )}
+                                                  </div>
+                                                </ScrollArea>
                                               </DialogContent>
                                             </Dialog>
                                           )}
