@@ -437,6 +437,34 @@ export default async function SingleCoursePage({ params }: Props) {
               {/* Instructor Profile */}
               <InstructorProfileCard course={course} />
 
+              {/* Course Prerequisites */}
+              {course.prerequisites && course.prerequisites.length > 0 && (
+                <div className="border rounded-xl border-foreground/20 p-4 space-y-4">
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-semibold text-emerald-950">Course Prerequisites</h2>
+                    <p className="text-sm text-foreground/60">
+                      To get the most out of this course, we recommend having the following
+                      prerequisites:
+                    </p>
+                  </div>
+
+                  <div className="w-full grid grid-cols-2 gap-3">
+                    {course.prerequisites.map(({ prerequisite }, index) => (
+                      <Card
+                        key={index}
+                        className="p-3 shadow-none flex flex-row items-start gap-3 bg-linear-to-tr from-emerald-200/20 to-amber-200/30 border-foreground/10"
+                      >
+                        <div className="size-5">
+                          <CheckIcon className="size-5 min-w-5 text-emerald-900/80" />
+                        </div>
+
+                        <div className="line-clamp-2 text-emerald-950">{prerequisite}</div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Course Description */}
               {course.description && <RichTextComponent content={course.description} />}
             </div>
