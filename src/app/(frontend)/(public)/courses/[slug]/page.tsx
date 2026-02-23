@@ -72,6 +72,7 @@ import {
 } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { InstructorProfileCard } from '../_components/instructor-profile-card'
+import { CourseEnrollButton } from '../_components/enroll-button'
 
 type Props = {
   params: Promise<{ slug?: string }>
@@ -516,25 +517,8 @@ export default async function SingleCoursePage({ params }: Props) {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size={'lg'}
-                      className={cn(
-                        'flex-1 w-full hover:bg-emerald-900 bg-emerald-950 hover:text-emerald-50 text-emerald-100 h-12 rounded-lg',
-                      )}
-                    >
-                      Enroll Now
-                      <ArrowRightCircle />
-                    </Button>
-                    <Button
-                      size={'lg'}
-                      className={cn(
-                        'flex-1 w-full hover:bg-emerald-800/20 bg-emerald-700/20 hover:text-emerald-800 text-emerald-900 h-12 rounded-lg',
-                      )}
-                    >
-                      Add to Wishlist
-                    </Button>
-                  </div>
+                  {/* Course Enrollment Button with Add to Wishlist Button */}
+                  <CourseEnrollButton />
 
                   <Separator className="my-4" />
 
